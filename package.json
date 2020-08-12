@@ -1,5 +1,5 @@
 {
-  "name": "sodaviz",
+  "name": "@traviswheelerlab/soda",
   "version": "1.0.0",
   "description": "A sequence alignment visualization tool / library.",
   "main": "dist/main.js",
@@ -49,5 +49,6 @@
     "typescript": "^3.8.0",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11"
-  }
+  },
+  "author": "Jack Roddy"
 }
