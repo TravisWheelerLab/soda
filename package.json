@@ -1,0 +1,53 @@
+{
+  "name": "sodaviz",
+  "version": "1.0.0",
+  "description": "A sequence alignment visualization tool / library.",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "test": "test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TravisWheelerLab/soda.git"
+  },
+  "keywords": [
+    "visualization",
+    "dna",
+    "protein",
+    "amino acids",
+    "transposable elements",
+    "dfam",
+    "bioinformatics",
+    "computational biology"
+  ],
+  "authors": [
+    {
+      "name": "Jack Roddy",
+      "email": "jack.roddy@umontana.edu",
+      "url": "https://github.com/jackroddy"
+    },
+    {
+      "name": "George Lesica",
+      "email": "george.lesica@umontana.edu",
+      "url": "https://github.com/glesica"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TravisWheelerLab/SODA/issues"
+  },
+  "files": [
+    "dist/"
+  ],
+  "homepage": "https://github.com/TravisWheelerLab/SODA#readme",
+  "dependencies": {
+    "d3": "^5.15.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "typescript": "^3.8.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
