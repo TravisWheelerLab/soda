@@ -103,5 +103,11 @@ export abstract class ChartBase<T> implements Chart<T> {
             .attr('height', this.height);
     }
 
+    public setHeight(height: number): void {
+        this.height = height;
+        this.svgSelection
+            .attr('height', this.height);
+    }
+
     abstract render(params: T): void;
 }

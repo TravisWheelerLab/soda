@@ -51,11 +51,18 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
         .style('stroke-width', 1)
         .style('stroke', (d: Annotation) => {
             if (conf.strokeColor !== undefined) {
-                return (conf.strokeColor(d)); 
-            }
-            else {
+                return (conf.strokeColor(d));
+            } else {
                 return ('black');
             }
+        })
+        .style('fill', (d: Annotation) => {
+                if (conf.fillColor !== undefined) {
+                    return (conf.fillColor(d));
+                }
+                else {
+                    return ('black');
+                }
         });
 
     // set the position parameters

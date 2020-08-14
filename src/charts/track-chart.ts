@@ -102,7 +102,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
         // set the height of the chart based off of the number of
         // nesting layers are present in the params we were given
         this.setXScale(params.queryStart, params.queryEnd); 
-        this.height = (params.maxY + this.yOffset) * this.binHeight;
+        this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();
     }
 }

@@ -4,6 +4,7 @@
   "description": "A sequence alignment visualization tool / library.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "prepublish": "tsc",
   "scripts": {
     "test": "test.sh"
   },
