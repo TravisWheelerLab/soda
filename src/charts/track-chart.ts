@@ -27,7 +27,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
     constructor(config: ChartConfig) {
         super(config);
         this.binHeight = 20;
-        this.yOffset = 1;
+        this.yOffset = 0;
         this.textPadSize = 5;
 
         const self = this; 
