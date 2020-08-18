@@ -1,6 +1,4 @@
 import * as d3 from 'd3';
-import * as sp from '../primitives';
-import * as tt from '../plugins/tooltip';
 import { ChartBase, ChartConfig } from "../charts";
 import { ZoomableChart, ZoomBehavior, ZoomController } from "../plugins/zoom";
 import { ResizableChart } from "../plugins/resize";
@@ -104,5 +102,8 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
         this.setXScale(params.queryStart, params.queryEnd); 
         this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();
+        for (const plugin of this.plugins) {
+            plugin.alert();
+        }
     }
 }

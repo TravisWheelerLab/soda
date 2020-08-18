@@ -79,7 +79,7 @@ export class ZoomController {
         this.transform.x -= jumpPxStart;
         this.updateZoomedScale();
 
-        // finally we can propogate the fully calculated transform
+        // finally we can propagate the fully calculated transform
         // across all of our components
         this.updateCompTransforms();
         this.zoomedRender();

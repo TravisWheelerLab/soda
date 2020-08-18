@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { Chart } from './chart';
 import { ChartConfig } from './chart-config';
+import { Plugin } from '../plugins/plugin';
 
 export abstract class ChartBase<T> implements Chart<T> {
     // width of our svg viewport
@@ -16,6 +17,8 @@ export abstract class ChartBase<T> implements Chart<T> {
     // the height of a row/bin in the chart
     // TODO: this will probably live on TrackChart (when I get around to making it)
     binHeight:   number;
+    // a list of plugins attached to the chart
+    plugins: Plugin[] = [];
 
     protected constructor(config: ChartConfig) {
         this.selector = config.selector;
