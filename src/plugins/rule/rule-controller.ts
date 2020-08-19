@@ -1,10 +1,11 @@
 import * as d3 from 'd3';
 import { ChartBase } from '../../charts';
 import { Plugin } from '../plugin';
-import { RuleConfig } from './rule-config';
 
 export class RuleController implements Plugin {
+    // a list of components that the controller is controlling rules for
     components: ChartBase<any>[];
+    // the current component that is being hovered by the user
     activeComponent?: ChartBase<any>;
 
     constructor() {
@@ -13,37 +14,50 @@ export class RuleController implements Plugin {
     }
 
     public alert(): void {
+        // this is called by registered components any time an event that the controller
+        // should know about occurs. the alert system will probably be expanded on and
+        // generalized more later on
         this.updateRuleSize();
     }
 
-    public addComponent(component: ChartBase<any>, config: RuleConfig) {
+    public addComponent(component: ChartBase<any>) {
         this.components.push(component);
         component.plugins.push(this);
+        // actually create the rule
         verticalRule(component);
-        ruleTooltip(component, config);
+        // create the tooltip that will display the chromosome position currently hovered
+        ruleTooltip(component);
         component.svgSelection
-            .on('mousemove', () => this.chartMouseMove(component, config))
+            .on('mousemove', () => this.chartMouseMove(component))
     }
 
-    public chartMouseMove(chart: ChartBase<any>, config: RuleConfig) {
+    public chartMouseMove(chart: ChartBase<any>) {
+        // this is called any time the mouse moves on a chart
+        // set the active component
         this.activeComponent = chart;
-        this.moveRule(config);
+        // then defer to the function that will actually move the rules
+        this.moveRule();
     }
 
-    public moveRule(config: RuleConfig): void {
+    public moveRule(): void {
         let mouseX = d3.event.pageX;
         let mouseY = d3.event.pageY;
 
         for (const comp of this.components) {
+            // move the rules
             d3.select(comp.selector)
                 .selectAll('div.vertical-rule')
                 .style('left', (mouseX + 5) + 'px');
 
+            // we need to figure out where the svg is actually sitting in the absolute
+            // coordinate system so that we can figure out the position of the rule
+            // relative to the chromosome coordinate system
             const compSvgDims = comp.getSvgDimensions();
             let tooltipText = Math.round(comp.getXScale().invert(mouseX - compSvgDims.x + 5));
             d3.select(comp.selector)
                 .selectAll('div.rule-tooltip')
                 .style('opacity', () => {
+                    // we'll hide the tooltip for every component except the active one
                     if (this.activeComponent == comp) {
                         return (1);
                     }
@@ -58,6 +72,8 @@ export class RuleController implements Plugin {
     }
 
     public updateRuleSize(): void {
+        // whenever the charts resize themselves, we need to
+        // resize the rules too
         for (const comp of this.components) {
             let containerDims = comp.getContainerDimensions();
             let top = containerDims.y;
@@ -69,20 +85,19 @@ export class RuleController implements Plugin {
     }
 }
 
-export function ruleTooltip(chart: ChartBase<any>, config: RuleConfig) {
-    let containerDims = chart.getContainerDimensions();
-    let top = containerDims.y;
+export function ruleTooltip(chart: ChartBase<any>) {
+    // a utility function to create the div for a rule tooltip
     d3.select(chart.selector)
       .append('div')
         .attr('class', 'rule-tooltip')
         .style('position', 'absolute')
-        .style('top', top + 'px')
         .style('border-radius', '8px')
         .style('background', 'lightsteelblue')
-        .html('test');
+        .style('opacity', 0);
 }
 
 export function verticalRule(chart: ChartBase<any>) {
+    // a utility function to create the div for a vertical rule
     let containerDims = chart.getContainerDimensions();
     let top = containerDims.y;
     d3.select(chart.selector)
@@ -94,12 +109,4 @@ export function verticalRule(chart: ChartBase<any>) {
         .style('border-left', '2px dotted')
         .style('text-align', 'left')
         .style('border-color', 'coral');
-}
-
-function moveRule(selector: string, config: RuleConfig): void {
-    let mouseX = d3.event.pageX;
-
-    d3.select(selector)
-        .selectAll('div.vertical-rule')
-        .style('left', (mouseX + 5) + 'px');
 }
