@@ -88,6 +88,13 @@ export abstract class ChartBase<T> implements Chart<T> {
         }
         return (containerDimensions);
     }
+    public getSvgDimensions(): DOMRect {
+        let svg = this.svgSelection.node();
+        if (svg == null) {
+            throw(`SVG selection is undefined on , ${this}`);
+        }
+        return (svg.getBoundingClientRect());
+    }
 
     public getContainerWidth(): number {
         return (this.getContainerDimensions().width);
@@ -108,8 +115,18 @@ export abstract class ChartBase<T> implements Chart<T> {
 
     public setHeight(height: number): void {
         this.height = height;
+
+        d3.select<HTMLDivElement, any>(this.selector)
+            .style('height', this.height + 'px');
+
         this.svgSelection
             .attr('height', this.height);
+    }
+
+    protected alertPlugins(): void {
+        for (const plugin of this.plugins) {
+            plugin.alert();
+        }
     }
 
     abstract render(params: T): void;
