@@ -75,8 +75,8 @@ export class RuleController implements Plugin {
         // whenever the charts resize themselves, we need to
         // resize the rules too
         for (const comp of this.components) {
-            let containerDims = comp.getContainerDimensions();
-            let top = containerDims.y;
+            let svgDims = comp.getSvgDimensions();
+            let top = svgDims.y;
             d3.select(comp.selector)
                 .selectAll('div.vertical-rule')
                 .style('height', comp.height + 'px')
