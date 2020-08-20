@@ -74,6 +74,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
     public resize(): void {
         // TODO: implement this for when there's no zoom controller
         this.setToContainerDimensions();
+        this.alertPlugins();
     }
 
     public registerZoomController(controller: ZoomController): void {
@@ -102,8 +103,6 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
         this.setXScale(params.queryStart, params.queryEnd); 
         this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();
-        for (const plugin of this.plugins) {
-            plugin.alert();
-        }
+        this.alertPlugins();
     }
 }
