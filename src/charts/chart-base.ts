@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { Chart } from './chart';
 import { ChartConfig } from './chart-config';
+import { Plugin } from '../plugins/plugin';
 
 export abstract class ChartBase<T> implements Chart<T> {
     // width of our svg viewport
@@ -16,6 +17,8 @@ export abstract class ChartBase<T> implements Chart<T> {
     // the height of a row/bin in the chart
     // TODO: this will probably live on TrackChart (when I get around to making it)
     binHeight:   number;
+    // a list of plugins attached to the chart
+    plugins: Plugin[] = [];
 
     protected constructor(config: ChartConfig) {
         this.selector = config.selector;
@@ -85,6 +88,13 @@ export abstract class ChartBase<T> implements Chart<T> {
         }
         return (containerDimensions);
     }
+    public getSvgDimensions(): DOMRect {
+        let svg = this.svgSelection.node();
+        if (svg == null) {
+            throw(`SVG selection is undefined on , ${this}`);
+        }
+        return (svg.getBoundingClientRect());
+    }
 
     public getContainerWidth(): number {
         return (this.getContainerDimensions().width);
@@ -105,8 +115,18 @@ export abstract class ChartBase<T> implements Chart<T> {
 
     public setHeight(height: number): void {
         this.height = height;
+
+        d3.select<HTMLDivElement, any>(this.selector)
+            .style('height', this.height + 'px');
+
         this.svgSelection
             .attr('height', this.height);
+    }
+
+    protected alertPlugins(): void {
+        for (const plugin of this.plugins) {
+            plugin.alert();
+        }
     }
 
     abstract render(params: T): void;

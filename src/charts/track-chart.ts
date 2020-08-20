@@ -1,6 +1,4 @@
 import * as d3 from 'd3';
-import * as sp from '../primitives';
-import * as tt from '../plugins/tooltip';
 import { ChartBase, ChartConfig } from "../charts";
 import { ZoomableChart, ZoomBehavior, ZoomController } from "../plugins/zoom";
 import { ResizableChart } from "../plugins/resize";
@@ -30,8 +28,8 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
         this.yOffset = 0;
         this.textPadSize = 5;
 
-        const self = this; 
-        
+        const self = this;
+
         this.svgSelection
             .call(d3.zoom()
                 .on('zoom', () => self.callZoomTrigger())
@@ -39,7 +37,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
             .on("dblclick.zoom", null);
             
     }
-    
+
     public getXScale(): d3.ScaleLinear<number, number> {
         // if we have a zoom controller, we'll get a rescaled X scale provided by the controller
         if (this.zoomController !== undefined) {
@@ -104,5 +102,8 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
         this.setXScale(params.queryStart, params.queryEnd); 
         this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();
+        for (const plugin of this.plugins) {
+            plugin.alert();
+        }
     }
 }
