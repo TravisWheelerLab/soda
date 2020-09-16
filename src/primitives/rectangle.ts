@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { registerZoomBehavior } from "../primitives";
 import { Annotation } from "../annotations";
 import { ChartBase } from "../charts";
+import { mapIdToSelection } from "../plugins/id-map";
 import { isZoomableChart,  ZoomBehavior, ZoomController } from "../plugins/zoom";
 
 // a module that provides an abstracted interface for drawing rectangles in a chart
@@ -9,8 +10,14 @@ import { isZoomableChart,  ZoomBehavior, ZoomController } from "../plugins/zoom"
 export interface RectangleConfig {
     // the class to apply to the svg when it's created
     class: string;
+    // functions to extract drawing coordinates from an Annotation
+    yFromAnn?(d: Annotation): number;
+    xFromAnn?(d: Annotation): number;
+    wFromAnn?(d: Annotation): number;
+    strokeWidth?: number;
     // a function to extract the outline color from an Annotation
     strokeColor?(d: Annotation): string;
+    strokeOpacity?: number;
     // a function to extract the fill color from an Annotation
     fillColor?(d: Annotation): string;
     // the user can optionally provide a custom ZoomBehavior for the line
@@ -48,7 +55,22 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
     // set the constant parameters
     enter
         .attr('class', conf.class)
-        .style('stroke-width', 1)
+        .style('stroke-width', () => {
+            if (conf.strokeWidth !== undefined) {
+                return conf.strokeWidth;
+            }
+            else {
+                return 1;
+            }
+        })
+        .style('stroke-opacity', () => {
+            if (conf.strokeOpacity!== undefined) {
+                return conf.strokeOpacity;
+            }
+            else {
+                return 1;
+            }
+        })
         .style('stroke', (d: Annotation) => {
             if (conf.strokeColor !== undefined) {
                 return (conf.strokeColor(d));
@@ -65,12 +87,42 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
                 }
         });
 
+    let xFromAnn: (d: Annotation) => number;
+    if (conf.xFromAnn !== undefined) {
+        xFromAnn = conf.xFromAnn;
+    }
+    else {
+        xFromAnn = (d: Annotation) => chart.getXScale()(d.x) + 2;
+    }
+
+    let yFromAnn: (d: Annotation) => number;
+    if (conf.yFromAnn !== undefined) {
+        yFromAnn = conf.yFromAnn;
+    }
+    else {
+        yFromAnn = (d: Annotation) => d.y * chart.binHeight + 2;
+    }
+
+    let wFromAnn: (d: Annotation) => number;
+    if (conf.wFromAnn !== undefined) {
+        wFromAnn = conf.wFromAnn;
+    }
+    else {
+        wFromAnn = (d: Annotation) => chart.getXScale()(d.getX() + d.getW()) - chart.getXScale()(d.getX() - 4)
+    }
+
     // set the position parameters
     merge
-        .attr('x', (d: Annotation) => chart.getXScale()(d.getX()))
-        .attr('y', (d: Annotation) => d.y * chart.binHeight)
-        .attr('width', (d: Annotation) => chart.getXScale()(d.getX() + d.getW()) - chart.getXScale()(d.getX()))
-        .attr('height', (d: Annotation) => chart.binHeight/2)
+        .attr('x', (d: Annotation) => xFromAnn(d))
+        .attr('y', (d: Annotation) => yFromAnn(d))
+        .attr('width', (d: Annotation) => wFromAnn(d))
+        .attr('height', (d: Annotation) => chart.binHeight - 4);
+
+    // for all of the rectangles remaining, update the id->d3 selection map
+    merge
+        .each((d, i, nodes) => {
+            mapIdToSelection(d.id, d3.select(nodes[i]));
+        });
 
     // remove rectangles that are no longer in the chart
     selection.exit()

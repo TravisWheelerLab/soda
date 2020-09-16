@@ -13,8 +13,11 @@ export interface TrackParams {
 export class TrackChart<T extends TrackParams> extends ChartBase<T> implements ZoomableChart<T>, ResizableChart<T> {
     // the height of a bin where Annotations are drawn
     binHeight:     number;
+    // the number of bins we have
+    binCount:      number;
     // the layer we start drawing at
-    yOffset:       number; 
+    yOffset:       number;
+
     // object that controls how svg elements render as we zoom
     zoomController?: ZoomController;
     // a list of objects that define behaviors for different svg elements
@@ -25,6 +28,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
     constructor(config: ChartConfig) {
         super(config);
         this.binHeight = 20;
+        this.binCount = 0;
         this.yOffset = 0;
         this.textPadSize = 5;
 
@@ -32,10 +36,35 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
 
         this.svgSelection
             .call(d3.zoom()
+                .filter(() => {
+                    if (d3.event.type === 'wheel') {
+                        // don't allow zooming without pressing ctrl
+                        return d3.event.ctrlKey;
+                    }
+                    return true;
+                })
                 .on('zoom', () => self.callZoomTrigger())
             )
             .on("dblclick.zoom", null);
-            
+
+    }
+
+    public constrainZoom(min: number, max: number) {
+        const self = this;
+        this.svgSelection
+            .call(d3.zoom()
+                .filter(() => {
+                    if (d3.event.type === 'wheel') {
+                        // don't allow zooming without pressing ctrl
+                        return d3.event.ctrlKey;
+                    }
+                    return true;
+                })
+                .scaleExtent([min, max]) // these extent functions can be used to control how much zooming/panning is allowed
+                .translateExtent([[0,0], [this.width, this.height]])
+                .on('zoom', () => self.callZoomTrigger())
+            )
+            .on("dblclick.zoom", null);
     }
 
     public getXScale(): d3.ScaleLinear<number, number> {
@@ -100,7 +129,10 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
     render(params: TrackParams): void {
         // set the height of the chart based off of the number of
         // nesting layers are present in the params we were given
-        this.setXScale(params.queryStart, params.queryEnd); 
+        console.log("RENDERING");
+        this.binCount = params.maxY;
+        console.log(params.queryStart, params.queryEnd);
+        this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();
         this.alertPlugins();

@@ -15,7 +15,6 @@ export abstract class ChartBase<T> implements Chart<T> {
     // maps from query range to pixels
     _xScale?: d3.ScaleLinear<number, number>;
     // the height of a row/bin in the chart
-    // TODO: this will probably live on TrackChart (when I get around to making it)
     binHeight:   number;
     // a list of plugins attached to the chart
     plugins: Plugin[] = [];
@@ -23,7 +22,8 @@ export abstract class ChartBase<T> implements Chart<T> {
     protected constructor(config: ChartConfig) {
         this.selector = config.selector;
         this.svgSelection = d3.select(this.selector)
-            .append('svg');
+            .append('svg')
+            .style('vertical-align', 'top');
 
         if (config.width !== undefined) {
             this.width = config.width;
