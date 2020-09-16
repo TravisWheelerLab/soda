@@ -2,6 +2,11 @@ import * as d3 from 'd3';
 import { getSelectionById } from '../id-map';
 import { Annotation } from "../../annotations/annotation";
 
+// this module provides a way to route an arbitrary number of
+// hover behaviors to a soda primitive
+
+// these maps contain lists of mouseover and mouseout functions
+// to be called whenever a soda primitive is hovered
 const mouseoverBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, d: Annotation): void}[]> = new Map();
 const mouseoutBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, d: Annotation): void}[]> = new Map();
 
@@ -32,9 +37,11 @@ export function addHoverBehavior(ann: Annotation,
     mouseoutList.push(mouseout);
 
     let selection = getSelectionById(ann.id);
+    // we bind every svg that has a hover parameter to the same mouseover
+    // and mouseout functions
     selection
-        .on('mouseover', (d: Annotation) => mouseover(selection, d))
-        .on('mouseout', (d: Annotation) => mouseout(selection, d));
+        .on('mouseover', (a: Annotation) => mouseover(selection, a))
+        .on('mouseout', (a: Annotation) => mouseout(selection, a));
 }
 
 function mouseover(selection: d3.Selection<any, any, any, any>, ann: Annotation): void {
@@ -54,16 +61,3 @@ function mouseout(selection: d3.Selection<any, any, any, any>, ann: Annotation):
         behavior(selection, ann);
     }
 }
-
-
-// merge
-//     .on('mouseover', (d) => {
-//         d3.selectAll<SVGRectElement, Annotation>('rect')
-//             .filter((d2: Annotation) => d2.id == d.id)
-//             .style('stroke-opacity', 0.5);
-//     })
-//     .on('mouseout', (d) => {
-//         d3.selectAll<SVGRectElement, Annotation>('rect')
-//             .filter((d2: Annotation) => d2.id == d.id)
-//             .style('stroke-opacity', 0);
-//     });

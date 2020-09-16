@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { Annotation } from '../annotations';
 
+// this module provides some convenience maps that give
+// access to selections and annotations via id
 export const idAnnotationMap: Map<string, Annotation> = new Map();
 export const idSelectionMap: Map<string, d3.Selection<any, any, any, any>> = new Map();
 

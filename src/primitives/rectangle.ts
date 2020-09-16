@@ -118,22 +118,11 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
         .attr('width', (d: Annotation) => wFromAnn(d))
         .attr('height', (d: Annotation) => chart.binHeight - 4);
 
+    // for all of the rectangles remaining, update the id->d3 selection map
     merge
         .each((d, i, nodes) => {
             mapIdToSelection(d.id, d3.select(nodes[i]));
         });
-
-    // merge
-    //     .on('mouseover', (d) => {
-    //     d3.selectAll<SVGRectElement, Annotation>('rect')
-    //         .filter((d2: Annotation) => d2.id == d.id)
-    //         .style('stroke-opacity', 0.5);
-    // })
-    // .on('mouseout', (d) => {
-    //      d3.selectAll<SVGRectElement, Annotation>('rect')
-    //         .filter((d2: Annotation) => d2.id == d.id)
-    //         .style('stroke-opacity', 0);
-    // });
 
     // remove rectangles that are no longer in the chart
     selection.exit()
