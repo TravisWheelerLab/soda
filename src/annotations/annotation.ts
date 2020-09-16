@@ -6,7 +6,7 @@ import { AnnotationConfig } from './annotation-config'
 export class Annotation {
     readonly id: string;
     readonly x: number;
-    readonly y: number;
+    y: number;
     readonly w: number;
     readonly h: number;
 

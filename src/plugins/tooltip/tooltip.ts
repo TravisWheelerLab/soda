@@ -17,6 +17,9 @@ function initTooltipDiv(): void {
         tooltipSelection = d3.select('body')
             .append('div')
             .attr('class', 'tooltip')
+            .style('background-color', 'lightsteelblue')
+            .style('border-radius', '8px')
+            .style('position', 'absolute')
             .style('opacity', 0);
 
         tooltipDivInitialized = true;
