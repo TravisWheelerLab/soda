@@ -145,7 +145,7 @@ export class ZoomController {
             const compInternalTransform = comp.svgSelection.node().__zoom
             
             // configure it to be equal to the internal transform from the caller component
-            // * it's possible for the interntal transform to be undefined, in which case
+            // * it's possible for the internal transform to be undefined, in which case
             // * we just don't have to worry about it
             if (compInternalTransform !== undefined) {
                 compInternalTransform.k = this.transform.k;
