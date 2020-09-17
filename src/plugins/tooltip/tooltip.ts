@@ -58,4 +58,10 @@ export function defaultTooltipMouseout<A extends Annotation>(): void {
     tooltipSelection.transition()
         .duration(500)
         .style('opacity', 0);
+
+    tooltipSelection
+        .html('')
+        .style("left", "0px")
+        .style("top", "0px")
+
 }
