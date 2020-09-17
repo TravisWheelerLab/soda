@@ -6,8 +6,8 @@ import { Annotation } from "../../annotations/annotation";
 // this module provides a way to route an arbitrary number of
 // click behaviors to a soda primitive
 
-// these maps contain lists of click and mouseout functions
-// to be called whenever a soda primitive is clicked
+// these maps contain lists of click functions to
+// be called whenever a soda primitive is clicked
 const clickBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, a: Annotation): void}[]> = new Map();
 
 function getClickList<A extends Annotation>(ann: A): {(s: d3.Selection<any, any, any, any>, a: A): void}[] {
