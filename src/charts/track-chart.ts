@@ -129,9 +129,7 @@ export class TrackChart<T extends TrackParams> extends ChartBase<T> implements Z
     render(params: TrackParams): void {
         // set the height of the chart based off of the number of
         // nesting layers are present in the params we were given
-        console.log("RENDERING");
         this.binCount = params.maxY;
-        console.log(params.queryStart, params.queryEnd);
         this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((params.maxY + this.yOffset) * this.binHeight);
         this.callZoomTrigger();

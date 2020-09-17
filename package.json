@@ -43,10 +43,12 @@
   ],
   "homepage": "https://github.com/TravisWheelerLab/SODA#readme",
   "dependencies": {
-    "d3": "^5.15.0"
+    "d3": "^5.15.0",
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
+    "@types/lodash": "^4.14.161",
     "typescript": "^3.8.0",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11"
