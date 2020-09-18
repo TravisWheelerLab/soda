@@ -14,6 +14,7 @@ export interface RectangleConfig {
     yFromAnn?(d: Annotation): number;
     xFromAnn?(d: Annotation): number;
     wFromAnn?(d: Annotation): number;
+    hFromAnn?(d: Annotation): number;
     strokeWidth?: number;
     // a function to extract the outline color from an Annotation
     strokeColor?(d: Annotation): string;
@@ -28,7 +29,7 @@ export class DefaultRectZoomBehavior implements ZoomBehavior<d3.Selection<SVGRec
     // the default zoom behavior for a rectangle
     // it basically just allows stretching/panning in the horizontal direction
     selector: string;
-    
+
     constructor(selector: string) {
         this.selector = `rect.${selector}`;
     }
@@ -36,7 +37,7 @@ export class DefaultRectZoomBehavior implements ZoomBehavior<d3.Selection<SVGRec
     public apply(controller: ZoomController, selection: d3.Selection<SVGRectElement, Annotation, HTMLElement, any>): void {
         selection
             .attr('x', (d: Annotation) => controller.getZoomedXScale()(d.getX()))
-            .attr('width', (d: Annotation) => ( controller.getXScale()(d.getX() + d.getW()) - controller.getXScale()(d.getX()) ) * controller.transform.k); 
+            .attr('width', (d: Annotation) => ( controller.getXScale()(d.getX() + d.getW()) - controller.getXScale()(d.getX()) ) * controller.transform.k);
     }
 }
 
@@ -45,7 +46,7 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
 
     // bind the data to rectangles
     const selection = chart.svgSelection
-      .selectAll<SVGRectElement, Annotation>(`rect.${conf.class}`)
+        .selectAll<SVGRectElement, Annotation>(`rect.${conf.class}`)
         .data(data, (d: Annotation) => d.id);
 
     const enter = selection.enter()
@@ -79,12 +80,12 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
             }
         })
         .style('fill', (d: Annotation) => {
-                if (conf.fillColor !== undefined) {
-                    return (conf.fillColor(d));
-                }
-                else {
-                    return ('black');
-                }
+            if (conf.fillColor !== undefined) {
+                return (conf.fillColor(d));
+            }
+            else {
+                return ('black');
+            }
         });
 
     let xFromAnn: (d: Annotation) => number;
@@ -111,12 +112,20 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
         wFromAnn = (d: Annotation) => chart.getXScale()(d.getX() + d.getW()) - chart.getXScale()(d.getX() - 4)
     }
 
+    let hFromAnn: (d: Annotation) => number;
+    if (conf.hFromAnn !== undefined) {
+        hFromAnn = conf.hFromAnn;
+    }
+    else {
+        hFromAnn = (d: Annotation) => chart.binHeight - 4;
+    }
+
     // set the position parameters
     merge
         .attr('x', (d: Annotation) => xFromAnn(d))
         .attr('y', (d: Annotation) => yFromAnn(d))
         .attr('width', (d: Annotation) => wFromAnn(d))
-        .attr('height', (d: Annotation) => chart.binHeight - 4);
+        .attr('height', (d: Annotation) => hFromAnn(d));
 
     // for all of the rectangles remaining, update the id->d3 selection map
     merge
@@ -127,7 +136,7 @@ export function rectangle(chart: ChartBase<any>, data: Annotation[], conf: Recta
     // remove rectangles that are no longer in the chart
     selection.exit()
         .remove();
-            
+
     if (isZoomableChart(chart)) {
         // if the chart is zoomable, register the ZoomBehavior for the rectangles
         registerZoomBehavior(chart, new DefaultRectZoomBehavior(conf.class));

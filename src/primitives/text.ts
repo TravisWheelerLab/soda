@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { registerZoomBehavior } from "../primitives";
-import { TextAnnotation } from "../annotations";
+import {Annotation, TextAnnotation} from "../annotations";
 import { ChartBase } from "../charts";
 import { isZoomableChart, ZoomBehavior, ZoomController } from "../plugins/zoom";
 
@@ -13,6 +13,7 @@ export interface TextConfig {
     textPad: number;
     // a function to extract the x coordinate from an Annotation object
     xFromAnn(d: TextAnnotation): number;
+    yFromAnn?(d: TextAnnotation): number;
     // a function to extract the text from an Annotation object
     textFromAnn(d: TextAnnotation): string[];
     // the user can optionally provide a custom ZoomBehavior for the line
@@ -109,10 +110,18 @@ export function text(chart: ChartBase<any>, data: TextAnnotation[], conf: TextCo
             return "";
         });
 
+    let yFromAnn: (d: TextAnnotation) => number;
+    if (conf.yFromAnn == undefined) {
+        yFromAnn = (d: TextAnnotation) => d.y * chart.binHeight + 5;
+    }
+    else {
+        yFromAnn = conf.yFromAnn;
+    }
+
     // set the position parameters
     merge
         .attr('x', (d: TextAnnotation) => chart.getXScale()(conf.xFromAnn(d)))
-        .attr('y', (d: TextAnnotation) => d.y * chart.binHeight + 5)
+        .attr('y', (d: TextAnnotation) => yFromAnn(d));
 
     // remove text that is no longer in the chart
     selection.exit()
