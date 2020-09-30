@@ -11,13 +11,13 @@ export abstract class ChartBase<T> implements Chart<T> {
     // the dom element that we will insert the chart svg into
     selector:       string;
     // d3 selection of the chart svg
-    svgSelection:  d3.Selection<any, any, any, any>;
+    svgSelection:   d3.Selection<any, any, any, any>;
     // maps from query range to pixels
-    _xScale?: d3.ScaleLinear<number, number>;
+    _xScale?:       d3.ScaleLinear<number, number>;
     // the height of a row/bin in the chart
-    binHeight:   number;
+    binHeight:      number;
     // a list of plugins attached to the chart
-    plugins: Plugin[] = [];
+    plugins:        Plugin[] = [];
 
     protected constructor(config: ChartConfig) {
         this.selector = config.selector;
@@ -116,6 +116,7 @@ export abstract class ChartBase<T> implements Chart<T> {
     public setHeight(height: number): void {
         this.height = height;
 
+        // TODO: is this really always going to be a div?
         d3.select<HTMLDivElement, any>(this.selector)
             .style('height', this.height + 'px');
 

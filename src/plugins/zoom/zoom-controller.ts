@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { cloneDeep } from "lodash";
 import { Transform } from './transform';
 import { ZoomableChart }  from './zoomable-chart'
 
@@ -23,7 +24,7 @@ export class ZoomController {
     _zoomedXScale?:  d3.ScaleLinear<number, number>;
 
     constructor() {
-        this.transform = d3.zoomIdentity;
+        this.transform = cloneDeep(d3.zoomIdentity);
         this.components = [];
     }
 
@@ -126,11 +127,11 @@ export class ZoomController {
 
     public trigger(callerTransform: Transform): void {
         // set the zoom controllers internal transform to that of the caller
-        this.transform = callerTransform;
+        this.transform = cloneDeep(callerTransform);
         // rescale our scales
         this.updateZoomedScale();
         // sync the internal transforms across all components
-        this.updateCompTransforms();  
+        this.updateCompTransforms();
         // finally, render everything in its zoomed form
         this.zoomedRender();
     }
@@ -142,8 +143,7 @@ export class ZoomController {
     public updateCompTransforms(): void {
         for (const comp of this.components) {
             // grab the internal transform object on the component
-            const compInternalTransform = comp.svgSelection.node().__zoom
-            
+            const compInternalTransform = comp.svgSelection.node().__zoom;
             // configure it to be equal to the internal transform from the caller component
             // * it's possible for the internal transform to be undefined, in which case
             // * we just don't have to worry about it
@@ -178,5 +178,11 @@ export class ZoomController {
         }
         this.components.push(component);
         component.registerZoomController(this);
+        // TODO: is this insane? it seems that by default, d3 will give each element a reference
+        //       to d3.zoomIdentity when they are initially rendered. When using d3 normally, applying
+        //       a transform to some object would then swap this reference out with a new Transform.
+        //       In our case though, we're directly messing with the internal Transform, so we need to
+        //       explicitly make a new Transform immediately.
+        component.svgSelection.node().__zoom = cloneDeep(component.svgSelection.node().__zoom);
     }
 }

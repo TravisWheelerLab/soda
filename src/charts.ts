@@ -1,6 +1,6 @@
 export * from './charts/chart'
 export * from './charts/chart-config'
 export * from './charts/chart-base'
-export * from './charts/track-chart'
-export * from './charts/axis/axis'
-export * from './charts/axis/axis-params'
+export * from './charts/track'
+export * from './charts/axis'
+

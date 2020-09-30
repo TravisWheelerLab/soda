@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-import { AxisParams } from "./axis-params";
+import { AxisRenderParams } from "./axis-render-params";
 import { ChartBase } from '../chart-base'
 import { ChartConfig } from '../chart-config'
 import { ZoomController, ZoomableChart, ZoomBehavior } from '../../plugins/zoom';
 import { ResizableChart } from '../../plugins/resize';
 
 // a generic chart to display a dynamic horizontal axis
-export class AxisChart extends ChartBase<AxisParams> implements ZoomableChart<AxisParams>, ResizableChart<AxisParams> {
+export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableChart<AxisRenderParams>, ResizableChart<AxisRenderParams> {
     // TODO: fix this typing
     axis: any;
     _axisSelection?: d3.Selection<any, any, any, any>;
@@ -52,7 +52,7 @@ export class AxisChart extends ChartBase<AxisParams> implements ZoomableChart<Ax
     public getXScale(): d3.ScaleLinear<number, number> {
         // if we have a zoom controller, we'll get a rescaled X scale provided by the controller
         if (this.zoomController !== undefined) {
-            // TODO: fix this asinine try/catch bullshit
+            // TODO: find a better way to do this
             //       this catches the error that occurs when we render the axis before
             //       the zoom controller has a defined scale
             try {
@@ -94,7 +94,7 @@ export class AxisChart extends ChartBase<AxisParams> implements ZoomableChart<Ax
         return [];
     }
 
-    public render(params: AxisParams) {
+    public render(params: AxisRenderParams) {
         this._queryStart = params.queryStart;
         this._queryEnd = params.queryEnd;
 
@@ -112,7 +112,7 @@ export class AxisChart extends ChartBase<AxisParams> implements ZoomableChart<Ax
     }
 
     public renderAxis() {
-        // TODO: maybe we want to suport vertical axes as well?
+        // TODO: maybe we want to support vertical axes as well?
         // render the axis based off of the x scale
         // if there is a ZoomController registered, it will use the controllers' x scale
         this.axis = d3.axisBottom(this.getXScale());
