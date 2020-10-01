@@ -18,9 +18,10 @@ function initTooltipDiv(): void {
     if (!tooltipDivInitialized) {
         tooltipSelection = d3.select('body')
             .append('div')
-            .attr('class', 'tooltip')
+            .attr('class', 'soda-tooltip')
             .style('background-color', 'lightsteelblue')
             .style('border-radius', '8px')
+            .style('padding', '4px')
             .style('position', 'absolute')
             .style('opacity', 0);
 

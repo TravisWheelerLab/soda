@@ -4,7 +4,7 @@
   "description": "A sequence alignment visualization tool / library.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
-  "prepublish": "tsc",
+  "prepublish": "make build",
   "scripts": {
     "test": "test.sh"
   },
@@ -17,8 +17,6 @@
     "dna",
     "protein",
     "amino acids",
-    "transposable elements",
-    "dfam",
     "bioinformatics",
     "computational biology"
   ],
