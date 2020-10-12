@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash";
 import { Annotation } from "../../annotations/annotation";
 import { AnnotationGraph } from "./annotation-graph"
 
-export function graphColorLayout(ann: Annotation[], nIters: number = 100, tolerance: number = 0): number {
+export function heuristicGraphLayout(ann: Annotation[], nIters: number = 100, tolerance: number = 0): number {
     // This function takes an array of Annotations, turns them into a graph in which
     // there is an edge between any Annotations that would overlap in the x-dimension.
     // It then uses a graph coloring heuristic to find a "good enough" coloring for
@@ -31,36 +31,34 @@ export function graphColorLayout(ann: Annotation[], nIters: number = 100, tolera
     for (let i = 0; i < nIters; i++) {
         // this maps node->{color in best coloring} at the current iteration
         const colors: Map<string, number> = new Map();
-        nextColor = 1;
+        nextColor = 0;
         while (degreesCopy.size > 0) {
             // we use this map to determine whether or not we
             // still want to consider each vert in this iteration
-            let vertNotChecked: Map<string, boolean> = new Map();
+            let vertAvailable: Map<string, boolean> = new Map();
             // take a random ordering of the remaining nodes
             let verts = shuffle(Array.from(degreesCopy.keys()));
 
             for (const n of verts) {
-                vertNotChecked.set(n, true);
+                vertAvailable.set(n, true);
             }
             for (const n of verts) {
-                if (vertNotChecked.get(n)) {
+                if (vertAvailable.get(n)) {
                     // take the next vertex and assign it a color
                     colors.set(n, nextColor);
 
                     for (const n2 of edgesCopy.get(n)!) {
                         // remove all of that vertices adjacent vertices from consideration
-                        vertNotChecked.delete(n2);
+                        vertAvailable.delete(n2);
                     }
                     // now remove that vertex entirely
-                    vertNotChecked.delete(n);
+                    vertAvailable.delete(n);
                     degreesCopy.delete(n);
                     edgesCopy.delete(n);
                 }
             }
             nextColor++;
         }
-
-        nextColor--;
         edgesCopy = cloneDeep(graph.edges);
         degreesCopy = cloneDeep(graph.degrees);
 
@@ -71,7 +69,7 @@ export function graphColorLayout(ann: Annotation[], nIters: number = 100, tolera
     }
     for (const vert of bestColors.keys()) {
         // here we actually set the y values based off of the coloring
-        graph.getAnnotationFromId(vert).y = bestColors.get(vert)! - 1;
+        graph.getAnnotationFromId(vert).y = bestColors.get(vert)!
     }
     return (nextColor);
 }

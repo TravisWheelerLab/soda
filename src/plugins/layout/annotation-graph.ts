@@ -33,7 +33,7 @@ export class AnnotationGraph {
     }
 
     public getVertices(): string[] {
-        return Array.from(this.idMap.keys());
+        return Array.from(this.degrees.keys());
     }
 
     public getEdges(n: string): string[] {
@@ -42,17 +42,6 @@ export class AnnotationGraph {
             edges = [];
         }
         return edges;
-    }
-
-    public getVerticesSortedByWidth(): string[] {
-        let verts = Array.from(this.degrees.keys()).sort((v1, v2) => {
-            if (this.getAnnotationFromId(v1).getW() > this.getAnnotationFromId(v2).getW()) {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
-        return verts;
     }
 
     public getAnnotationFromId(id: string): Annotation {
