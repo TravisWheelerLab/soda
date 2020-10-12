@@ -1,1 +1,2 @@
-export * from './layout/graph-color-layout';
+export * from './layout/heuristic-graph-layout';
+export * from './layout/greedy-graph-layout';
