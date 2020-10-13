@@ -115,7 +115,7 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     protected callZoomTrigger(): void {
         let transform;
         if (d3.event == null) {
-            transform = d3.zoomIdentity;
+            transform = this.svgSelection.node().__zoom;
         }
         else {
             transform = d3.event.transform;
