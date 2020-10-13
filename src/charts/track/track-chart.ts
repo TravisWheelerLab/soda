@@ -129,7 +129,7 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     }
 
     protected preRender(params: T): void {
-        this.binCount = params.maxY || 0;
+        this.binCount = params.maxY || 1;
         this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((this.binCount + this.yOffset) * this.binHeight);
     }
@@ -143,6 +143,4 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
         this.callZoomTrigger();
         this.alertPlugins();
     }
-
-
 }
