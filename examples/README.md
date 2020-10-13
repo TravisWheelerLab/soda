@@ -4,7 +4,7 @@
 
 ## Usage 
 To run these examples, you'll want to have NPM installed.
-Once you've done that, rom the root of the example directory, install the dependencies with:
+Once you've done that, from the root of the example directory, install the dependencies with:
 
     make setup 
 
