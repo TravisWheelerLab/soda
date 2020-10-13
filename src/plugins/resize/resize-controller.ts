@@ -29,5 +29,11 @@ export class ResizeController {
 
     public addComponent<T>(component: ResizableChart<T>) {
        this.components.push(component);
-    } 
+    }
+
+    public addComponents(components: ResizableChart<any>[]): void {
+        for (const comp of components) {
+            this.addComponent(comp);
+        }
+    }
 }

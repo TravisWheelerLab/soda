@@ -212,7 +212,7 @@ export class ZoomController {
         }
     }
     
-    public addComponent(component: ZoomableChart<any>): void {
+    public addComponent<T>(component: ZoomableChart<T>): void {
         // if the width wasn't set in the config, grab the width of a component
         if (this._width == undefined) {
             this._width = component.width;
@@ -228,5 +228,11 @@ export class ZoomController {
         //       In our case though, we're directly messing with the internal Transform, so we need to
         //       explicitly make a new Transform immediately.
         component.svgSelection.node().__zoom = cloneDeep(component.svgSelection.node().__zoom);
+    }
+
+    public addComponents(components: ZoomableChart<any>[]): void {
+        for (const comp of components) {
+            this.addComponent(comp);
+        }
     }
 }

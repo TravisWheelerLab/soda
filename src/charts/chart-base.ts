@@ -130,5 +130,19 @@ export abstract class ChartBase<T> implements Chart<T> {
         }
     }
 
-    abstract render(params: T): void;
+    // this should be responsible for anything that needs to be done before the render
+    protected abstract preRender(params: T): void
+
+    // this should be responsible for using soda to actually render primitives
+    protected abstract inRender(params: T): void
+
+    // this should be responsible for anything that needs to be done after the render
+    protected abstract postRender(params: T): void
+
+    public render(params: T): void {
+        this.preRender(params);
+        this.inRender(params);
+        this.postRender(params);
+    }
+
 }
