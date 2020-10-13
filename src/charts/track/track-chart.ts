@@ -6,8 +6,6 @@ import { TrackChartConfig } from "./track-chart-config";
 import { TrackChartRenderParams } from "./track-chart-render-params";
 
 export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> implements ZoomableChart<T>, ResizableChart<T> {
-    // the last used rendering parameters
-    _renderParams?:        T;
     // the number of bins we have
     binCount:      number;
     // the layer we start drawing at
@@ -131,7 +129,6 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     }
 
     protected preRender(params: T): void {
-        this._renderParams = params;
         this.binCount = params.maxY || 0;
         this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((this.binCount + this.yOffset) * this.binHeight);
@@ -145,13 +142,6 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     protected postRender(params: T): void {
         this.callZoomTrigger();
         this.alertPlugins();
-    }
-
-    public getRenderParams(): T {
-        if (this._renderParams == undefined) {
-            throw(`Render params not defined on ${this}`);
-        }
-        return (this._renderParams);
     }
 
 
