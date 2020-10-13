@@ -14,7 +14,7 @@
 ### single asset to be consumed by example/index.html.
 ###
 .PHONY: build
-build: build/d3.js build/index.html
+build: builddir build/d3.js build/index.html
 	tsc --build tsconfig-example.json
 	npx webpack-cli --config webpack.config.js
 
@@ -32,6 +32,9 @@ serve: build
 ## ---------------
 ## Private Targets
 ## ---------------
+
+builddir:
+	mkdir -p build/
 
 build/d3.js:
 	wget -O build/d3.js -nc https://d3js.org/d3.v5.js

@@ -12,10 +12,10 @@ zoomController.addComponent(chart);
 
 resizeController.addComponent(axis);
 resizeController.addComponent(chart);
-resizeController.setZoomController(zoomController);
+
 window.onresize = () => resizeController.trigger();
 
-let n = 1000;
+let n = 100;
 let w = 100000;
 
 const ann: soda.Annotation[] = [];

@@ -7,18 +7,6 @@
 ## Public Targets
 ## --------------
 
-### build
-### -----
-### Build the example app such that TypeScript files are compiled
-### to JavaScript and the example/ directory is bundled into a
-### single asset to be consumed by example/index.html.
-###
-.PHONY: build
-build: build/d3.js build/index.html
-	@echo "Building all examples.."
-	tsc --build tsconfig-example.json
-	npx webpack-cli --config webpack.config.js
-
 ### setup
 ### -----
 ### Install development dependencies, run this first!
