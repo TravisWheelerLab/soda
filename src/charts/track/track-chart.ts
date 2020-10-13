@@ -91,10 +91,20 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     }
 
     public resize(): void {
-        // TODO: this implementation will really only do something if there's a zoom controller;
-        //       I should make an implementation for when there isn't one
         this.setToContainerDimensions();
-        this.configureZoom();
+
+        if (this.zoomController !== undefined) {
+            // if we have a zoom controller, we'll let it handle the re-rendering
+            this.configureZoom();
+            this.callZoomTrigger();
+        }
+        else {
+            // if we don't have a zoom controller, we'll update and re-render
+            const params = this.getRenderParams();
+            this.setXScale(params.queryStart, params.queryEnd);
+            this.inRender(params);
+        }
+
         this.alertPlugins();
     }
 
@@ -118,10 +128,18 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
         }
     }
 
-    render(params: T): void {
-        this.binCount = params.maxY || 0;
+    protected preRender(params: T): void {
+        this.binCount = params.maxY || 1;
         this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((this.binCount + this.yOffset) * this.binHeight);
+    }
+
+    protected inRender(params: T): void {
+        // this method is the one responsible for actually drawing things
+        // as such, it probably doesn't make sense for it to have a common implementation
+    }
+
+    protected postRender(params: T): void {
         this.callZoomTrigger();
         this.alertPlugins();
     }

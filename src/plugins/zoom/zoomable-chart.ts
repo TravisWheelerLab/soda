@@ -3,6 +3,7 @@ import { ZoomBehavior } from "./zoom-behavior";
 import { ZoomController } from "./zoom-controller";
 
 export interface ZoomableChart<T> extends Chart<T> {
+    zoomController?: ZoomController;
     registerZoomController(controller: ZoomController): void;
     zoomBehaviors?: ZoomBehavior<any>[];
     getZoomBehaviors(): ZoomBehavior<any>[];

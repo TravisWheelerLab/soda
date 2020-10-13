@@ -39,7 +39,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
         this.clearAxis();
         this.setToContainerDimensions();
         this.setXScale();
-        this.renderAxis();
+        this.inRender();
     }
 
     protected clearAxis(): void {
@@ -94,16 +94,6 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
         return [];
     }
 
-    public render(params: AxisRenderParams) {
-        this._queryStart = params.queryStart;
-        this._queryEnd = params.queryEnd;
-
-        // set the d3 scale to the query range
-        this.setXScale();
-        // then render the new axis
-        this.renderAxis();
-   }
-
     public setXScale() {
         // set the internal x scale based off of internal properties
         this._xScale = d3.scaleLinear()
@@ -111,7 +101,14 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
             .range([0, this.width]);
     }
 
-    public renderAxis() {
+    protected preRender(params: AxisRenderParams) {
+        this._queryStart = params.queryStart;
+        this._queryEnd = params.queryEnd;
+        // set the d3 scale to the query range
+        this.setXScale();
+    }
+
+    protected inRender() {
         // TODO: maybe we want to support vertical axes as well?
         // render the axis based off of the x scale
         // if there is a ZoomController registered, it will use the controllers' x scale
@@ -119,5 +116,9 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
         this._axisSelection = this.svgSelection
             .attr('class', 'x-axis')
             .call(this.axis);
+    }
+
+    protected postRender() {
+        // this doesn't currently need to do anything post render
     }
 }

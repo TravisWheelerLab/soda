@@ -2,5 +2,5 @@
 export interface TrackChartRenderParams {
     queryStart: number;
     queryEnd:   number;
-    maxY?:       number;
+    maxY?:      number;
 }

@@ -1,4 +1,4 @@
-import {Chart} from "../../charts/chart";
+import { Chart } from "../../charts/chart";
 
 export interface ResizableChart<T> extends Chart<T> {
     // all we require for a resizable chart is that it provides

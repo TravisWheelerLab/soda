@@ -4,6 +4,8 @@ import { ChartConfig } from './chart-config';
 import { Plugin } from '../plugins/plugin';
 
 export abstract class ChartBase<T> implements Chart<T> {
+    // the last used rendering parameters
+    _renderParams?:        T;
     // width of our svg viewport
     width:          number;
     // height of our svg viewport
@@ -130,5 +132,27 @@ export abstract class ChartBase<T> implements Chart<T> {
         }
     }
 
-    abstract render(params: T): void;
+    public getRenderParams(): T {
+        if (this._renderParams == undefined) {
+            throw(`Render params not defined on ${this}`);
+        }
+        return (this._renderParams);
+    }
+
+    // this should be responsible for anything that needs to be done before the render
+    protected abstract preRender(params: T): void
+
+    // this should be responsible for using soda to actually render primitives
+    protected abstract inRender(params: T): void
+
+    // this should be responsible for anything that needs to be done after the render
+    protected abstract postRender(params: T): void
+
+    public render(params: T): void {
+        this._renderParams = params;
+        this.preRender(params);
+        this.inRender(params);
+        this.postRender(params);
+    }
+
 }

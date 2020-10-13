@@ -8,12 +8,10 @@ export class ZoomController {
     transform: Transform;
     // a list of zoomable components that we are controlling
     components: ZoomableChart<any>[];
-    // the current component off of which zoom events are calculated
-
-    // TODO: consider having multiple sets of ranges and scales, one for each chart
-    //       this could be useful in the case where components have distinct sizes/queries
 
     // the actual width of the components we are controlling
+    // I think we should always assume that one zoom controller
+    // always handles components of equal dimensions
     _width?:      number;
     _queryStart?: number;
     _queryEnd?:   number;
@@ -28,21 +26,21 @@ export class ZoomController {
         this.components = [];
     }
 
-    getWidth(): number {
+    public getWidth(): number {
         if (this._width == undefined) {
             throw('_width is undefined on ZoomController');
         } 
         return (this._width);
     }
 
-    getQueryStart(): number {
+    public getQueryStart(): number {
         if (this._queryStart == undefined) {
             throw('_queryStart is undefined on ZoomController');
         } 
         return (this._queryStart);
     }
 
-    getQueryEnd(): number {
+    public getQueryEnd(): number {
         if (this._queryEnd == undefined) {
             throw('_queryEnd is undefined on ZoomController');
         } 
@@ -125,15 +123,61 @@ export class ZoomController {
         }
     }
 
+    public checkForWidthChange(): boolean {
+        // check if any of the components have a different width than their container
+        for (const comp of this.components) {
+            if (comp.width !== this.getWidth()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected checkComponentWidthEquality(): boolean {
+        let equal = true;
+        const firstWidth = this.components[0].width;
+        for (const comp of this.components.slice(1)) {
+            if (firstWidth !== comp.width) {
+                console.error(`Width mismatch on component ${comp} in ZoomController`);
+                equal = false;
+            }
+        }
+        return (equal);
+    }
+
+    public handleResize() {
+        // this should be called to deal with components changing in dimensions
+        // first get the view range from before the resize
+        const view = this.getSemanticViewRange();
+        // resize the controller to match the new browser size
+        this.setToComponentWidth();
+        // reset the controller's x scale to match the new browser size
+        this.setXScale();
+        // now zoom everything so that we visualize the original
+        // semantic view range within the new browser size
+        this.zoomToRange(view.start, view.end);
+    }
+
+    protected checkForTransformDifference(transform: Transform): boolean {
+        return this.transform.k !== transform.k || this.transform.x !== transform.x || this.transform.y !== transform.y;
+
+    }
+
     public trigger(callerTransform: Transform): void {
-        // set the zoom controllers internal transform to that of the caller
-        this.transform = cloneDeep(callerTransform);
-        // rescale our scales
-        this.updateZoomedScale();
-        // sync the internal transforms across all components
-        this.updateCompTransforms();
-        // finally, render everything in its zoomed form
-        this.zoomedRender();
+        if (this.checkForWidthChange()) {
+            this.handleResize();
+            this.checkComponentWidthEquality();
+        }
+        if (this.checkForTransformDifference(callerTransform)) {
+            // set the zoom controllers internal transform to that of the caller
+            this.transform = cloneDeep(callerTransform);
+            // rescale our scales
+            this.updateZoomedScale();
+            // sync the internal transforms across all components
+            this.updateCompTransforms();
+            // finally, render everything in its zoomed form
+            this.zoomedRender();
+        }
     }
 
     public updateZoomedScale(): void {
@@ -168,7 +212,7 @@ export class ZoomController {
         }
     }
     
-    public addComponent(component: ZoomableChart<any>): void {
+    public addComponent<T>(component: ZoomableChart<T>): void {
         // if the width wasn't set in the config, grab the width of a component
         if (this._width == undefined) {
             this._width = component.width;
@@ -184,5 +228,11 @@ export class ZoomController {
         //       In our case though, we're directly messing with the internal Transform, so we need to
         //       explicitly make a new Transform immediately.
         component.svgSelection.node().__zoom = cloneDeep(component.svgSelection.node().__zoom);
+    }
+
+    public addComponents(components: ZoomableChart<any>[]): void {
+        for (const comp of components) {
+            this.addComponent(comp);
+        }
     }
 }
