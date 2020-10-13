@@ -1,6 +1,6 @@
 {
   "name": "@traviswheelerlab/soda",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A sequence alignment visualization tool / library.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
