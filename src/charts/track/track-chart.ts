@@ -14,7 +14,7 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
     // object that controls how svg elements render as we zoom
     zoomController?: ZoomController;
     // a list of objects that define behaviors for different svg elements
-    zoomBehaviors:  ZoomBehavior<any>[] = [];
+    zoomBehaviors:  ZoomBehavior<TrackChart<T>, any>[] = [];
     scaleExtent: [number, number];
     translateExtent: (chart: TrackChart<any>) => [[number, number], [number, number]];
 
@@ -83,7 +83,7 @@ export class TrackChart<T extends TrackChartRenderParams> extends ChartBase<T> i
             .range([0, this.width]);
     }    
 
-    public getZoomBehaviors(): ZoomBehavior<d3.Selection<d3.BaseType, unknown, HTMLElement, any>>[] {
+    public getZoomBehaviors(): ZoomBehavior<TrackChart<T>, d3.Selection<d3.BaseType, unknown, HTMLElement, any>>[] {
         if (this.zoomBehaviors == null) {
             throw ("zoomBehaviors are null or undefined");
         }

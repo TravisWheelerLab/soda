@@ -1,12 +1,11 @@
+import {Chart} from "./charts/chart";
 export * from './primitives/rectangle';
 export * from './primitives/line';
-export * from './primitives/horizontal-line';
-export * from './primitives/vertical-line';
 export * from './primitives/text';
 
 import { ZoomableChart, ZoomBehavior } from "./plugins/zoom";
 
-export function registerZoomBehavior(chart: ZoomableChart<any>, behavior: ZoomBehavior<any>): void {
+export function registerZoomBehavior(chart: ZoomableChart<any>, behavior: ZoomBehavior<Chart<any>, any>): void {
     // if we don't have any zoom behaviors, we'll need to initialize this
     // TODO: think of a safer way to handle this
     if (chart.zoomBehaviors == undefined) {

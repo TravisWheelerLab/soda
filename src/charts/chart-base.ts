@@ -4,14 +4,14 @@ import { ChartConfig } from './chart-config';
 import { Plugin } from '../plugins/plugin';
 
 export abstract class ChartBase<T> implements Chart<T> {
+    // the dom element that we will insert the chart svg into
+    selector:       string;
     // the last used rendering parameters
     _renderParams?:        T;
     // width of our svg viewport
     width:          number;
     // height of our svg viewport
     height:         number;
-    // the dom element that we will insert the chart svg into
-    selector:       string;
     // d3 selection of the chart svg
     svgSelection:   d3.Selection<any, any, any, any>;
     // maps from query range to pixels

@@ -207,7 +207,7 @@ export class ZoomController {
                 // ** we want to make this selection out here, so that we could possibly
                 // ** apply a secondary selector to distinguish between charts
                 const selection = d3.selectAll(behavior.selector);
-                behavior.apply(this, selection);
+                behavior.apply(comp, selection);
             }
         }
     }
