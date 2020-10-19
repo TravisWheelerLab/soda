@@ -2,6 +2,7 @@ import {Chart} from "./charts/chart";
 export * from './primitives/rectangle';
 export * from './primitives/line';
 export * from './primitives/text';
+export * from './primitives/chevron-rectangle';
 
 import { ZoomableChart, ZoomBehavior } from "./plugins/zoom";
 
@@ -13,11 +14,11 @@ export function registerZoomBehavior(chart: ZoomableChart<any>, behavior: ZoomBe
     }
 
     for (const b of chart.zoomBehaviors) {
-        if (behavior.selector == b.selector) {
-            // if this chart already has a zoomBehavior 
-            // registered to this selector, we'll just return
-            return;
-        }
+        // if (behavior.selector == b.selector) {
+        //     // if this chart already has a zoomBehavior
+        //     // registered to this selector, we'll just return
+        //     return;
+        // }
     }
     chart.zoomBehaviors.push(behavior);
 }

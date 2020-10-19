@@ -3,7 +3,7 @@ import {Chart} from "../../charts/chart";
 import {OrientedAnnotation} from "../../annotations/oriented-annotation";
 import {mapIdToSelection} from "../../plugins/id-map";
 import {isZoomableChart} from "../../plugins/zoom/zoomable-chart";
-import {registerZoomBehavior} from "../../primitives";
+import {rectangle, registerZoomBehavior} from "../../primitives";
 import * as defaults from "./chevron-rectangle-defaults";
 import {ChevronRectangleConfig} from "./chevron-rectangle-config";
 
@@ -27,10 +27,11 @@ export function chevronRectangle<A extends OrientedAnnotation, C extends Chart<a
     const patternMerge = patternEnter.merge(patternSelection);
 
     const h: (a: A, c: C) => number = conf.h || defaults.rectHFn;
+    const fillColor = conf.fillColor || (() => 'black');
 
     // for every oriented annotation, we create a pattern
     patternEnter
-        .attr('class', 'orientation')
+        .attr('class', conf.selector)
         .attr('id', (a) => `chevron-rect-bg-${a.id}`)
         .attr('patternUnits', 'userSpaceOnUse')
         .attr('viewBox', (a) => defaults.chevronPatternViewBoxFn(a, h(a, chart)))
@@ -48,7 +49,7 @@ export function chevronRectangle<A extends OrientedAnnotation, C extends Chart<a
         .attr('height', (a) => h(a, chart))
         // .attr('height', 100)
         // .attr('width', 100)
-        .attr('fill', (a) => conf.fillColor(a, chart));
+        .attr('fill', (a) => fillColor(a, chart));
 
     // in every pattern, draw the chevrons to indicate the orientation
     patternEnter
@@ -66,4 +67,22 @@ export function chevronRectangle<A extends OrientedAnnotation, C extends Chart<a
 
     patternSelection.exit()
         .remove();
+
+    const rectSelection = rectangle(chart, ann, conf);
+
+    rectSelection
+        .style('fill', (a ) => {
+            if (chart.getSemanticViewRange().width < Infinity) {
+                return (`url(#chevron-rect-bg-${a.id})`);
+            }
+            else {
+                return fillColor(a, chart);
+            }
+        });
+
+    if (isZoomableChart(chart)) {
+        // if the chart is zoomable, register the ZoomBehavior for the rectangles
+        registerZoomBehavior(chart, conf.zoom || new defaults.PatternZoomBehavior(conf.selector));
+        registerZoomBehavior(chart, conf.zoom || new defaults.PatternSwitchZoomBehavior(conf.selector, fillColor));
+    }
 }
