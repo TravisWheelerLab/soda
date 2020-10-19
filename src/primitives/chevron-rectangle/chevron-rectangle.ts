@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import {Chart} from "../../charts/chart";
 import {OrientedAnnotation} from "../../annotations/oriented-annotation";
-import {mapIdToSelection} from "../../plugins/id-map";
 import {isZoomableChart} from "../../plugins/zoom/zoomable-chart";
 import {rectangle, registerZoomBehavior} from "../../primitives";
 import * as defaults from "./chevron-rectangle-defaults";
@@ -47,8 +46,6 @@ export function chevronRectangle<A extends OrientedAnnotation, C extends Chart<a
         .attr('y', 0)
         .attr('width', (a) => h(a, chart)/2)
         .attr('height', (a) => h(a, chart))
-        // .attr('height', 100)
-        // .attr('width', 100)
         .attr('fill', (a) => fillColor(a, chart));
 
     // in every pattern, draw the chevrons to indicate the orientation
