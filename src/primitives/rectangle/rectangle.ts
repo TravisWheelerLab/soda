@@ -7,7 +7,7 @@ import {registerZoomBehavior} from "../../primitives";
 import * as defaults from "./rectangle-defaults";
 import {RectangleConfig} from "./rectangle-config";
 
-export function rectangle<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: RectangleConfig<A, C>): void {
+export function rectangle<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: RectangleConfig<A, C>): d3.Selection<SVGRectElement, A, HTMLElement, any> {
     // the function that takes Annotation data and draws rectangles in the DOM
 
     // bind the data to rectangles
@@ -59,4 +59,6 @@ export function rectangle<A extends Annotation, C extends Chart<any>>(chart: C, 
         // if the chart is zoomable, register the ZoomBehavior for the rectangles
         registerZoomBehavior(chart, conf.zoom || new defaults.RectZoomBehavior(conf.selector, x, w));
     }
+
+    return merge;
 }
