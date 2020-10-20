@@ -3,6 +3,7 @@ export * from './primitives/rectangle';
 export * from './primitives/line';
 export * from './primitives/text';
 export * from './primitives/chevron-rectangle';
+export * from './primitives/chevron-line';
 
 import { ZoomableChart, ZoomBehavior } from "./plugins/zoom";
 
