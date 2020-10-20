@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import {Chart} from "../../charts/chart";
-import {OrientedAnnotation} from "../../annotations/oriented-annotation";
-import {isZoomableChart} from "../../plugins/zoom/zoomable-chart";
-import {rectangle, registerZoomBehavior} from "../../primitives";
+import {Chart} from "../../../charts/chart";
+import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {isZoomableChart} from "../../../plugins/zoom/zoomable-chart";
+import {rectangle, registerZoomBehavior} from "../../../primitives";
 import * as defaults from "./chevron-rectangle-defaults";
 import {ChevronRectangleConfig} from "./chevron-rectangle-config";
 

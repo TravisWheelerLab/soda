@@ -1,2 +1,2 @@
-export * from "./chevron-line/chevron-line";
-export * from "./chevron-line/chevron-line-config";
+export * from "./chevron/chevron-line/chevron-line";
+export * from "./chevron/chevron-line/chevron-line-config";

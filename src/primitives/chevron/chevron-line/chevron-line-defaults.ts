@@ -1,9 +1,9 @@
-import {ZoomBehavior} from "../../plugins/zoom/zoom-behavior";
+import {ZoomBehavior} from "../../../plugins/zoom/zoom-behavior";
 
-export {rectHFn} from "../rectangle/rectangle-defaults";
-import {OrientedAnnotation} from "../../annotations/oriented-annotation";
-import {Annotation} from "../../annotations/annotation";
-import {Chart} from "../../charts/chart";
+export {rectHFn} from "../../rectangle/rectangle-defaults";
+import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {Annotation} from "../../../annotations/annotation";
+import {Chart} from "../../../charts/chart";
 import * as d3 from "d3";
 
 export const chevronPathDfn = <A extends OrientedAnnotation>(a: A, h: number) => {

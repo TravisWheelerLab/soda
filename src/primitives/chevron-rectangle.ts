@@ -1,2 +1,2 @@
-export * from './chevron-rectangle/chevron-rectangle';
-export * from './chevron-rectangle/chevron-rectangle-config';
+export * from './chevron/chevron-rectangle/chevron-rectangle';
+export * from './chevron/chevron-rectangle/chevron-rectangle-config';
