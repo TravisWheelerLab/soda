@@ -17,5 +17,5 @@ export interface RectangleConfig<A extends Annotation, C extends Chart<any>> {
     strokeColor?:   (a: A, c: C) => string;
     fillColor?:     (a: A, c: C) => string;
     // the user can optionally provide a custom ZoomBehavior for the primitive
-    zoom?: ZoomBehavior<C, d3.Selection<SVGRectElement, A, HTMLElement, any>>;
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }

@@ -18,7 +18,7 @@ export interface LineConfig<A extends Annotation, C extends Chart<any>> {
     // controls dashed/dotted line parameters
     strokeDashArray?: (a: A, c: C) => string;
     // the user can optionally provide a custom ZoomBehavior for the line
-    zoom?: ZoomBehavior<C, d3.Selection<SVGLineElement, A, HTMLElement, any>>;
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
 
 export interface VerticalLineConfig<A extends Annotation, C extends Chart<any>> {
@@ -35,7 +35,7 @@ export interface VerticalLineConfig<A extends Annotation, C extends Chart<any>> 
     // controls dashed/dotted line parameters
     strokeDashArray?: (a: A, c: C) => string;
     // the user can optionally provide a custom ZoomBehavior for the line
-    zoom?: ZoomBehavior<C, d3.Selection<SVGLineElement, A, HTMLElement, any>>;
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
 
 export interface HorizontalLineConfig<A extends Annotation, C extends Chart<any>> {
@@ -52,5 +52,5 @@ export interface HorizontalLineConfig<A extends Annotation, C extends Chart<any>
     // controls dashed/dotted line parameters
     strokeDashArray?: (a: A, c: C) => string;
     // the user can optionally provide a custom ZoomBehavior for the line
-    zoom?: ZoomBehavior<C, d3.Selection<SVGLineElement, A, HTMLElement, any>>;
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
