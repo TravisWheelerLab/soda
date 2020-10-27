@@ -12,7 +12,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
     _axisSelection?: d3.Selection<any, any, any, any>;
     // these objects define how to re-render the different parts of a chart
     // in this case, we won't actually need any ZoomBehaviors
-    zoomBehaviors?: ZoomBehavior<any>[];
+    zoomBehaviors?: ZoomBehavior<AxisChart, any>[];
     zoomController?: ZoomController;
     _queryStart?: number;
     _queryEnd?: number;
@@ -85,7 +85,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
         this.zoomController = controller;
     }
 
-    public getZoomBehaviors(): ZoomBehavior<any>[]{
+    public getZoomBehaviors(): ZoomBehavior<AxisChart, any>[]{
         // TODO: restructure this to have a zoom trigger method
         // i'm just calling these here for now
         this.axis.scale(this.getXScale()); 

@@ -6,5 +6,5 @@ export interface TooltipConfig<A extends Annotation> {
     ann: A;
     // a function that must be provided to extract the
     // desired text from the Annotation
-    textFromAnn: (a: A) => string;
+    text: (a: A) => string;
 }

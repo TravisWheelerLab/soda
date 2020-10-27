@@ -36,20 +36,20 @@ export function tooltip<A extends Annotation>(chart: ChartBase<any>, config: Too
 
     const hoverConf: HoverConfig<A> = {
         ann: config.ann,
-        mouseover: (s, a: A) => { defaultTooltipMouseover(a, config.textFromAnn)},
+        mouseover: (s, a: A) => { defaultTooltipMouseover(a, config.text)},
         mouseout: (s, a: A) => { defaultTooltipMouseout() },
     };
     addHoverBehavior(hoverConf);
 }
 
-export function defaultTooltipMouseover<A extends Annotation>(a: A, textFromAnn: (a: A) => string): void {
+export function defaultTooltipMouseover<A extends Annotation>(a: A, text: (a: A) => string): void {
     // this uses the provided function parameter to extract text
     // from the bound Annotation data and draw it in the tooltip
     tooltipSelection.transition()
         .duration(200)
         .style('opacity', .9);
 
-    tooltipSelection.html(textFromAnn(a))
+    tooltipSelection.html(text(a))
         .style("left", (d3.event.pageX ) + "px")
         .style("top", (d3.event.pageY + 20) + "px");
 }
