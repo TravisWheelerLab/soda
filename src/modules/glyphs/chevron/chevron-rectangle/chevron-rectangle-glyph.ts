@@ -8,14 +8,14 @@ import {Orientation} from "../chevron-config";
 import {createChevronPatterns, ChevronPatternType, chevronPatternId} from "../chevron-patterns";
 import {rectangleGlyph} from "../../rectangle/rectangle-glyph";
 
-export function forwardChevronRectangle<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronRectangleConfig<A, C>) {
+export function forwardChevronRectangleGlyph<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronRectangleConfig<A, C>) {
     chevronRectangleGlyph(chart, ann, conf, Orientation.Forward);
     if (isZoomableChart(chart)) {
         registerZoomBehavior(chart, conf.zoom || new defaults.ForwardChevronZoomBehavior(conf.selector));
     }
 }
 
-export function reverseChevronRectangle<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronRectangleConfig<A, C>) {
+export function reverseChevronRectangleGlyph<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronRectangleConfig<A, C>) {
     chevronRectangleGlyph(chart, ann, conf, Orientation.Reverse);
     if (isZoomableChart(chart)) {
         registerZoomBehavior(chart, conf.zoom || new defaults.ReverseChevronZoomBehavior(conf.selector));
