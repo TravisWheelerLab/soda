@@ -7,7 +7,7 @@ export abstract class ChartBase<T> implements Chart<T> {
     // the dom element that we will insert the chart svg into
     selector:       string;
     // the last used rendering parameters
-    _renderParams?:        T;
+    _renderParams:  T | undefined;
     // width of our svg viewport
     width:          number;
     // height of our svg viewport

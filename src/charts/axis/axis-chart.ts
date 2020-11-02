@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 import { AxisRenderParams } from "./axis-render-params";
 import { ChartBase } from '../chart-base'
 import { ChartConfig } from '../chart-config'
-import { ZoomController, ZoomableChart, ZoomBehavior } from '../../plugins/zoom';
-import { ResizableChart } from '../../plugins/resize';
+import { ZoomController, ZoomableChart, ZoomBehavior } from '../../modules/zoom';
+import { ResizableChart } from '../../modules/resize';
 
 // a generic chart to display a dynamic horizontal axis
 export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableChart<AxisRenderParams>, ResizableChart<AxisRenderParams> {

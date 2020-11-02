@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { ChartBase, ChartConfig } from "../../charts";
-import { ZoomableChart, ZoomBehavior, ZoomController } from "../../plugins/zoom";
-import { ResizableChart } from "../../plugins/resize";
+import { ZoomableChart, ZoomBehavior, ZoomController } from "../../modules/zoom";
+import { ResizableChart } from "../../modules/resize";
 import { TrackChartConfig } from "./track-chart-config";
 import { TrackChartRenderParams } from "./track-chart-render-params";
 
