@@ -61,13 +61,13 @@ export interface LineConfig<A extends Annotation, C extends Chart<any>> extends 
      */
     x2: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic y1 coordinate of the line glyph.
+     * A callback to define the y1 coordinate of the line glyph.
      * @param a
      * @param c
      */
     y1: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic y2 coordinate of the line glyph.
+     * A callback to define the y2 coordinate of the line glyph.
      * @param a
      * @param c
      */
@@ -85,13 +85,13 @@ export interface VerticalLineConfig<A extends Annotation, C extends Chart<any>> 
      */
     x?: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic y1 coordinate of the vertical line glyph.
+     * A callback to define the y1 coordinate of the vertical line glyph.
      * @param a
      * @param c
      */
     y1?: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic y2 coordinate of the vertical line glyph.
+     * A callback to define the y2 coordinate of the vertical line glyph.
      * @param a
      * @param c
      */
@@ -115,7 +115,7 @@ export interface HorizontalLineConfig<A extends Annotation, C extends Chart<any>
      */
     x2?: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic y coordinate of the horizontal line glyph.
+     * A callback to define the y coordinate of the horizontal line glyph.
      * @param a
      * @param c
      */

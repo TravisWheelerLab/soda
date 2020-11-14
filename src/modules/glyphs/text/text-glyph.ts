@@ -4,8 +4,9 @@ import {TextAnnotation} from "../../../annotations/text-annotation";
 import {mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import * as defaults from "./text-defaults";
-import {TextConfig} from "./text-config";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
+import {ZoomBehavior} from "../../zoom/zoom-behavior";
+import {GlyphConfig} from "../glyph-config";
 
 // a module that provides an abstracted interface for drawing text in a chart
 
@@ -25,6 +26,46 @@ function getTextSize(text: string): number {
     return (width);
 }
 
+export interface TextConfig<A extends TextAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+    /**
+     * The number of pixels to pad the text width.
+     */
+    textPad?: number;
+    /**
+     * A callback to define the semantic x coordinate of the text glyph.
+     * @param a
+     * @param c
+     */
+    x?: (a: A, c: C) => number;
+    /**
+     * A callback to define the y coordinate of the text glyph.
+     * @param a
+     * @param c
+     */
+    y?: (a: A, c: C) => number;
+    /**
+     * A callback to extract a list of text to display from the represented Annotation object. It is a list of text
+     * because TextGlyphs can display varying length text depending on how much room is available in the
+     * target Chart's SVG viewport.
+     * @param a
+     * @param c
+     */
+    text: (a: A, c: C) => string[];
+    /**
+     * A custom defined zoom behavior for all of the glyphs rendered with this config. This is intended to be used by
+     * experienced users only.
+     */
+    zoom?: ZoomBehavior<C, d3.Selection<SVGTextElement, A, HTMLElement, any>>;
+}
+
+
+/**
+ * This renders a list of Annotation objects in a target chart as text glyphs. These are most likely to be used as
+ * labels that will be affixed next to another glyph.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function textGlyph<A extends TextAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: TextConfig<A, C>): void {
     // the function that takes TextAnnotation data and draws text in the dom
 

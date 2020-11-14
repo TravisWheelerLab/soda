@@ -6,8 +6,7 @@ import * as defaults from "./chevron-defaults";
 import {chevronPatternId, ChevronPatternType, createChevronPatterns} from "./chevron-patterns";
 import {ChevronPrimitiveConfig, Orientation} from "./chevron-config";
 import {horizontalLine, HorizontalLineConfig} from "../line/line-glyph";
-import {RectangleConfig} from "../rectangle/rectangle-config";
-import {rectangleGlyph} from "../rectangle/rectangle-glyph";
+import {RectangleConfig, rectangleGlyph} from "../rectangle/rectangle-glyph";
 
 /**
  * An interface that holds the parameters for rendering and configuring a chevron line glyph.

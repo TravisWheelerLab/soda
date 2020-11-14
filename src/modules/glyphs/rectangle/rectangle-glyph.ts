@@ -4,9 +4,75 @@ import {Annotation} from "../../../annotations/annotation";
 import {mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import * as defaults from "./rectangle-defaults";
-import {RectangleConfig} from "./rectangle-config";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
+import {ZoomBehavior} from "../../zoom/zoom-behavior";
+import {GlyphConfig} from "../glyph-config";
 
+/**
+ * An interface that holds the parameters for rendering rectangle glyphs.
+ */
+export interface RectangleConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+    /**
+     * A callback to define the y coordinate of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    y?: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic x coordinate of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    x?: (a: A, c: C) => number;
+    /**
+     * A callback to define the width of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    w?: (a: A, c: C) => number;
+    /**
+     * A callback to define the height of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    h?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke width of the border around the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    strokeWidth?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke width of the border around the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    strokeOpacity?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke color of the border around the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    strokeColor?: (a: A, c: C) => string;
+    /**
+     * A callback to define the fill color of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    fillColor?: (a: A, c: C) => string;
+    /**
+     * A custom defined zoom behavior for all of the glyphs rendered with this config. This is intended to be used by
+     * experienced users only.
+     */
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
+}
+
+/**
+ * This renders a list of Annotation objects in a target chart as rectangles.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function rectangleGlyph<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: RectangleConfig<A, C>): d3.Selection<SVGRectElement, A, HTMLElement, any> {
     // the function that takes Annotation data and draws rectangles in the DOM
 

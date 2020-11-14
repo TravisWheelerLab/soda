@@ -5,8 +5,7 @@ import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./chevron-defaults";
 import {ChevronPrimitiveConfig, Orientation} from "./chevron-config";
 import {chevronPatternId, ChevronPatternType, createChevronPatterns} from "./chevron-patterns";
-import {rectangleGlyph} from "../rectangle/rectangle-glyph";
-import {RectangleConfig} from "../rectangle/rectangle-config";
+import {RectangleConfig, rectangleGlyph} from "../rectangle/rectangle-glyph";
 
 /**
  * An interface that holds the parameters for rendering and configuring a chevron rectangle glyph.
