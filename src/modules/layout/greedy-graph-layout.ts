@@ -14,12 +14,12 @@ const DEFAULT_VERTEX_SORT = (verts: string[], graph: AnnotationGraph) => {
 
 export function greedyGraphLayout(ann: Annotation[],
                                   tolerance: number = 0,
-                                  vertSortFunction: {(verts: string[], graph: AnnotationGraph): void} | undefined = undefined) {
+                                  vertSortFunction: {(verts: string[], graph: AnnotationGraph): void}  = DEFAULT_VERTEX_SORT) {
 
    let graph: AnnotationGraph = new AnnotationGraph(ann, tolerance);
-   if (vertSortFunction == undefined) {
-       vertSortFunction = DEFAULT_VERTEX_SORT;
-   }
+   // if (vertSortFunction == undefined) {
+   //     vertSortFunction = DEFAULT_VERTEX_SORT;
+   // }
    let nextColor = 0;
    while (graph.degrees.size > 0) {
       // we use this map to determine whether or not we

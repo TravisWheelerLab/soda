@@ -1,15 +1,27 @@
-import {Chart} from "../../../../charts/chart";
-import {OrientedAnnotation} from "../../../../annotations/oriented-annotation";
-import {isZoomableChart} from "../../../zoom/zoomable-chart";
-import {registerZoomBehavior} from "../../../zoom/zoom-utilities";
-import * as defaults from "../chevron-defaults";
-import {ChevronLineConfig} from "./chevron-line-config";
-import {chevronPatternId, ChevronPatternType, createChevronPatterns} from "../chevron-patterns";
-import {Orientation} from "../chevron-config";
-import {horizontalLine} from "../../line/line-glyph";
-import {RectangleConfig} from "../../rectangle/rectangle-config";
-import {rectangleGlyph} from "../../rectangle/rectangle-glyph";
+import {Chart} from "../../../charts/chart";
+import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {isZoomableChart} from "../../zoom/zoomable-chart";
+import {registerZoomBehavior} from "../../zoom/zoom-utilities";
+import * as defaults from "./chevron-defaults";
+import {chevronPatternId, ChevronPatternType, createChevronPatterns} from "./chevron-patterns";
+import {ChevronPrimitiveConfig, Orientation} from "./chevron-config";
+import {horizontalLine, HorizontalLineConfig} from "../line/line-glyph";
+import {RectangleConfig} from "../rectangle/rectangle-config";
+import {rectangleGlyph} from "../rectangle/rectangle-glyph";
 
+/**
+ * An interface that holds the parameters for rendering and configuring a chevron line glyph.
+ */
+export interface ChevronLineConfig<A extends OrientedAnnotation, C extends Chart<any>> extends ChevronPrimitiveConfig<A, C>, HorizontalLineConfig<A, C> {
+    h?: (a: A, c: C) => number;
+}
+
+/**
+ * This renders a list of Annotation objects in a target chart as forward facing chevron lines.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function forwardChevronLine<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronLineConfig<A, C>) {
     chevronLineGlyph(chart, ann, conf, Orientation.Forward);
     if (isZoomableChart(chart)) {
@@ -17,6 +29,12 @@ export function forwardChevronLine<A extends OrientedAnnotation, C extends Chart
     }
 }
 
+/**
+ * This renders a list of Annotation objects in a target chart as reverse facing chevron lines.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function reverseChevronLine<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: ChevronLineConfig<A, C>) {
     chevronLineGlyph(chart, ann, conf, Orientation.Reverse);
     if (isZoomableChart(chart)) {

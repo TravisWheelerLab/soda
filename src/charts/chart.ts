@@ -1,30 +1,74 @@
 import * as d3 from 'd3'
 
+/**
+ * An interface to describe the bare minimum properties and methods that a SODA Chart should have.
+ */
 export interface Chart<T> {
-    // the dom element that we will insert the chart svg into
+    /**
+     * A string that can be used to uniquely select the target DOM container via d3.select().
+     */
     selector:       string;
-    // the vertical size of the chart in pixels
+    /**
+     * The height in pixels of the Chart's SVG viewport.
+     */
     height: number;
-    // the horizontal size of the chart in pixels
+    /**
+     * The width in pixels of the Chart's SVG viewport.
+     */
     width: number;
-    // maps from query range to pixels
+    /**
+     * A d3 scale that the Chart will use to translate between semantic and SVG viewport coordinates.
+     */
     _xScale?:       d3.ScaleLinear<number, number>;
-    // the height of a row/bin in the chart
+    /**
+     * The height in pixels of a horizontal bin in the visualization. Generally, the y coordinate of an Annotation
+     * glyph will be given in terms of which bin it should be rendered in. This defaults to a value of 10.
+     */
     binHeight:      number;
-
-    // these functions should provide the size in pixels
-    // of whatever dom element is containing the chart
+    /**
+     * This method should return the width of the Chart's DOM container.
+     */
     getContainerWidth(): number;
+    /**
+     * This method should return the height of the Chart's DOM container.
+     */
     getContainerHeight(): number;
-    // get a reference to whatever scale the chart is using
+    /**
+     * This method should return a reference to whatever d3 scale the chart is using for coordinate translation.
+     * This may be a scale internal to the Chart, or it may be a ZoomController's scale.
+     */
     getXScale(): d3.ScaleLinear<number, number>;
-    // get the semantic dimensions of the view
+    /**
+     * This method should return the semantic dimensions of what is currently displayed in the Chart's SVG viewport.
+     */
     getSemanticViewRange(): {start: number, end: number, width: number};
 
-    // The SVG element(s) into which the chart
-    // is to be rendered, as a D3 `Selection`.
-    // TODO: narrow this typing
+    /**
+     * A d3 selection of the Chart's SVG viewport.
+     */
     svgSelection: d3.Selection<any, any, any, any>;
 
+    /**
+     * This method should be responsible for rendering glyphs inside of the Chart.
+     * @param params
+     */
     render(params: T): void;
+}
+
+/**
+ * A simple interface that defines the common parameters that should be used to configure any Chart.
+ */
+export interface ChartConfig {
+    selector: string;
+    binHeight?: number;
+    height?: number;
+    width?: number;
+}
+
+/**
+ * A simple interface that defines the common parameters that should be used to render glyphs in any chart.
+ */
+export interface ChartRenderParams {
+    queryStart: number;
+    queryEnd: number;
 }

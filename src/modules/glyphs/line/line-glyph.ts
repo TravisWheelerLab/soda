@@ -5,12 +5,129 @@ import {mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./line-defaults";
-import {LineConfig, VerticalLineConfig, HorizontalLineConfig} from "./line-config";
+import {ZoomBehavior} from "../../zoom/zoom-behavior";
+import {GlyphConfig} from "../glyph-config";
 
-// a module that provides an abstracted interface for drawing generic lines in a chart
+/**
+ * An interface that holds the common parameters for rendering line glyphs.
+ */
+interface CommonLineConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+    /**
+     * A callback to define the stroke color of the line glyph.
+     * @param a
+     * @param c
+     */
+    strokeColor?: (a: A, c: C) => string;
+    /**
+     * A callback to define the stroke width of the line glyph.
+     * @param a
+     * @param c
+     */
+    strokeWidth?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke opacity of the line glyph.
+     * @param a
+     * @param c
+     */
+    strokeOpacity?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke dash array of the line glyph. Supplying this will allow lines to be
+     * dotted/dashed.
+     * @param a
+     * @param c
+     */
+    strokeDashArray?: (a: A, c: C) => string;
+    /**
+     * A custom defined zoom behavior for all of the glyphs rendered with this config. This is intended to be used by
+     * experienced users only.
+     */
+    zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
+}
 
-// a module that provides an abstracted interface for drawing generic lines in a chart
+/**
+ * An interface that holds the parameters for rendering generic line glyphs.
+ */
+export interface LineConfig<A extends Annotation, C extends Chart<any>> extends CommonLineConfig<A, C> {
+    /**
+     * A callback to define the semantic x1 coordinate of the line glyph.
+     * @param a
+     * @param c
+     */
+    x1: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic x2 coordinate of the line glyph.
+     * @param a
+     * @param c
+     */
+    x2: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic y1 coordinate of the line glyph.
+     * @param a
+     * @param c
+     */
+    y1: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic y2 coordinate of the line glyph.
+     * @param a
+     * @param c
+     */
+    y2: (a: A, c: C) => number;
+}
 
+/**
+ * An interface that holds the parameters for rendering vertical line glyphs.
+ */
+export interface VerticalLineConfig<A extends Annotation, C extends Chart<any>> extends CommonLineConfig<A, C> {
+    /**
+     * A callback to define the semantic x coordinate of the vertical line glyph.
+     * @param a
+     * @param c
+     */
+    x?: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic y1 coordinate of the vertical line glyph.
+     * @param a
+     * @param c
+     */
+    y1?: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic y2 coordinate of the vertical line glyph.
+     * @param a
+     * @param c
+     */
+    y2?: (a: A, c: C) => number;
+}
+
+/**
+ * An interface that holds the parameters for rendering horizontal line glyphs.
+ */
+export interface HorizontalLineConfig<A extends Annotation, C extends Chart<any>> extends CommonLineConfig<A, C> {
+    /**
+     * A callback to define the semantic x1 coordinate of the horizontal line glyph.
+     * @param a
+     * @param c
+     */
+    x1?: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic x2 coordinate of the horizontal line glyph.
+     * @param a
+     * @param c
+     */
+    x2?: (a: A, c: C) => number;
+    /**
+     * A callback to define the semantic y coordinate of the horizontal line glyph.
+     * @param a
+     * @param c
+     */
+    y?: (a: A, c: C) => number;
+}
+
+/**
+ * This renders a list of Annotation objects in a target chart as vertical lines.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function verticalLine<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: VerticalLineConfig<A, C>): void {
     const lineConfig: LineConfig<A, C> = {
         selector: conf.selector,
@@ -27,6 +144,12 @@ export function verticalLine<A extends Annotation, C extends Chart<any>>(chart: 
     lineGlyph(chart, ann, lineConfig);
 }
 
+/**
+ * This renders a list of Annotation objects in a target chart as horizontal lines.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function horizontalLine<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: HorizontalLineConfig<A, C>): void {
     const lineConfig: LineConfig<A, C> = {
         selector: conf.selector,
@@ -43,7 +166,12 @@ export function horizontalLine<A extends Annotation, C extends Chart<any>>(chart
     lineGlyph(chart, ann, lineConfig);
 }
 
-
+/**
+ * This renders a list of Annotation objects in a target chart as lines.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function lineGlyph<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: LineConfig<A, C>): void {
     // bind the provided data to new svg lines
     const selection = chart.svgSelection

@@ -1,14 +1,28 @@
 import { Annotation } from "./annotation";
 
-// an interface to define an annotations that can be visually compacted in a chart
+/**
+ * An interface to define an Annotation that can be dynamically compacted and un-compacted in a visualization.
+ */
 export interface CompactAnnotation extends Annotation {
+    /**
+     * The flag that indicates whether the Annotation is currently compacted.
+     */
     compacted: boolean;
+    /**
+     * The adjusted semantic x-coordinate to use in rendering when the Annotation is compacted.
+     */
     compactX: number;
+    /**
+     * The adjusted semantic width to use in rendering when the Annotation is compacted.
+     */
     compactW: number;
 }
 
-// we define a custom type guard for this interface, since typescript doesn't
-// seem to support runtime type checking for interfaces
+/**
+ * A custom type guard function to check whether an arbitrary Annotation object is compactable. This may not
+ * currently be entirely robust, but it should be fine to use with reasonable caution.
+ * @param a The Annotation object to type check.
+ */
 export function isCompactAnn(a: Annotation): a is CompactAnnotation {
     // TODO: we can probably make a stronger type guard
     return (<CompactAnnotation> a).compacted !== undefined;

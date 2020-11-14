@@ -2,7 +2,7 @@ import {Chart} from "../../charts/chart";
 
 // an interface for objects that define how to re-render
 // svg elements when a zoom event takes place
-export interface ZoomBehavior<C extends Chart<any>, S> {
+export interface ZoomBehavior<C extends Chart<any>, S extends d3.Selection<any, any, any, any>> {
     // this should be a unique selector to the svg elements
     // that we want to transform on a zoom event
     selector: string;

@@ -1,2 +1,2 @@
-export * from './chevron/chevron-line';
-export * from './chevron/chevron-rectangle';
+export * from './chevron/chevron-line-glyph';
+export * from './chevron/chevron-rectangle-glyph';

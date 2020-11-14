@@ -1,4 +1,13 @@
-import { AnnotationConfig } from './annotation-config'
+/**
+ * A simple interface that holds the arguments for an Annotation constructor.
+ */
+export interface AnnotationConfig {
+    id: string,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+}
 
 /**
  * Annotation objects are the main data structure used by SODA to store information about alignments. In many cases,
