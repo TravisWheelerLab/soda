@@ -1,12 +1,25 @@
 import { Annotation } from "../../annotations/annotation";
 
-function overlap(a: Annotation, b: Annotation, tolerance: number = 0) {
+function annotationsOverlap(a: Annotation, b: Annotation, tolerance: number = 0) {
     return (a.x + tolerance <= b.x + b.w + tolerance && a.x + a.w + tolerance >= b.x + tolerance);
 }
 
+/**
+ * This class represents Annotations as a graph, in which there is an edge between two Annotations if they
+ * horizontally overlap in semantic coordinate space.
+ */
 export class AnnotationGraph {
+    /**
+     * This maps from Annotation id's to Annotation objects
+     */
     idMap: Map<string, Annotation>;
+    /**
+     * This maps from Annotation id A to a list of Annotation id's that annotation id A shares an edge with.
+     */
     edges: Map<string, string[]>;
+    /**
+     * This maps from Annotation id A to the number of edges it shares with other Annotations.
+     */
     degrees: Map<string, number>;
 
     constructor(ann: Annotation[], tolerance: number = 0) {
@@ -24,7 +37,7 @@ export class AnnotationGraph {
                 if (a == b) {
                     continue;
                 }
-                if (overlap(a, b, tolerance)) {
+                if (annotationsOverlap(a, b, tolerance)) {
                     this.edges.set(a.id, this.edges.get(a.id)!.concat(b.id));
                     this.degrees.set(a.id, this.degrees.get(a.id + 1)!);
                 }

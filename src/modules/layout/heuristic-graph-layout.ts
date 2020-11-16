@@ -2,6 +2,15 @@ import { cloneDeep } from "lodash";
 import { Annotation } from "../../annotations/annotation";
 import { AnnotationGraph } from "./annotation-graph"
 
+
+/**
+ * This function takes a list of Annotation objects and uses a non-deterministic greedy graph coloring heuristic to
+ * assign each of them a y coordinate in terms of horizontal bins that will prevent any horizontal overlap when they are
+ * rendered in a Chart.
+ * @param ann
+ * @param tolerance
+ * @param vertSortFunction
+ */
 export function heuristicGraphLayout(ann: Annotation[], nIters: number = 100, tolerance: number = 0): number {
     // This function takes an array of Annotations, turns them into a graph in which
     // there is an edge between any Annotations that would overlap in the x-dimension.

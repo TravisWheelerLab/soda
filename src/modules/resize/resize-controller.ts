@@ -1,15 +1,22 @@
 import { ResizableChart } from "./resizable-chart";
 
-// an object to synchronize and propagate browser resize events across different charts
+/**
+ * This class can be used to synchronize and propagate browser resize events across different Charts.
+ */
 export class ResizeController {
-    // if we are using a zoom controller in the visualization, we are going to need to
-    // interact with it during a resize event
+    /**
+     * A list of Charts that the ResizeController will control.
+     */
     components: ResizableChart<any>[];
 
     constructor() {
         this.components = [];
     }
 
+    /**
+     * This method will check if any of the component's container's dimensions have changed, and then it will call
+     * resize() if they have.
+     */
     public trigger() {
         for (const comp of this.components) {
             if (comp.getContainerWidth() !== comp.width) {
@@ -21,16 +28,27 @@ export class ResizeController {
         }
     }
 
+    /**
+     * This is the method that will actually call resize() on all of the controller's registered components.
+     */
     public resize() {
         for (const comp of this.components) {
             comp.resize();
         }
     }
 
+    /**
+     * This registers a Chart to the controller.
+     * @param component
+     */
     public addComponent<T>(component: ResizableChart<T>) {
        this.components.push(component);
     }
 
+    /**
+     * This registers a list of Charts to the controller.
+     * @param components
+     */
     public addComponents(components: ResizableChart<any>[]): void {
         for (const comp of components) {
             this.addComponent(comp);

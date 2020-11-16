@@ -12,6 +12,14 @@ const DEFAULT_VERTEX_SORT = (verts: string[], graph: AnnotationGraph) => {
    });
 };
 
+/**
+ * This function takes a list of Annotation objects and uses a deterministic greedy graph coloring algorithm to assign
+ * each of them a y coordinate in terms of horizontal bins that will prevent any horizontal overlap when they are
+ * rendered in a Chart.
+ * @param ann
+ * @param tolerance
+ * @param vertSortFunction
+ */
 export function greedyGraphLayout(ann: Annotation[],
                                   tolerance: number = 0,
                                   vertSortFunction: {(verts: string[], graph: AnnotationGraph): void}  = DEFAULT_VERTEX_SORT) {

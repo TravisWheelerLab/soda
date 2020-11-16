@@ -1,8 +1,7 @@
 import * as d3 from 'd3';
-import {TooltipConfig} from "./tooltip-config";
 import {Chart} from '../../charts';
 import {Annotation} from '../../annotations';
-import {HoverConfig, addHoverBehavior} from "../hover";
+import {addHoverBehavior, HoverConfig} from "../hover";
 import * as defaults from "./tooltip-defaults";
 
 // this module provides a generic process by which we can bind a text tooltip
@@ -31,6 +30,59 @@ function initTooltipDiv(): void {
     }
 }
 
+/**
+ * An interface that holds the parameters for configuring a glyph tooltip.
+ */
+
+export interface TooltipConfig<A extends Annotation, C extends Chart<any>> {
+    /**
+     * The Annotation object whose representative glyph we are binding the tooltip to.
+     */
+    ann: A;
+    /**
+     * A callback function to set the tooltip text.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    text: (a: A, c: C) => string;
+    /**
+     * A callback function to set the tooltip text color.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    textColor?: (a: A, c: C) => string;
+    /**
+     * A callback function to set the opacity of the tooltip.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    opacity?: (a: A, c: C) => number;
+    /**
+     * A callback function to set the background color of the tooltip.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    backgroundColor?: (a: A, c: C) => string;
+    /**
+     * A callback function to set the border radius of the tooltip.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    borderRadius?: (a: A, c: C) => number;
+    /**
+     * A callback function to set the css padding on of the tooltip.
+     * @param a The Annotation object.
+     * @param c The Chart that the glyph has been rendered in.
+     */
+    padding?: (a: A, c: C) => number;
+}
+
+/**
+ * A utility function to actually apply a TooltipConfig to a glyph. It uses the hover plugin to add a hover behavior
+ * for the tooltip functionality.
+ * @param chart The Chart that the glyph is rendered in.
+ * @param config The Annotation whose representative glyph we are binding the tooltip to.
+ */
 export function tooltip<A extends Annotation, C extends Chart<any>>(chart: C, config: TooltipConfig<A, C>) {
     // the function that actually binds the mouse events to the svg elements
     initTooltipDiv();
@@ -43,7 +95,13 @@ export function tooltip<A extends Annotation, C extends Chart<any>>(chart: C, co
     addHoverBehavior(hoverConf);
 }
 
-// export function defaultTooltipMouseover<A extends Annotation>(a: A, text: (a: A) => string): void {
+/**
+ * The default tooltip mouseover callback function. It moves the tooltip div to the appropriate spot and then uses
+ * the config to style the tooltip.
+ * @param a The Annotation object whose representative glyph has been hovered.
+ * @param c The Chart in which the glyph has been rendered.
+ * @param config The config to be applied to the tooltip.
+ */
 export function defaultTooltipMouseover<A extends Annotation, C extends Chart<any>>(a: A, c: C, config: TooltipConfig<A, C>): void {
     // this uses the provided function parameter to extract text
     // from the bound Annotation data and draw it in the tooltip
@@ -67,6 +125,10 @@ export function defaultTooltipMouseover<A extends Annotation, C extends Chart<an
         .style("top", (d3.event.pageY + 20) + "px");
 }
 
+/**
+ * The default tooltip mouseout callback function. It just moves the tooltip div out of the way, shrinks it, and
+ * makes it invisible.
+ */
 export function defaultTooltipMouseout<A extends Annotation>(): void {
     // this just makes the tooltip disappear
     tooltipSelection.transition()
@@ -77,5 +139,4 @@ export function defaultTooltipMouseout<A extends Annotation>(): void {
         .html('')
         .style("left", "0px")
         .style("top", "0px")
-
 }
