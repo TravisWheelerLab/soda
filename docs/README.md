@@ -1,16 +1,14 @@
 # SODA docs
 
 We use Sphinx to generate the HTML for the SODA documentation. To build the docs, first install Sphinx.
-
-macOS
-  
-    brew install sphinx-doc
-    
-For linux, use your distribution's package manager. If it's not available there, Sphinx is available on PyPI and can be installed with pip.
     
     pip install -U Sphinx
 
-Once Sphinx is installed, run
+Once Sphinx is installed, you'll need to install the sphinx_rtd_theme from PyPI
+    
+    pip install sphinx_rtd_theme
+   
+Next, you can build the HTML by running
 
     make html
     
