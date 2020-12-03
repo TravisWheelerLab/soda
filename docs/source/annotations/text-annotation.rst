@@ -5,7 +5,7 @@ Text-annotation
 *Interface* TextAnnotation extends :ref:`Annotation<Annotation>`
 -----------------------------------------------------------------
 
-An interface to represent an Annotation that will be represented as text. Generally, this will be a label that is rendered near another Annotation. TextAnnotations are capable of trying to be "smart" about displaying their underlying data. They can be provided with a list of strings of various levels of detail/length, and they will display the most detailed/longest text that will fit inside of the space available in the target Chart. When paired with the default TextAnnotation ZoomBehavior, this behavior can be dynamically applied as the Chart is zoomed or changes dimensions.
+| An interface to represent an Annotation that will be represented as text. Generally, this will be a label that is rendered near another Annotation. TextAnnotations are capable of trying to be "smart" about displaying their underlying data. They can be provided with a list of strings of various levels of detail/length, and they will display the most detailed/longest text that will fit inside of the space available in the target Chart. When paired with the default TextAnnotation ZoomBehavior, this behavior can be dynamically applied as the Chart is zoomed or changes dimensions.
 
 :Properties:
  | **drawThresholds**: number []
