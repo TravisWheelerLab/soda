@@ -45,10 +45,10 @@ axis.render(axisParams);
 chart.render(trackParams);
 
 let rectConf = {
-    class: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
+    selector: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
 };
 
-soda.rectangle(chart, ann, rectConf);
+soda.rectangleGlyph(chart, ann, rectConf);
 
 function randInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));

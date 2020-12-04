@@ -16,31 +16,34 @@ resizeController.addComponent(chart);
 window.onresize = () => resizeController.trigger();
 
 let n = 10;
-let w = 1000;
+let exampleWidth = 1000;
 const ann: soda.Annotation[] = [];
-let ids = [];
 for (let i = 0; i < n; i++) {
     let id = i.toString();
-    ids.push(id);
-    ann.push(new soda.Annotation({h: 0, id: id, w: (w/n), x: i * (w/n), y: i}));
+    let annConf: soda.AnnotationConfig = {
+        id: id,
+        w: (exampleWidth/n),
+        x: i * (exampleWidth/n),
+        y: i,
+        h: 0,
+    };
+    ann.push(new soda.Annotation(annConf));
 }
 
-let colorScale = d3.scaleOrdinal(d3.schemeCategory10)
-    .domain(ids);
+let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-let axisParams: soda.AxisRenderParams = {
-    queryEnd: w, queryStart: 0
+let renderParams: soda.TrackChartRenderParams = {
+    queryStart: 0,
+    queryEnd: exampleWidth,
+    maxY: n
 };
 
-let trackParams: soda.TrackChartRenderParams = {
-    maxY: n, queryEnd: w, queryStart: 0
+axis.preRender(renderParams);
+chart.preRender(renderParams);
+
+let rectConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
+    selector: 'ann',
+    fillColor: (d: soda.Annotation) => colorScale(d.id)
 };
 
-axis.render(axisParams);
-chart.render(trackParams);
-
-let rectConf = {
-    class: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
-};
-
-soda.rectangle(chart, ann, rectConf);
+soda.rectangleGlyph(chart, ann, rectConf);
