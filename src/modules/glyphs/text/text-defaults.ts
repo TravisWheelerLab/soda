@@ -37,4 +37,24 @@ export class TextZoomBehavior<A extends TextAnnotation, C extends Chart<any>> im
                 return "";
             });
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGTextElement, A, HTMLElement, any>, duration: number): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('x', (a) => chart.getXScale()(this.x(a, chart)) - this.textPad)
+            .text((a) => {
+                // figure out the semantic view range of the zoom controller
+                let viewWidth = chart.getSemanticViewRange().width;
+                let i = 0;
+                for (const thresh of a.drawThresholds) {
+                    // find out which level of text detail to draw
+                    if (viewWidth <= thresh) {
+                        return (a.text[i]);
+                    }
+                    i++;
+                }
+                return "";
+            });
+    }
 }

@@ -6,6 +6,10 @@ import { Annotation } from '../annotations';
 export const idAnnotationMap: Map<string, Annotation> = new Map();
 export const idSelectionMap: Map<string, d3.Selection<any, any, any, any>> = new Map();
 
+export function getAllIds(): string[] {
+    return Array.from(idAnnotationMap.keys());
+}
+
 /**
  * This function stores a reference to an Annotation object in an internal map that is keyed by string id's. By
  * default, the SODA rendering module will call this function to map each rendered Annotation with its id property.

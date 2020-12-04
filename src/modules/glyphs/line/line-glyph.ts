@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {Annotation} from "../../../annotations/annotation";
-import {mapIdToSelection} from "../../../plugins/id-map";
+import {mapIdToAnnotation, mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./line-defaults";
@@ -207,6 +207,7 @@ export function lineGlyph<A extends Annotation, C extends Chart<any>>(chart: C, 
     merge
         .each((a, i, nodes) => {
             mapIdToSelection(a.id, d3.select(nodes[i]));
+            mapIdToAnnotation(a.id, a);
         });
 
     // remove lines no longer in the visualization

@@ -29,4 +29,12 @@ export class LineZoomBehavior<A extends Annotation, C extends Chart<any>> implem
             .attr('x1', (a: A) => chart.getXScale()(this.x1(a, chart)))
             .attr('x2', (a: A) => chart.getXScale()(this.x2(a, chart)));
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGLineElement, A, HTMLElement, any>, duration: number = 0): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('x1', (a: A) => chart.getXScale()(this.x1(a, chart)))
+            .attr('x2', (a: A) => chart.getXScale()(this.x2(a, chart)));
+    }
 }

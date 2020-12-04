@@ -26,4 +26,13 @@ export class RectZoomBehavior<A extends Annotation, C extends Chart<any>> implem
             .attr('x', (a: A) => chart.getXScale()(this.x(a, chart)))
             .attr('width', (a: A) => chart.getXScale()(this.w(a, chart) + this.x(a, chart)) - chart.getXScale()(this.x(a, chart)));
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGRectElement, A, HTMLElement, any>, duration: number): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('x', (a: A) => chart.getXScale()(this.x(a, chart)))
+            .attr('width', (a: A) => chart.getXScale()(this.w(a, chart) + this.x(a, chart)) - chart.getXScale()(this.x(a, chart)));
+    }
+
 }

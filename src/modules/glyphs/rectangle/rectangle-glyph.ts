@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {Annotation} from "../../../annotations/annotation";
-import {mapIdToSelection} from "../../../plugins/id-map";
+import {mapIdToAnnotation, mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import * as defaults from "./rectangle-defaults";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
@@ -115,6 +115,7 @@ export function rectangleGlyph<A extends Annotation, C extends Chart<any>>(chart
     merge
         .each((a, i, nodes) => {
             mapIdToSelection(a.id, d3.select(nodes[i]));
+            mapIdToAnnotation(a.id, a);
         });
 
     // remove rectangles that are no longer in the chart

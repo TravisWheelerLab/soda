@@ -309,6 +309,24 @@ export class ZoomController {
     }
 
     /**
+     * This does the same thing as zoomedRender, but it uses the applyDuration() function on each ZoomBehavior,
+     * which makes the ZoomBehavior application seem animated.
+     */
+    public zoomedRenderDuration(duration: number): void {
+        // for every component the controller is paying attention to,
+        // grab the zoom behaviors, make a selection, and apply the behavior
+        for (const comp of this.components) {
+            for (const behavior of comp.getZoomBehaviors()) {
+                // ** we want to make this selection out here, so that we could possibly
+                // ** apply a secondary selector to distinguish between charts
+                const selection = d3.selectAll(behavior.selector);
+                behavior.applyDuration(comp, selection, duration);
+            }
+        }
+    }
+
+
+    /**
      * This method registers a component with the ZoomController. It will also register itself on the added component.
      * @param component The component to be added.
      */

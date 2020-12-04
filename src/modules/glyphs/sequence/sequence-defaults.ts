@@ -22,6 +22,13 @@ export class SequenceZoomBehavior<A extends SequenceAnnotation, C extends Chart<
         selection
             .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);//, scale(${chart.svgSelection.node().__zoom.k}, 1)`);
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>, duration: number): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);//, scale(${chart.svgSelection.node().__zoom.k}, 1)`);
+    }
 }
 
 export class SequenceCharacterZoomBehavior<D extends CharacterDatum, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGTextElement, D, HTMLElement, any>> {
@@ -35,6 +42,13 @@ export class SequenceCharacterZoomBehavior<D extends CharacterDatum, C extends C
 
     public apply(chart: C, selection: d3.Selection<SVGTextElement, D, HTMLElement, any>): void {
         selection
+            .attr('x', (d) => chart.getXScale()(d.x))
+    }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGTextElement, D, HTMLElement, any>, duration: number): void {
+        selection
+            .transition()
+            .duration(duration)
             .attr('x', (d) => chart.getXScale()(d.x))
     }
 }

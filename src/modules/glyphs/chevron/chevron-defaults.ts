@@ -50,6 +50,13 @@ export class ForwardChevronZoomBehavior<A extends Annotation, C extends Chart<an
         selection
             .attr('x', (a: A) => chart.getXScale()(forwardChevronXFn(a)))
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGPatternElement, A, HTMLElement, any>, duration: number): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('x', (a: A) => chart.getXScale()(forwardChevronXFn(a)))
+    }
 }
 
 export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
@@ -63,6 +70,14 @@ export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<an
         selection
             .attr('x', (a: A) => chart.getXScale()(reverseChevronXFn(a)))
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGPatternElement, A, HTMLElement, any>, duration: number = 0): void {
+        selection
+            .transition()
+            .duration(duration)
+            .attr('x', (a: A) => chart.getXScale()(reverseChevronXFn(a)))
+    }
+
 }
 
 export class PatternSwitchZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGRectElement, A, HTMLElement, any>> {
@@ -87,4 +102,19 @@ export class PatternSwitchZoomBehavior<A extends Annotation, C extends Chart<any
                 }
             });
     }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGRectElement, A, HTMLElement, any>, duration: number = 0) {
+        selection
+            .transition()
+            .duration(duration)
+            .style('fill', (a) => {
+                if (chart.getSemanticViewRange().width < 20000) {
+                    return (`url(#${chevronPatternId(this.patternType)}-${a.id})`);
+                }
+                else {
+                    return (this.fillColor(a, chart));
+                }
+            });
+    }
+
 }

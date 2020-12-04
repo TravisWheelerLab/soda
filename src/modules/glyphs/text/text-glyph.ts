@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {TextAnnotation} from "../../../annotations/text-annotation";
-import {mapIdToSelection} from "../../../plugins/id-map";
+import {mapIdToAnnotation, mapIdToSelection} from "../../../plugins/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import * as defaults from "./text-defaults";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
@@ -109,16 +109,18 @@ export function textGlyph<A extends TextAnnotation, C extends Chart<any>>(chart:
 
     let x: (a: A, c: C) => number = conf.x || defaults.textXFn;
     let y: (a: A, c: C) => number = conf.y || defaults.textYFn;
+    let textPad: number = conf.textPad || 0;
 
     // set the position parameters
     merge
-        .attr('x', (a: A) => chart.getXScale()(x(a, chart)))
+        .attr('x', (a: A) => chart.getXScale()(x(a, chart)) - textPad)
         .attr('y', (a: A) => y(a, chart));
 
     // for all of the rectangles remaining, update the id->d3 selection map
     merge
         .each((a, i, nodes) => {
             mapIdToSelection(a.id, d3.select(nodes[i]));
+            mapIdToAnnotation(a.id, a);
         });
 
     // remove text that is no longer in the chart
@@ -127,6 +129,6 @@ export function textGlyph<A extends TextAnnotation, C extends Chart<any>>(chart:
 
     if (isZoomableChart(chart)) {
         // if the chart is zoomable, register the ZoomBehavior for the text
-        registerZoomBehavior(chart, new defaults.TextZoomBehavior(conf.selector, conf.textPad || 0, x));
+        registerZoomBehavior(chart, new defaults.TextZoomBehavior(conf.selector, textPad, x));
     }
 }
