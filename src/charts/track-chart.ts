@@ -193,6 +193,16 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
     }
 
     /**
+     * A getter for the ZoomController.
+     */
+    public getZoomController(): ZoomController {
+        if (this.zoomController == null) {
+            throw("zoomController is null or undefined");
+        }
+        return this.zoomController;
+    }
+
+    /**
      * This is the handler method that will be called when the SVG viewport receives a browser zoom event. If
      * there is no ZoomController defined, it will do nothing.
      */

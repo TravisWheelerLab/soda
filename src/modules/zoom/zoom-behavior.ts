@@ -28,4 +28,12 @@ export interface ZoomBehavior<C extends Chart<any>, S extends d3.Selection<any, 
      * @param selection A D3 selection to the target glyphs.
      */
     apply(chart: C, selection: S): void;
+    /**
+     * This should be the same exact function as apply, except it should use the D3 transition function to make the
+     * behavior seem animated.
+     * @param chart The Chart in which the target glyphs have been rendered.
+     * @param selection A D3 selection to the target glyphs.
+     * @param duration The time in milliseconds over which the application of the ZoomBehavior will take place.
+     */
+    applyDuration(chart: C, selection: S, duration: number): void;
 }
