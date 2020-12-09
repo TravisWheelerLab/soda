@@ -20,8 +20,8 @@ export class ExampleChart extends soda.TrackChart<ExampleChartRenderParams> {
             .domain([]);
 
         const rectConf = {
-            class: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
+            selector: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
         };
-        soda.rectangle(this, params.ann, rectConf);
+        soda.rectangleGlyph(this, params.ann, rectConf);
     }
 }

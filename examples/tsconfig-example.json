@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir" : "./js",
     "strict": true,
     "noImplicitAny": true,
     "module": "CommonJS",

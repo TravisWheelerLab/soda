@@ -38,8 +38,8 @@ let renderParams: soda.TrackChartRenderParams = {
     maxY: n
 };
 
-axis.preRender(renderParams);
-chart.preRender(renderParams);
+axis.render(renderParams);
+chart.render(renderParams);
 
 let rectConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
     selector: 'ann',

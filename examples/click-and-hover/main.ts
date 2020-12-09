@@ -30,8 +30,8 @@ for (let i = 0; i < n; i++) {
 let colorScale = d3.scaleOrdinal(d3.schemeCategory10)
     .domain(ids);
 
-let conf = {
-    class: 'ann',
+let conf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
+    selector: 'ann',
     fillColor: (d: soda.Annotation) => colorScale(d.id)
 };
 let colorCount = soda.heuristicGraphLayout(ann);
@@ -47,7 +47,7 @@ let trackParams: soda.TrackChartRenderParams = {
 axis.render(axisParams);
 chart.render(trackParams);
 
-soda.rectangle(chart, ann, conf);
+soda.rectangleGlyph(chart, ann, conf);
 
 for (const a of ann) {
     const hoverConf: soda.HoverConfig<soda.Annotation> = {
@@ -57,9 +57,9 @@ for (const a of ann) {
     };
     soda.addHoverBehavior(hoverConf);
 
-    const tooltipConf: soda.TooltipConfig<soda.Annotation> = {
+    const tooltipConf: soda.TooltipConfig<soda.Annotation, soda.TrackChart<any>> = {
         ann : a,
-        textFromAnn: (a) => a.id,
+        text: (a) => a.id,
     };
     soda.tooltip(chart, tooltipConf);
 

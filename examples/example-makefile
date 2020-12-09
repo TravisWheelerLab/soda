@@ -9,15 +9,14 @@
 
 ### build
 ### -----
+### Build the example app such that TypeScript files are compiled
+### to JavaScript and the example/ directory is bundled into a
+### single asset to be consumed by example/index.html.
 ###
 .PHONY: build
-build: builddir build/d3.js build/index.html
-	cd click-and-hover && make build
-	cd single-track-rectangles && make build
-	cd graph-color-layout && make build
-	cd build && ln -sfn ../single-track-rectangles/build ./single-track-rectangles
-	cd build && ln -sfn ../click-and-hover/build ./click-and-hover
-	cd build && ln -sfn ../graph-color-layout/build ./graph-color-layout
+build: builddir build/index.html
+	npx tsc --build tsconfig-example.json
+	npx webpack-cli --config webpack.config.js
 
 ### serve
 ### -----
@@ -30,6 +29,7 @@ serve: build
 	@echo "Use ctrl-c to stop"
 	@python3 -m http.server -d build/ -b localhost 8080 && echo "Bye bye!"
 
+
 ### clean
 ### -----
 ### Remove files from the build process
@@ -37,18 +37,7 @@ serve: build
 .PHONY: clean
 clean:
 	rm -rf build/
-	cd single-track-rectangles && make clean
-	cd click-and-hover && make clean
-	cd graph-color-layout && make clean
-
-### setup
-### -----
-### Install development dependencies, run this first!
-###
-.PHONY: setup
-setup:
-	@npm install --include=dev
-	@echo "You will also need wget to run the example"
+	rm -rf js/
 
 ## ---------------
 ## Private Targets
@@ -56,9 +45,7 @@ setup:
 
 builddir:
 	mkdir -p build/
-
-build/d3.js:
-	wget -O build/d3.js -nc https://d3js.org/d3.v5.js
+	mkdir -p js/
 
 build/index.html: index.html
 	cp index.html build/
