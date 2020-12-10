@@ -11,13 +11,11 @@
 ### -----
 ###
 .PHONY: build
-build: builddir build/d3.js build/index.html
-	cd single-track-rectangles && make build
-	cd click-and-hover && make build
-	cd graph-color-layout && make build
-	cd build && ln -sfn ../single-track-rectangles/build ./single-track-rectangles
-	cd build && ln -sfn ../click-and-hover/build ./click-and-hover
-	cd build && ln -sfn ../graph-color-layout/build ./graph-color-layout
+build: builddir build/d3.js
+	cd rectangles && make build
+	cd lines && make build
+	cd build && ln -sfn ../rectangles/build ./rectangles
+	cd build && ln -sfn ../lines/build ./lines
 
 ### serve
 ### -----
@@ -60,8 +58,6 @@ builddir:
 build/d3.js:
 	wget -O build/d3.js -nc https://d3js.org/d3.v5.js
 
-build/index.html: index.html
-	cp index.html build/
 
 ## This lives way down here because it screws up the syntax highlighting
 ## for the rest of the file if it's higher up. Basically, we just grep
