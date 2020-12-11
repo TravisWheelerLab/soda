@@ -22,7 +22,7 @@ build: builddir build/d3.js
 ### Build and serve the example app on port 8080.
 ###
 .PHONY: serve
-serve: build
+serve:
 	@echo "SERVE invoked at $$(date)"
 	@echo "Running server on localhost:8080"
 	@echo "Use ctrl-c to stop"
