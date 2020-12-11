@@ -40,7 +40,7 @@ jobs:
           npm i
           cd test-apps/
           echo 'building test apps...'
-          make serve
+          make build
           echo 'serving test apps...'
           python3 -m http.server -d build/ -b localhost 8080 &
           sleep 5
