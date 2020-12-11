@@ -42,7 +42,7 @@ jobs:
           echo 'building test apps...'
           make serve
           echo 'serving test apps...'
-          python3 -m http.server -d build/ -b localhost 8080
+          python3 -m http.server -d build/ -b localhost 8080 &
           sleep 5
           echo 'running tests...'
           cd ../scripts/
