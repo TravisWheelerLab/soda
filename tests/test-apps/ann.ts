@@ -34,3 +34,20 @@ const CONF: soda.AnnotationConfig[]  = [
 ];
 
 export const ANN: soda.Annotation[] = CONF.map( (conf) => new soda.Annotation(conf) );
+
+export const ORIENTED_ANN: soda.OrientedAnnotation[] = ANN.map( (a) => {
+     return {
+        id: a.id,
+        h: a.h,
+        w: a.w,
+        x: a.x,
+        y: a.y,
+        orientation: soda.Orientation.Forward,
+        getW(): number {
+            return this.w;
+        },
+        getX(): number {
+            return this.x;
+        }
+    }
+});

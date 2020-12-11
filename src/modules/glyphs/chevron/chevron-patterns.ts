@@ -1,7 +1,7 @@
 import * as defaults from "./chevron-defaults";
-import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {Orientation, OrientedAnnotation} from "../../../annotations/oriented-annotation";
 import {Chart} from "../../../charts/chart";
-import {ChevronPrimitiveConfig, Orientation} from "./chevron-config";
+import {ChevronPrimitiveConfig} from "./chevron-config";
 import * as d3 from "d3";
 
 export enum ChevronPatternType {
@@ -22,7 +22,6 @@ function initSvgDefs(selection: d3.Selection<SVGElement, any, HTMLElement, any>)
 
 export function createChevronPatterns<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[],
                                                                                           conf: ChevronPrimitiveConfig<A, C>,
-                                                                                          orientation: Orientation,
                                                                                           patternType: ChevronPatternType): void {
     initSvgDefs(chart.svgSelection);
 
@@ -85,7 +84,7 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
 
     patternPaths
         .style('stroke-linejoin', 'miter')
-        .attr('d', (a) => defaults.chevronPathDFn(a, chevronH(a, chart), orientation))
+        .attr('d', (a) => defaults.chevronPathDFn(a, chevronH(a, chart)))
         .style('stroke', (a) => chevronStrokeColor(a, chart))
         .style('stroke-width', (a) => chevronStrokeWidth(a, chart))
         .style('stroke-opacity', (a) => chevronStrokeOpacity(a, chart))
@@ -100,7 +99,7 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     // position all of the patterns so that they align with the correct
     // side of the rectangle depending on the alignment orientation
     patternMerge
-        .attr('x', (a) => defaults.chevronXFn(a, orientation))
+        .attr('x', (a) => defaults.chevronXFn(a))
         .attr('y', (a) => chevronH(a, chart));
 
     patternSelection.exit()

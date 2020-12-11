@@ -2,10 +2,7 @@ import {Annotation} from "../../../annotations/annotation";
 import {Chart} from "../../../charts/chart";
 import {GlyphConfig} from "../glyph-config";
 
-export enum Orientation {
-    Forward = "+",
-    Reverse = "-",
-}
+
 
 /**
  * An interface that defines the common parameters for rendering chevron glyphs.
