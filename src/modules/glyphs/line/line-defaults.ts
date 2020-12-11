@@ -7,7 +7,7 @@ export const horizontalLineX1Fn = <A extends Annotation>(a: A) => a.getX();
 export const horizontalLineX2Fn = <A extends Annotation>(a: A) => a.getX() + a.getW();
 export const horizontalLineYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight + c.binHeight / 2;
 
-export const verticalLineXFn = <A extends Annotation>(a: A) => (a.getX() + a.getW()) / 2;
+export const verticalLineXFn = <A extends Annotation>(a: A) => (a.getX() + a.getW() / 2);
 export const verticalLineY1Fn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
 export const verticalLineY2Fn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => (a.y + 1) * c.binHeight;
 

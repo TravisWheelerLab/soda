@@ -1,0 +1,21 @@
+{
+  "name": "soda-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jack Roddy",
+  "license": "ISC",
+  "dependencies": {
+    "@traviswheelerlab/soda": "file:.."
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^5.4.2",
+    "puppeteer": "^5.5.0",
+    "typescript": "^3.8.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
