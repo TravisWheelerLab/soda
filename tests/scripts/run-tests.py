@@ -43,7 +43,7 @@ def getComparefiles():
         os.mkdir(comparefiles_dir)
     cmd = ['npx', 'tsc', 'generate-comparefiles.ts']
     subprocess.run(cmd)
-    cmd = ['node', 'generate-comparefiles.js']
+    cmd = ['node', '--unhandled-rejections=strict', 'generate-comparefiles.js']
     subprocess.run(cmd)
 
 def clean():
