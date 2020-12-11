@@ -43,4 +43,5 @@ jobs:
           python3 -m http.server -b localhost 8080 &
           sleep 5
           echo 'running tests...'
-          python3 ../scripts/run-tests.py
+          cd ../scripts/
+          python3 run-tests.py
