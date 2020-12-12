@@ -34,6 +34,12 @@ export interface ChevronPrimitiveConfig<A extends Annotation, C extends Chart<an
      */
     backgroundFillOpacity?: (a: A, c: C) => number;
     /**
+     * A callback to define the y coordinate of the chevron pattern.
+     * @param a
+     * @param c
+     */
+    chevronY?: (a: A, c: C) => number;
+    /**
      * A callback to define the height of the chevron SVG path that is placed inside of the background rectangle.
      * @param a
      * @param c

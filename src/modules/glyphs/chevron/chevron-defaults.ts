@@ -135,5 +135,4 @@ export class PatternSwitchZoomBehavior<A extends Annotation, C extends Chart<any
                 }
             });
     }
-
 }

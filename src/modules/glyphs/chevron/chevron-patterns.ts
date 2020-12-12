@@ -1,5 +1,5 @@
 import * as defaults from "./chevron-defaults";
-import {Orientation, OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
 import {Chart} from "../../../charts/chart";
 import {ChevronPrimitiveConfig} from "./chevron-config";
 import * as d3 from "d3";
@@ -38,6 +38,7 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     const backgroundFillColor = conf.backgroundFillColor || (() => 'black');
     const backgroundFillOpacity = conf.backgroundFillOpacity || (() => 1);
 
+    const chevronY = conf.chevronY || (() => 0);
     const chevronH = conf.chevronH || defaults.chevronHFn;
     const chevronSpacing = conf.chevronSpacing || (() => 0);
     const chevronStrokeColor = conf.chevronStrokeColor || (() => 'ghostwhite');
@@ -100,7 +101,7 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     // side of the rectangle depending on the alignment orientation
     patternMerge
         .attr('x', (a) => defaults.chevronXFn(a))
-        .attr('y', (a) => chevronH(a, chart));
+        .attr('y', (a) => chevronY(a, chart));
 
     patternSelection.exit()
         .remove();

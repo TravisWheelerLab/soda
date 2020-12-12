@@ -42,6 +42,7 @@ export function reverseChevronRectangleGlyph<A extends OrientedAnnotation, C ext
 
 export function chevronRectangleGlyph<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[],
                                                                                    conf: ChevronRectangleConfig<A, C>): void {
+    conf.chevronY = conf.chevronY || conf.y;
     conf.chevronH = conf.chevronH || conf.h;
     conf.backgroundH = conf.backgroundH || conf.h;
     conf.backgroundFillColor = conf.backgroundFillColor || conf.fillColor;
