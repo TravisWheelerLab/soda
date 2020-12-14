@@ -38,7 +38,14 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     const backgroundFillColor = conf.backgroundFillColor || (() => 'black');
     const backgroundFillOpacity = conf.backgroundFillOpacity || (() => 1);
 
-    const chevronY = conf.chevronY || (() => 0);
+    // TODO: this is convoluted and I should find a way to simplify this
+    let chevronY: (a: A, c: C) => number;
+    if (patternType == ChevronPatternType.Rectangle) {
+        chevronY = conf.chevronY || defaults.chevronRectYFn;
+    }
+    else if (patternType == ChevronPatternType.Line) {
+        chevronY = conf.chevronY || defaults.chevronLineYFn;
+    }
     const chevronH = conf.chevronH || defaults.chevronHFn;
     const chevronSpacing = conf.chevronSpacing || (() => 0);
     const chevronStrokeColor = conf.chevronStrokeColor || (() => 'ghostwhite');
@@ -100,8 +107,16 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     // position all of the patterns so that they align with the correct
     // side of the rectangle depending on the alignment orientation
     patternMerge
-        .attr('x', (a) => defaults.chevronXFn(a))
-        .attr('y', (a) => chevronY(a, chart));
+        .attr('x', (a) => defaults.chevronXFn(a));
+
+    if (patternType == ChevronPatternType.Rectangle) {
+        patternMerge
+            .attr('y', (a) => chevronY(a, chart));
+    }
+    else if (patternType == ChevronPatternType.Line) {
+        patternMerge
+            .attr('y', (a) => chevronY(a, chart) - chevronH(a, chart)/2);
+    }
 
     patternSelection.exit()
         .remove();

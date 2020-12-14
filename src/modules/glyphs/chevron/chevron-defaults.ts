@@ -4,7 +4,11 @@ import {Chart} from "../../../charts/chart";
 import * as d3 from "d3";
 import {chevronPatternId, ChevronPatternType} from "./chevron-patterns";
 import {Orientation, OrientedAnnotation} from "../../../annotations/oriented-annotation";
+import {horizontalLineYFn} from "../line/line-defaults";
+import {rectYFn} from "../rectangle/rectangle-defaults";
 
+export const chevronRectYFn = rectYFn;
+export const chevronLineYFn = horizontalLineYFn;
 export const chevronHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight - 4;
 
 export const chevronPathDFn = <A extends OrientedAnnotation>(a: A, h: number) => {

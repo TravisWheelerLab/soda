@@ -10,7 +10,6 @@ import {RectangleConfig, rectangleGlyph} from "../rectangle/rectangle-glyph";
 /**
  * An interface that holds the parameters for rendering and configuring a chevron rectangle glyph.
  */
-
 export interface ChevronRectangleConfig<A extends OrientedAnnotation, C extends Chart<any>> extends ChevronPrimitiveConfig<A, C>, RectangleConfig<A, C> {
 }
 

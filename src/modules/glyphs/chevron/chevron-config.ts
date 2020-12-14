@@ -2,8 +2,6 @@ import {Annotation} from "../../../annotations/annotation";
 import {Chart} from "../../../charts/chart";
 import {GlyphConfig} from "../glyph-config";
 
-
-
 /**
  * An interface that defines the common parameters for rendering chevron glyphs.
  */

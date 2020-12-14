@@ -41,13 +41,14 @@ export function reverseChevronLine<A extends OrientedAnnotation, C extends Chart
     }
 }
 
-function chevronLineGlyph<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[],
-                                                                              conf: ChevronLineConfig<A, C>): void {
+export function chevronLineGlyph<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[],
+                                                                                    conf: ChevronLineConfig<A, C>): void {
+    conf.chevronY = conf.chevronY || conf.y;
     conf.chevronH = conf.chevronH || conf.h;
     createChevronPatterns(chart, ann, conf, ChevronPatternType.Line);
     horizontalLine(chart, ann, conf);
     const h = conf.h || defaults.chevronHFn;
-    const y = conf.y || (() => 0);
+    const y = conf.y || defaults.chevronLineYFn;
 
     const rectConf: RectangleConfig<A, C> = {
         selector: conf.selector,
@@ -59,4 +60,8 @@ function chevronLineGlyph<A extends OrientedAnnotation, C extends Chart<any>>(ch
     const rectSelection = rectangleGlyph(chart, ann, rectConf);
     rectSelection
         .style('fill', (a ) => `url(#${chevronPatternId(ChevronPatternType.Line)}-${a.id})`);
+
+    if (isZoomableChart(chart)) {
+        registerZoomBehavior(chart, conf.zoom || new defaults.ReverseChevronZoomBehavior(conf.selector));
+    }
 }
