@@ -2,11 +2,6 @@ import {Annotation} from "../../../annotations/annotation";
 import {Chart} from "../../../charts/chart";
 import {GlyphConfig} from "../glyph-config";
 
-export enum Orientation {
-    Forward = "+",
-    Reverse = "-",
-}
-
 /**
  * An interface that defines the common parameters for rendering chevron glyphs.
  */
@@ -36,6 +31,12 @@ export interface ChevronPrimitiveConfig<A extends Annotation, C extends Chart<an
      * @param c
      */
     backgroundFillOpacity?: (a: A, c: C) => number;
+    /**
+     * A callback to define the y coordinate of the chevron pattern.
+     * @param a
+     * @param c
+     */
+    chevronY?: (a: A, c: C) => number;
     /**
      * A callback to define the height of the chevron SVG path that is placed inside of the background rectangle.
      * @param a

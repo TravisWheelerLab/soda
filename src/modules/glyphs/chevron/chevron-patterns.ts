@@ -1,7 +1,7 @@
 import * as defaults from "./chevron-defaults";
 import {OrientedAnnotation} from "../../../annotations/oriented-annotation";
 import {Chart} from "../../../charts/chart";
-import {ChevronPrimitiveConfig, Orientation} from "./chevron-config";
+import {ChevronPrimitiveConfig} from "./chevron-config";
 import * as d3 from "d3";
 
 export enum ChevronPatternType {
@@ -22,7 +22,6 @@ function initSvgDefs(selection: d3.Selection<SVGElement, any, HTMLElement, any>)
 
 export function createChevronPatterns<A extends OrientedAnnotation, C extends Chart<any>>(chart: C, ann: A[],
                                                                                           conf: ChevronPrimitiveConfig<A, C>,
-                                                                                          orientation: Orientation,
                                                                                           patternType: ChevronPatternType): void {
     initSvgDefs(chart.svgSelection);
 
@@ -39,6 +38,14 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     const backgroundFillColor = conf.backgroundFillColor || (() => 'black');
     const backgroundFillOpacity = conf.backgroundFillOpacity || (() => 1);
 
+    // TODO: this is convoluted and I should find a way to simplify this
+    let chevronY: (a: A, c: C) => number;
+    if (patternType == ChevronPatternType.Rectangle) {
+        chevronY = conf.chevronY || defaults.chevronRectYFn;
+    }
+    else if (patternType == ChevronPatternType.Line) {
+        chevronY = conf.chevronY || defaults.chevronLineYFn;
+    }
     const chevronH = conf.chevronH || defaults.chevronHFn;
     const chevronSpacing = conf.chevronSpacing || (() => 0);
     const chevronStrokeColor = conf.chevronStrokeColor || (() => 'ghostwhite');
@@ -85,7 +92,7 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
 
     patternPaths
         .style('stroke-linejoin', 'miter')
-        .attr('d', (a) => defaults.chevronPathDFn(a, chevronH(a, chart), orientation))
+        .attr('d', (a) => defaults.chevronPathDFn(a, chevronH(a, chart)))
         .style('stroke', (a) => chevronStrokeColor(a, chart))
         .style('stroke-width', (a) => chevronStrokeWidth(a, chart))
         .style('stroke-opacity', (a) => chevronStrokeOpacity(a, chart))
@@ -100,8 +107,16 @@ export function createChevronPatterns<A extends OrientedAnnotation, C extends Ch
     // position all of the patterns so that they align with the correct
     // side of the rectangle depending on the alignment orientation
     patternMerge
-        .attr('x', (a) => defaults.chevronXFn(a, orientation))
-        .attr('y', (a) => chevronH(a, chart));
+        .attr('x', (a) => defaults.chevronXFn(a));
+
+    if (patternType == ChevronPatternType.Rectangle) {
+        patternMerge
+            .attr('y', (a) => chevronY(a, chart));
+    }
+    else if (patternType == ChevronPatternType.Line) {
+        patternMerge
+            .attr('y', (a) => chevronY(a, chart) - chevronH(a, chart)/2);
+    }
 
     patternSelection.exit()
         .remove();
