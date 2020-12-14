@@ -227,6 +227,7 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
      * @param params
      */
     protected preRender(params: P): void {
+        this.zoomBehaviors = [];
         this.binCount = params.maxY || 1;
         this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((this.binCount + this.yOffset) * this.binHeight);

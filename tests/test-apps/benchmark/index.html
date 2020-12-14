@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>soda example - single track rectangles</title>
+    <script src="../d3.js"></script>
+    <style type="text/css">
+	    form  { display: table;      }
+	    p     { display: table-row;  }
+	    label { display: table-cell; }
+	    input { display: table-cell; }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        div.chart {
+            width: calc(100% - 40px);
+            height: 0px;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 0px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            background-color: lightgrey;
+        }
+    </style>
+</head>
+<body>
+    <div id="track-chart" class="chart"></div>
+    <div id="info">
+        <h1></h1>
+    </div>
+    <p>
+        <label for="n">n:</label>
+        <input type="text" id="n" name="n" value="100"><br>
+    </p>
+    <p>
+        <label for="glyph">Glyph:</label>
+        <select name="glyph" id="glyph">
+            <option value="0">Rect</option>
+            <option value="1">Line</option>
+            <option value="2">Text</option>
+            <option value="3">Chevron rect</option>
+            <option value="4">Chevron line</option>
+            <option value="5">Sequence</option>
+        </select>
+    </p>
+    <button id='submit'>Submit</button><br>
+    <script src="main.js"></script>
+
+</body>
+</html>
