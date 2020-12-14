@@ -1,5 +1,8 @@
 import * as soda from "@traviswheelerlab/soda"
 
+export const ANN = uniformAnn(10, 95, 5, 1);
+export const ORIENTED_ANN = uniformOrientedAnn(10, 95, 5, 1);
+
 export function uniformAnn(n: number, width: number, spacing: number, layers: number): soda.Annotation[] {
     const conf: soda.AnnotationConfig[] = [];
     let id = 0;
