@@ -19,6 +19,7 @@ build:
 ###
 .PHONY: bench
 bench: build
+	mkdir -p benchmark-results/
 	node js/benchmarks.js
 
 ### clean
