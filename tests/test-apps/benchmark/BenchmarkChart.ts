@@ -38,11 +38,13 @@ export class BenchmarkChart extends soda.TrackChart<BenchmarkRenderParams> {
             .text(this.getAvgZoomTime());
     }
     public preRender(params: BenchmarkRenderParams) {
-        super.preRender(params);
-        this.reset();
+        d3.select('div#done')
+            .remove();
         this.svgSelection
             .selectAll('*')
             .remove();
+        super.preRender(params);
+        this.reset();
     }
 
     public inRender(params: BenchmarkRenderParams ) {
@@ -80,6 +82,10 @@ export class BenchmarkChart extends soda.TrackChart<BenchmarkRenderParams> {
         else if (this.getRenderParams().glyph == BenchGlyph.Sequence) {
             //TODO: this
         }
+
+        d3.select('body')
+            .append('div')
+            .attr('id', 'done')
     }
 
     public reset(): void {

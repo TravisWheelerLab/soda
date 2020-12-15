@@ -3,9 +3,6 @@ import * as fs from "fs";
 import {installMouseHelper} from "./install-mouse-helper";
 
 export async function saveTrackChartSvgXml(url: string, outpath: string, outname: string) {
-    let pageX: number = 0;
-    let pageY: number = 0;
-
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
 
