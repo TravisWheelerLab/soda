@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>soda example - single track rectangles</title>
+    <script src="../d3.js"></script>
+    <style type="text/css">
+	    form  { display: table;      }
+	    p     { display: table-row;  }
+	    label { display: table-cell; }
+	    input { display: table-cell; }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        div.axis {
+            width: calc(100% - 40px);
+            height: 25px;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            /*background-color: lightgrey;*/
+        }
+        div.chart {
+            width: calc(100% - 40px);
+            height: 0px;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 0px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            /*background-color: lightgrey;*/
+        }
+    </style>
+</head>
+<body>
+    <div id="axis-chart" class="axis"></div>
+    <div id="track-chart" class="chart"></div>
+    <script src="main.js"></script>
+
+</body>
+</html>

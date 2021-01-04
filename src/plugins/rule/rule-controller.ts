@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { ChartBase } from '../../charts';
 import { Plugin } from '../plugin';
+import {ZoomableChart} from "../../modules/zoom/zoomable-chart";
 
 /**
  * This plugin object allows a dynamic vertical rule to be added to any Chart.
@@ -41,6 +42,16 @@ export class RuleController implements Plugin {
         ruleTooltip(component);
         component.svgSelection
             .on('mousemove', () => this.chartMouseMove(component))
+    }
+
+    /**
+     * This method registers a list of components with the RuleController.
+     * @param components
+     */
+    public addComponents(components: ChartBase<any>[]): void {
+        for (const comp of components) {
+            this.addComponent(comp);
+        }
     }
 
     /**

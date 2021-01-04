@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir" : "./js",
+    "strict": true,
+    "noImplicitAny": true,
+    "module": "CommonJS",
+    "sourceMap": true,
+    "target": "es6"
+  },
+  "compileOnSave": true
+}
