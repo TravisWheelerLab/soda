@@ -12,7 +12,7 @@
 ###
 .PHONY: build
 build:
-	tsc --build tsconfig-scripts.json
+	npx tsc --build tsconfig-scripts.json
 
 ### build
 ### -----

@@ -1,5 +1,5 @@
 import * as soda from "@traviswheelerlab/soda"
-import {uniformOrientedAnn} from '../ann'
+import {uniformBenchAnn} from '../ann'
 import {BenchmarkChart, BenchmarkRenderParams} from "./BenchmarkChart";
 
 let chart = new BenchmarkChart({selector: '#track-chart', binHeight: 14});
@@ -14,7 +14,7 @@ function submit() {
     let n = parseInt((<HTMLInputElement>document.getElementById('n')).value);
     let glyph: string = (<HTMLInputElement>document.getElementById('glyph')).value;
     console.log(glyph);
-    let ann = uniformOrientedAnn(n/5, 100, 5, 5);
+    let ann = uniformBenchAnn(n/5, 100, 5, 5);
     let queryEnd = Math.max.apply(Math, ann.map(function(a) { return a.x + a.w; }));
     let maxY = Math.max.apply(Math, ann.map(function(a) { return a.y; }));
 

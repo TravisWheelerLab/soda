@@ -1,8 +1,13 @@
 import * as puppeteer from "puppeteer";
+import * as fs from 'fs';
 
 (async () => {
-    const glyphs = ['rect', 'line', 'chevronrect', 'chevronline'];
-    const glyphToNum = new Map<string, string>([['rect', '0'], ['line', '1'], ['chevronrect', '3'], ['chevronline', '4']]);
+    fs.writeFile('./benchmark-results/timings.txt', '', function (err) {
+        if (err) throw err;
+    });
+    // const glyphs = ['rect', 'line', 'text', 'chevronrect', 'chevronline'];
+    const glyphs = ['chevronrect', 'chevronline'];
+    const glyphToNum = new Map<string, string>([['rect', '0'], ['line', '1'], ['text', '2'], ['chevronrect', '3'], ['chevronline', '4']]);
     const glyphCounts = ['100', '1000', '2500', '5000'];
 
     const browser = await puppeteer.launch({
@@ -38,7 +43,10 @@ import * as puppeteer from "puppeteer";
             }
             await page.screenshot({path: `./benchmark-results/${glyph}-${n}.png`, type: 'png'});
             await page.tracing.stop();
-
+            let timing = await page.$eval("#info>h1", e => e.innerHTML);
+            fs.appendFile('./benchmark-results/timings.txt', `${glyph}-${n}: ${timing}\n`, function (err) {
+                if (err) throw err;
+            });
             await page.close();
         }
     }

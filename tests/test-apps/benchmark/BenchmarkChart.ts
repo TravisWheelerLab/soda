@@ -10,8 +10,10 @@ export enum BenchGlyph {
     Sequence
 }
 
+export interface BenchAnnotation extends soda.OrientedAnnotation, soda.TextAnnotation {}
+
 export interface BenchmarkRenderParams extends soda.TrackChartRenderParams {
-    ann: soda.OrientedAnnotation[];
+    ann: BenchAnnotation[];
     glyph: BenchGlyph;
 }
 
@@ -63,7 +65,11 @@ export class BenchmarkChart extends soda.TrackChart<BenchmarkRenderParams> {
             soda.horizontalLine(this, params.ann, lineConf);
         }
         else if (this.getRenderParams().glyph == BenchGlyph.Text) {
-            //TODO: this
+            let textConf: soda.TextConfig<soda.TextAnnotation, BenchmarkChart> = {
+                selector: 'ann',
+                text: () => ['Some long text', 'Some long...', 'Some...', '...'],
+            }
+            soda.textGlyph(this, params.ann, textConf);
         }
         else if (this.getRenderParams().glyph == BenchGlyph.ChevronRect) {
             let rectConf: soda.ChevronRectangleConfig<soda.OrientedAnnotation, BenchmarkChart> = {
