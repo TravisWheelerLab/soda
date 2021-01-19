@@ -17,7 +17,7 @@
 ###
 .PHONY: build
 build:
-	tsc --build tsconfig.json
+	npx tsc --build tsconfig.json
 
 ### setup
 ### -----

@@ -6,7 +6,7 @@ import * as fs from 'fs';
         if (err) throw err;
     });
     // const glyphs = ['rect', 'line', 'text', 'chevronrect', 'chevronline'];
-    const glyphs = ['chevronrect', 'chevronline'];
+    const glyphs = ['rect', 'line', 'text', 'chevronrect', 'chevronline'];
     const glyphToNum = new Map<string, string>([['rect', '0'], ['line', '1'], ['text', '2'], ['chevronrect', '3'], ['chevronline', '4']]);
     const glyphCounts = ['100', '1000', '2500', '5000'];
 
