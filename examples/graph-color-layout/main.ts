@@ -3,8 +3,10 @@ import * as soda from "@traviswheelerlab/soda"
 
 const axis = new soda.AxisChart({selector: '#axis-chart'});
 const chart = new soda.TrackChart({selector: '#track-chart'});
+const chart2 = new soda.TrackChart({selector: '#track-chart2'});
+const chart3 = new soda.TrackChart({selector: '#track-chart3'});
 
-const charts = [axis, chart];
+const charts = [axis, chart, chart2, chart3];
 
 const zoomController = new soda.ZoomController();
 const resizeController = new soda.ResizeController();
@@ -24,31 +26,45 @@ for (let i = 0; i < n; i++) {
     ann.push(new soda.Annotation({h: 0, id: id, w: randInt(1000), x: randInt(w), y: 0}));
 }
 
-let colorScale = d3.scaleOrdinal(d3.schemeCategory10)
-    .domain(ids);
+// ann.push(new soda.Annotation({h: 0, id: '0', w: 1000, x: 0, y: 0}));
+// ann.push(new soda.Annotation({h: 0, id: '1', w: 1000, x: 1, y: 0}));
+// ann.push(new soda.Annotation({h: 0, id: '2', w: 1000, x: 2, y: 0}));
 
-let layerCount = soda.heuristicGraphLayout(ann);
-// let colorCount = soda.greedyGraphLayout(ann);
+let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
 let axisParams: soda.AxisRenderParams = {
     queryEnd: w,
     queryStart: 0
 };
 
-let trackParams: soda.TrackChartRenderParams = {
-    maxY: layerCount,
-    queryEnd: w,
-    queryStart: 0
-};
-
 axis.render(axisParams);
-chart.render(trackParams);
 
-let rectConf = {
-    selector: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
-};
+for (let i = 1; i < charts.length; i++) {
+    let layerCount = 0;
+    if (i == 1) {
+        layerCount = soda.intervalGraphLayout(ann);
+    }
+    else if (i == 2) {
+        layerCount = soda.heuristicGraphLayout(ann);
+    }
+    else if (i == 3) {
+        layerCount = soda.greedyGraphLayout(ann);
+    }
 
-soda.rectangleGlyph(chart, ann, rectConf);
+    let trackParams: soda.TrackChartRenderParams = {
+        maxY: layerCount,
+        queryEnd: w,
+        queryStart: 0
+    };
+
+    charts[i].render(trackParams);
+
+    let rectConf = {
+        selector: 'ann', fillColor: (d: soda.Annotation) => colorScale(d.id)
+    };
+
+    soda.rectangleGlyph(charts[i], ann, rectConf);
+}
 
 function randInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
