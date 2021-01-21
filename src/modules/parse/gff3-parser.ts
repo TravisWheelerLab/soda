@@ -1,5 +1,4 @@
-import {Annotation, AnnotationConfig} from "../../annotations/annotation";
-import {StringParser} from "./string-parser";
+import {AnnotationConfig} from "../../annotations/annotation";
 import {Gff3Annotation, Gff3AnnotationConfig, Phase} from "../../annotations/gff3-annotation";
 import {Orientation} from "../../annotations/oriented-annotation";
 import {AnnotationGroup} from "../../annotations/annotation-group";
@@ -8,7 +7,6 @@ const GFF3_FIELD_COUNT = 9;
 const GFF3_SEPARATOR = '\t';
 const GFF3_ATTR_SEPARATOR = ';';
 
-// export class Gff3Parser implements StringParser<Gff3Annotation> {
 export class Gff3Parser {
     lineCount = 0;
     ann: Gff3Annotation[] = [];
@@ -61,16 +59,12 @@ export class Gff3Parser {
             let a = this.parseLine(line);
             if (a !== undefined) {
                 this.ann.push(a);
-                let parentId = a.attributes.get('Parent');
-
-                if (parentId !== undefined) {
-                    let group = this.groupMap.get(parentId);
-                    if (group == undefined) {
-                        group = [];
-                        this.groupMap.set(parentId, group);
-                    }
+                let groupId = a.attributes.get('Parent') || a.id;
+                let group = this.groupMap.get(groupId);
+                if (group == undefined) {
+                    group = [];
+                    this.groupMap.set(groupId, group);
                 }
-
                 group.push(a);
             }
         }
@@ -78,7 +72,6 @@ export class Gff3Parser {
         let annGroups: AnnotationGroup[] = [];
         let keys = Array.from(this.groupMap.keys());
         for (const id of keys) {
-
             let ann = this.groupMap.get(id)!;
             let a0 = ann[0];
             let conf: AnnotationConfig = {
