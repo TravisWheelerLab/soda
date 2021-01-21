@@ -1,22 +1,28 @@
-import {Annotation} from "../../annotations/annotation";
+import {Annotation, AnnotationConfig} from "../../annotations/annotation";
 import {StringParser} from "./string-parser";
 import {Gff3Annotation, Gff3AnnotationConfig, Phase} from "../../annotations/gff3-annotation";
 import {Orientation} from "../../annotations/oriented-annotation";
+import {AnnotationGroup} from "../../annotations/annotation-group";
 
 const GFF3_FIELD_COUNT = 9;
 const GFF3_SEPARATOR = '\t';
 const GFF3_ATTR_SEPARATOR = ';';
 
-export class Gff3Parser implements StringParser<Gff3Annotation> {
+// export class Gff3Parser implements StringParser<Gff3Annotation> {
+export class Gff3Parser {
     lineCount = 0;
+    ann: Gff3Annotation[] = [];
+    groupMap: Map<string, Gff3Annotation[]> = new Map();
+
     constructor() {
     }
 
-    public parseLine(line: string): Gff3Annotation[] {
+    public parseLine(line: string): Gff3Annotation | void {
         this.lineCount++;
         let fields = line.split(GFF3_SEPARATOR);
         if (fields.length !== GFF3_FIELD_COUNT) {
-            throw(`Incorrect field count at line ${this.lineCount}.\n${line}`);
+            console.error(`Incorrect field count at line ${this.lineCount}.\n${line}`);
+            return;
         }
         let attributePairs = fields[8].split(GFF3_ATTR_SEPARATOR);
         let attributes: Map<string, string> = new Map();
@@ -47,6 +53,47 @@ export class Gff3Parser implements StringParser<Gff3Annotation> {
             phase: <Phase>fields[7],
             attributes: attributes,
         }
-        return [];
+        return new Gff3Annotation(conf);
+    }
+
+    public parseLines(lines: string): AnnotationGroup[] {
+        for (const line of lines.split('\n')) {
+            let a = this.parseLine(line);
+            if (a !== undefined) {
+                this.ann.push(a);
+                let parentId = a.attributes.get('Parent');
+
+                if (parentId !== undefined) {
+                    let group = this.groupMap.get(parentId);
+                    if (group == undefined) {
+                        group = [];
+                        this.groupMap.set(parentId, group);
+                    }
+                }
+
+                group.push(a);
+            }
+        }
+
+        let annGroups: AnnotationGroup[] = [];
+        let keys = Array.from(this.groupMap.keys());
+        for (const id of keys) {
+
+            let ann = this.groupMap.get(id)!;
+            let a0 = ann[0];
+            let conf: AnnotationConfig = {
+                id: id,
+                x: a0.x,
+                w: a0.w,
+                y: 0,
+                h: 0,
+            }
+            let annGroup = new AnnotationGroup(conf);
+            for (const a of ann.slice(0)) {
+                annGroup.add(a);
+            }
+            annGroups.push(annGroup);
+        }
+        return annGroups;
     }
 }
