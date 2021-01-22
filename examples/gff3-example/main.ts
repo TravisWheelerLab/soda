@@ -47,9 +47,8 @@ chr1	HAVANA	exon	35721	36081	.	-	.	ID=exon:ENST00000417324.1:1;Parent=ENST000004
 chr1	HAVANA	exon	35277	35481	.	-	.	ID=exon:ENST00000417324.1:2;Parent=ENST00000417324.1;gene_id=ENSG00000237613.2;transcript_id=ENST00000417324.1;gene_type=lncRNA;gene_name=FAM138A;transcript_type=lncRNA;transcript_name=FAM138A-201;exon_number=2;exon_id=ENSE00001669267.1;level=2;transcript_support_level=1;hgnc_id=HGNC:32334;tag=basic;havana_gene=OTTHUMG00000000960.1;havana_transcript=OTTHUMT00000002842.1
 `;
 
-let parser = new soda.Gff3Parser();
 
-let ann: soda.AnnotationGroup[] = parser.parseLines(gff3Data);
+let ann: soda.AnnotationGroup[] = soda.gff3Parse(gff3Data);
 
 const axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart'});

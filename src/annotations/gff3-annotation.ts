@@ -52,7 +52,15 @@ export interface Gff3AnnotationConfig extends AnnotationConfig {
     /**
      * A map of attributes for the annotation.
      */
-    attributes: Map<string, string>;
+    attributes: Map<string, string[]>;
+    /**
+     * The annotations that are considered as a sub-component of this annotation.
+     */
+    children?: Gff3Annotation[];
+    /**
+     * The annotations that are considered as derived from this annotation.
+     */
+    derivatives?: Gff3Annotation[];
 }
 
 /**
@@ -87,7 +95,15 @@ export class Gff3Annotation extends Annotation implements OrientedAnnotation {
     /**
      * A map of attributes for the annotation.
      */
-    attributes: Map<string, string>;
+    attributes: Map<string, string[]>;
+    /**
+     * The annotations that are considered as a sub-component of this annotation.
+     */
+    children?: Gff3Annotation[] = [];
+    /**
+     * The annotations that are considered as derived from this annotation.
+     */
+    derivatives?: Gff3Annotation[] = [];
 
     constructor(config: Gff3AnnotationConfig) {
         super(config);
@@ -98,6 +114,8 @@ export class Gff3Annotation extends Annotation implements OrientedAnnotation {
         this.phase = config.phase;
         this.orientation = config.orientation;
         this.attributes = config.attributes;
+        this.children = config.children;
+        this.derivatives = config.derivatives;
     }
 
     getW(): number {

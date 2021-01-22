@@ -15,7 +15,6 @@ export class AnnotationGroup extends Annotation {
     }
 
     public add(ann: Annotation) {
-        console.log(this.x, this.w);
         if (this.x > ann.x) {
             this.x = ann.x;
         }
@@ -25,7 +24,6 @@ export class AnnotationGroup extends Annotation {
             this.x2 = annX2;
         }
         this.w = (this.x2 - this.x);
-        console.log("now", this.x, this.w);
         this.group.push(ann);
     }
 
