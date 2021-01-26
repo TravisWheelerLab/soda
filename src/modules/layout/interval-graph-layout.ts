@@ -49,7 +49,7 @@ export function intervalGraphLayout(ann: Annotation[],
             vColors.push(v);
         }
 
-        graph.getAnnotationFromId(v).y = vColor;
+        graph.getAnnotationFromId(v).setY(vColor)
     }
     return (colorCount++);
 }
