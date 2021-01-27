@@ -19,12 +19,12 @@ export class Annotation {
      * A unique identifier for an Annotation object. Currently, it is up to users to make sure that this field is
      * uniquely assigned. SODA will not behave as intended if two distinct Annotations have the same id.
      */
-    readonly id: string;
+    id: string;
 
     /**
      * The x position of the annotation in semantic coordinates (generally a position on a chromosome in base pairs)
      */
-    readonly x: number;
+    x: number;
 
     /**
      * The y position of the annotation. This rarely has semantic meaning, and is probably used to prevent
@@ -35,12 +35,12 @@ export class Annotation {
     /**
      * The width of the annotation in semantic coordinates.
      */
-    readonly w: number;
+    w: number;
     /**
      * The height of an annotation in the visualization. This is currently not used by the SODA core.
      */
         // TODO: get rid of this?
-    readonly h: number;
+    h: number;
 
     constructor(config: AnnotationConfig) {
         this.id = config.id;
@@ -64,5 +64,13 @@ export class Annotation {
      */
     public getW(): number {
         return (this.w);
+    }
+
+    /**
+     * Sets the y coordinate. This exists largely to let the layout module be oblivious to the existence of
+     * AnnotationGroups.
+     */
+    public setY(y: number) {
+        this.y = y;
     }
 }

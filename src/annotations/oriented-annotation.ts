@@ -5,13 +5,21 @@ import {Annotation} from "./annotation";
  */
 export enum Orientation {
     /**
-     * Represents the forward strand
+     * Represents the forward strand.
      */
     Forward = "+",
     /**
-     * Represents the reverse strand
+     * Represents the reverse strand.
      */
     Reverse = "-",
+    /**
+     * Represents an unknown strand where strand information would be relevant (if it were known).
+     */
+    Unknown = "?",
+    /**
+     * Represents no strand.
+     */
+    Unoriented = "."
 }
 
 /**
@@ -20,7 +28,7 @@ export enum Orientation {
  */
 export interface OrientedAnnotation extends Annotation {
     /**
-     *  The orientation.
-      */
+     * The orientation.
+     */
     orientation: Orientation;
 }

@@ -39,7 +39,7 @@ export class AnnotationGraph {
                 }
                 if (annotationsOverlap(a, b, tolerance)) {
                     this.edges.set(a.id, this.edges.get(a.id)!.concat(b.id));
-                    this.degrees.set(a.id, this.degrees.get(a.id + 1)!);
+                    this.degrees.set(a.id, this.degrees.get(a.id)! + 1);
                 }
             }
         }
