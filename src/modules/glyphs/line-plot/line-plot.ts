@@ -43,58 +43,74 @@ export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> 
 }
 
 export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: LinePlotConfig<A, C>): void {
-    // bind the provided data to new svg lines
-    const selection = chart.svgSelection
-        .selectAll<SVGPathElement, A>(`line.${conf.selector}`)
+    // first we're going to select the containing G tags
+    const outerSelection = chart.svgSelection
+        .selectAll<SVGGElement, A>(`g.${conf.selector}`)
         .data(ann, (a: A) => a.id);
-
-    console.log("FIRST SELECTION:", selection);
-
-    const enter = selection.enter()
-        .append('path');
-
-    console.log("ENTER:", enter)
-
-    const merge = enter.merge(selection);
-
-    console.log("MERGE:", enter)
 
     const strokeWidth = conf.strokeWidth || (() => 1);
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
     const strokeDashArray = conf.strokeDashArray || (() => "");
 
-    // set the constant style parameters
-    enter
+    const outerEnter = outerSelection.enter()
+        .append('g')
         .attr('class', conf.selector)
         .style('stroke-width', (a: A) => strokeWidth(a, chart))
         .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
         .style('stroke-dasharray', (a: A) => strokeDashArray(a, chart))
         .style('stroke', (a: A) => strokeColor(a, chart))
+        .style('fill', 'none')
+
+    const outerMerge = outerEnter.merge(outerSelection)
+
+    // TODO: do some cute config thing to set a background
+    // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    // outerMerge.append('rect')
+    //     .attr('x', (a) => chart.getXScale()(a.x))
+    //     .attr('width', (a) => chart.getXScale()(a.w))
+    //     .attr('y', (a) => a.y * chart.binHeight)
+    //     .attr('height', chart.binHeight)
+    //     .style('fill', (a) => colorScale(`${a.y}`))
+
+    // remove lines no longer in the visualization
+    outerSelection.exit()
+        .remove();
+
+    let points: PointDatum[][] = [];
+    for (const a of ann) {
+        points.push(a.points);
+    }
+
+    // now we'll actually grab the path elements
+    const innerSelection = outerMerge
+        .selectAll<SVGPathElement, PointDatum[]>('path')
+        .data(points)
+
+    const innerEnter = innerSelection.enter()
+        .append('path')
+        .attr('class', conf.selector)
+
+    const innerMerge = innerEnter.merge(innerSelection)
 
     // let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
     let lineFunc = defaults.lineFunc(chart)
 
-    // set the position parameters
-    merge
-        .datum((a) => a.points)
+    // create the line on each path with the lineFunc
+   innerMerge
         .attr('d', lineFunc);
 
-    //
-    //
-    // // for all of the lines remaining, update the id->d3 selection map
+    // TODO: the ID mapping for plots is going to require the mapping rework
+    // for all of the lines remaining, update the id->d3 selection map
     // merge
     //     .each((a, i, nodes) => {
     //         mapIdToSelection(a.id, d3.select(nodes[i]));
     //         mapIdToAnnotation(a.id, a);
     //     });
     //
-    // remove lines no longer in the visualization
-    selection.exit()
-        .remove();
 
-    // if (isZoomableChart(chart)) {
-    //     // if the chart is zoomable, register the ZoomBehavior for the lines
-    //     registerZoomBehavior(chart, conf.zoom || new defaults.LinePlotZoomBehavior(conf.selector));
-    // }
+    if (isZoomableChart(chart)) {
+        // if the chart is zoomable, register the ZoomBehavior for the lines
+        registerZoomBehavior(chart, conf.zoom || new defaults.LinePlotZoomBehavior(conf.selector, lineFunc));
+    }
 }

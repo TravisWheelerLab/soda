@@ -220,7 +220,7 @@ window.onresize = () => resizeController.trigger();
 let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
 let ann: soda.PlotAnnotation[] = []
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < 1; i++) {
     for (let j = 0; j < 2; j++) {
         let conf: soda.PlotAnnotationConfig = {
             id: `i`,
