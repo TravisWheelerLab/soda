@@ -21,7 +21,10 @@ export class LineChart extends TrackChart<LineChartRenderParams> {
         let conf: LinePlotConfig<PlotAnnotation, LineChart> = {
             selector: 'line-plot',
         }
-        linePlot(this, params.data, conf)
-        barPlot(this, params.data, conf)
+        let conf2: LinePlotConfig<PlotAnnotation, LineChart> = {
+            selector: 'bar-plot',
+        }
+        linePlot(this, [params.data[0]], conf)
+        barPlot(this, [params.data[1]], conf2)
     }
 }

@@ -6,7 +6,7 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
    let yScale = d3.scaleLinear()
        .domain(domain)
-       .range([0, chart.binHeight]);
+       .range([chart.binHeight, 0]);
 
    let func = d3.line<PointDatum>()
       .x((d) => chart.getXScale()(d.parent.x + d.x))
