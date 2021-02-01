@@ -9,6 +9,9 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
 
 
+/**
+ * An interface that holds the parameters to style a line plot.
+ */
 export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
     /**
      * A callback to define the stroke color of the line plot.
@@ -42,8 +45,13 @@ export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> 
     zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
 
+/**
+ * This renders PlotAnnotations as a line plot.
+ * @param chart The Chart in which we will render the plot.
+ * @param ann The PlotAnnotations to be rendered.
+ * @param conf The parameters for configuring the styling of the plot.
+ */
 export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: LinePlotConfig<A, C>): void {
-    // first we're going to select the containing G tags
     const outerSelection = chart.svgSelection
         .selectAll<SVGGElement, A>(`g.${conf.selector}`)
         .data(ann, (a: A) => a.id);
