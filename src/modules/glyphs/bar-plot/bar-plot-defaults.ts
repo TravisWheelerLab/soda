@@ -12,20 +12,26 @@ export const barHeightFunc = <P extends ChartRenderParams>(chart: Chart<P>, doma
     return func;
 }
 
-export class BarPlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPathElement, A, HTMLElement, any>> {
+export class BarPlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     selector: string;
 
     constructor(selector: string) {
         this.selector = `g.${selector}`;
     }
 
-    public apply(chart: C, selection: d3.Selection<SVGPathElement, A, HTMLElement, any>) {
+    public apply(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>) {
         selection
+            .selectAll<SVGRectElement, PointDatum>('rect')
+            .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
+            .attr('width', 5)
     }
 
-    public applyDuration(chart: C, selection: d3.Selection<SVGPathElement, A, HTMLElement, any>, duration: number) {
+    public applyDuration(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>, duration: number) {
         selection
+            .selectAll<SVGRectElement, PointDatum>('rect')
             .transition()
             .duration(duration)
+            .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
+            .attr('width', 5)
     }
 }
