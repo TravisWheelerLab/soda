@@ -60,6 +60,8 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
     const strokeDashArray = conf.strokeDashArray || (() => "");
+    // let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
+    const lineFunc = defaults.lineFunc(chart)
 
     const outerEnter = outerSelection.enter()
         .append('g')
@@ -72,50 +74,29 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
 
     const outerMerge = outerEnter.merge(outerSelection)
 
-    // TODO: do some cute config thing to set a background
-    // let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-    // outerMerge.append('rect')
-    //     .attr('x', (a) => chart.getXScale()(a.x))
-    //     .attr('width', (a) => chart.getXScale()(a.w))
-    //     .attr('y', (a) => a.y * chart.binHeight)
-    //     .attr('height', chart.binHeight)
-    //     .style('fill', (a) => colorScale(`${a.y}`))
-
-    // remove lines no longer in the visualization
+    // remove plots no longer in the visualization
     outerSelection.exit()
         .remove();
 
-    let points: PointDatum[][] = [];
-    for (const a of ann) {
-        points.push(a.points);
-    }
+    outerMerge
+        // iterate over the G tags and render the charts inside
+        .each((a, i, nodes) => {
+            // for now, I think mapping the annotations to the G tags make sense
+            mapIdToSelection(a.id, d3.select(nodes[i]));
+            mapIdToAnnotation(a.id, a);
 
-    // now we'll actually grab the path elements
-    const innerSelection = outerMerge
-        .selectAll<SVGPathElement, PointDatum[]>('path')
-        .data(points)
+            const innerSelection = d3.select(nodes[i])
 
-    const innerEnter = innerSelection.enter()
-        .append('path')
-        .attr('class', conf.selector)
+            innerSelection
+              .selectAll<SVGPathElement, PointDatum[]>(`path.${conf.selector}`)
+                .remove();
 
-    const innerMerge = innerEnter.merge(innerSelection)
-
-    // let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
-    let lineFunc = defaults.lineFunc(chart)
-
-    // create the line on each path with the lineFunc
-   innerMerge
-        .attr('d', lineFunc);
-
-    // TODO: the ID mapping for plots is going to require the mapping rework
-    // for all of the lines remaining, update the id->d3 selection map
-    // merge
-    //     .each((a, i, nodes) => {
-    //         mapIdToSelection(a.id, d3.select(nodes[i]));
-    //         mapIdToAnnotation(a.id, a);
-    //     });
-    //
+            innerSelection
+              .append('path')
+                .datum(a.points)
+                .attr('class', conf.selector)
+                .attr('d', lineFunc);
+        });
 
     if (isZoomableChart(chart)) {
         // if the chart is zoomable, register the ZoomBehavior for the lines

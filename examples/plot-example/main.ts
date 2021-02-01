@@ -223,7 +223,7 @@ let ann: soda.PlotAnnotation[] = []
 for (let i = 0; i < 1; i++) {
     for (let j = 0; j < 2; j++) {
         let conf: soda.PlotAnnotationConfig = {
-            id: `i`,
+            id: `${i}-${j}`,
             x: i * 1000,
             w: 1000,
             y: j,

@@ -15,7 +15,7 @@ export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [
    return func;
 }
 
-export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPathElement, A, HTMLElement, any>> {
+export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     selector: string;
     lineFunc: d3.Line<PointDatum>;
 
@@ -24,13 +24,13 @@ export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>
         this.lineFunc = lineFunc;
     }
 
-    public apply(chart: C, selection: d3.Selection<SVGPathElement, A, HTMLElement, any>) {
+    public apply(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>) {
         selection
             .selectAll<SVGPathElement, PointDatum[]>(`path`)
             .attr('d', this.lineFunc);
     }
 
-    public applyDuration(chart: C, selection: d3.Selection<SVGPathElement, A, HTMLElement, any>, duration: number) {
+    public applyDuration(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>, duration: number) {
         selection
             .transition()
             .duration(duration)
