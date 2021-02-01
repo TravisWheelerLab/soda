@@ -8,7 +8,6 @@ import * as defaults from "./line-plot-defaults";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
 
-
 /**
  * An interface that holds the parameters to style a line plot.
  */
@@ -99,7 +98,6 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
         });
 
     if (isZoomableChart(chart)) {
-        // if the chart is zoomable, register the ZoomBehavior for the lines
         registerZoomBehavior(chart, conf.zoom || new defaults.LinePlotZoomBehavior(conf.selector, lineFunc));
     }
 }

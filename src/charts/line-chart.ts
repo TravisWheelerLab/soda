@@ -1,6 +1,7 @@
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
 import {PlotAnnotation} from "../annotations/plot-annotation";
 import {linePlot, LinePlotConfig} from "../modules/glyphs/line-plot/line-plot";
+import {barPlot} from "../modules/glyphs/bar-plot/bar-plot";
 
 export interface LineChartConfig extends TrackChartConfig {
 
@@ -21,5 +22,6 @@ export class LineChart extends TrackChart<LineChartRenderParams> {
             selector: 'line-plot',
         }
         linePlot(this, params.data, conf)
+        barPlot(this, params.data, conf)
     }
 }
