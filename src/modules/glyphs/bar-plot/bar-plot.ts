@@ -54,8 +54,8 @@ export function barPlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C
             const innerEnter = innerSelection.enter()
                 .append('rect')
                 .attr('class', conf.selector)
-                .attr('y', (a) => chart.binHeight * (a.parent.y + 1) - barHeightFunc(a.y))
-                .attr('height', (a) => barHeightFunc(a.y))
+                .attr('y', (a) => chart.binHeight * (a.parent.y + 1) - barHeightFunc(a.value))
+                .attr('height', (a) => barHeightFunc(a.value))
                 .attr('fill', 'green')
 
             const innerMerge = innerEnter.merge(innerSelection);

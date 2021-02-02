@@ -10,7 +10,7 @@ export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [
 
    let func = d3.line<PointDatum>()
       .x((d) => chart.getXScale()(d.parent.x + d.x))
-      .y((d) => d.parent.y * chart.binHeight + yScale(d.y));
+      .y((d) => d.parent.y * chart.binHeight + yScale(d.value));
 
    return func;
 }
