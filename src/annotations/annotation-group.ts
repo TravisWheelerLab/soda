@@ -1,5 +1,9 @@
 import {Annotation, AnnotationConfig} from "./annotation";
 
+export interface AnnotationGroupConfig<A extends Annotation> extends AnnotationConfig {
+    group?: A[];
+}
+
 /**
  * An Annotation class that contains a group of Annotations. Mostly, this is used to maintain the group of
  * Annotations at the same vertical position--all Annotations in the group will be set to the same y coordinate
@@ -10,9 +14,15 @@ export class AnnotationGroup<A extends Annotation> extends Annotation {
     group: A[] = [];
     x2: number;
 
-    constructor(conf: AnnotationConfig) {
-       super(conf);
-       this.x2 = conf.x + conf.w;
+    constructor(conf: AnnotationGroupConfig<A>) {
+        super(conf);
+        this.x2 = conf.x + conf.w;
+
+        if (conf.group !== undefined) {
+            for (const ann of conf.group) {
+                this.add(ann);
+            }
+        }
     }
 
     public add(ann: A) {

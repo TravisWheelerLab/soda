@@ -55,6 +55,12 @@ export interface RectangleConfig<A extends Annotation, C extends Chart<any>> ext
      */
     strokeColor?: (a: A, c: C) => string;
     /**
+     * A callback to define the fill opacity of the rectangle glyph.
+     * @param a
+     * @param c
+     */
+    fillOpacity?: (a: A, c: C) => number;
+    /**
      * A callback to define the fill color of the rectangle glyph.
      * @param a
      * @param c
@@ -89,6 +95,7 @@ export function rectangleGlyph<A extends Annotation, C extends Chart<any>>(chart
     const strokeWidth = conf.strokeWidth || (() => 1);
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
+    const fillOpacity = conf.fillOpacity || (() => 1);
     const fillColor = conf.fillColor || (() => 'black');
 
     // set the constant style parameters
@@ -97,6 +104,7 @@ export function rectangleGlyph<A extends Annotation, C extends Chart<any>>(chart
         .style('stroke-width', (a: A) => strokeWidth(a, chart))
         .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
         .style('stroke', (a: A) => strokeColor(a, chart))
+        .style('fill-opacity', (a: A) => fillOpacity(a, chart))
         .style('fill', (a: A) => fillColor(a, chart));
 
     const x: (a: A, c: C) => number = conf.x || defaults.rectXFn;
