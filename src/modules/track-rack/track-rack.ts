@@ -5,10 +5,16 @@ export interface TrackRackConfig {
     selector: string;
 }
 
-export class TrackRack {
+export interface QuerySignature {
+    start: number;
+    end: number;
+}
+
+export class TrackRack<Q extends QuerySignature> {
     selector: string;
     compCount = 0;
     charts: Chart<any>[] = [];
+    renderCallbacks: ((chart: any, query: Q) => void)[] = [];
     divSelection: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
 
     constructor(config: TrackRackConfig) {
@@ -20,7 +26,11 @@ export class TrackRack {
             .style('height', 'auto')
     }
 
-    public add(chart: Chart<any>): void{
+    public add<C extends Chart<any>>(chart: C, renderCallback: (chart: C, query: Q) => void): void {
+
+        this.charts.push(chart);
+        this.renderCallbacks.push(renderCallback);
+
         let compDiv = this.divSelection
             .append('div')
             .attr('class', 'track-rack-component')
@@ -62,11 +72,9 @@ export class TrackRack {
         this.compCount++;
     }
 
-    protected query(start: number, end: number): void {
-
-    }
-
-    public render(): void {
-
+    public queryAndRender(query: Q): void {
+        for (let [i, chart] of this.charts.entries()) {
+            this.renderCallbacks[i](chart, query);
+        }
     }
 }
