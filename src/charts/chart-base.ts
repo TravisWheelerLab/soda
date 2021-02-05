@@ -12,7 +12,7 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
     /**
      * A string that can be used to uniquely select the target DOM container via d3.select().
      */
-    selector:       string;
+    selector:       string | undefined;
     /**
      * The last used render parameters.
      */
@@ -50,10 +50,16 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
      * @param config
      */
     protected constructor(config: ChartConfig) {
-        this.selector = config.selector;
-        this.svgSelection = d3.select(this.selector)
-            .append('svg')
-            .style('vertical-align', 'top');
+        if (config.selector !== undefined) {
+            this.selector = config.selector;
+            this.svgSelection = d3.select(this.selector)
+                .append('svg')
+                .style('vertical-align', 'top');
+        }
+        else {
+            this.svgSelection = d3.create('svg:svg')
+                .style('vertical-align', 'top');
+        }
 
         if (config.width !== undefined) {
             this.width = config.width;
@@ -80,6 +86,16 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         this.svgSelection
             .attr('width', this.width)
             .attr('height', this.height);
+    }
+
+    /**
+     * Get the string selector to the container that the Chart lives in.
+     */
+    public getSelector(): string {
+        if (this.selector == undefined) {
+            throw (`Selector on ${this} is null or undefined. Is this Chart detached?`)
+        }
+        return this.selector;
     }
 
     /**
@@ -119,17 +135,23 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
      * This uses d3 to select the Chart's DOM container and returns a DOMRect that describes that containers dimensions.
      */
     public getContainerDimensions(): DOMRect {
-        // use d3 to find the dimensions of the chart's container
-        const containerSelection = d3.select<HTMLElement, any>(this.selector).node();
-        let containerDimensions;
-        if (containerSelection == null) {
-            throw (`Selector: ${this.selector} returned null selection`);
+        let containerDimensions: DOMRect;
+        if (this.selector !== undefined ) {
+            const containerSelection = d3.select<HTMLElement, any>(this.selector).node();
+            if (containerSelection == null) {
+                throw (`Selector: ${this.selector} returned null selection`);
+            } else {
+                containerDimensions = containerSelection
+                    .getBoundingClientRect();
+            }
         }
         else {
-            containerDimensions = containerSelection
-                .getBoundingClientRect();
+            //TODO: this may be a bad way to handle this
+            containerDimensions = {
+                bottom: 0, height: 0, left: 0, right: 0, top: 0, width: 0, x: 0, y: 0, toJSON(): any {}
+            }
         }
-        return (containerDimensions);
+        return containerDimensions
     }
 
     /**
@@ -178,7 +200,7 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         this.height = height;
 
         // TODO: is this really always going to be a div?
-        d3.select<HTMLDivElement, any>(this.selector)
+        d3.select<HTMLDivElement, any>(this.getSelector())
             .style('height', this.height + 'px');
 
         this.svgSelection

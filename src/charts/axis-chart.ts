@@ -98,7 +98,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
      * This removes all of the SVG elements that the AxisChart has rendered.
      */
     protected clearAxis(): void {
-        d3.select(this.selector)
+       this.svgSelection
           .selectAll('g')
             .remove();
     }

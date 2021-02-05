@@ -76,7 +76,7 @@ export class RuleController implements Plugin {
 
         for (const comp of this.components) {
             // move the rules
-            d3.select(comp.selector)
+            d3.select(comp.getSelector())
                 .selectAll('div.vertical-rule')
                 .style('left', (mouseX + 5) + 'px');
 
@@ -85,7 +85,7 @@ export class RuleController implements Plugin {
             // relative to the chromosome coordinate system
             const compSvgDims = comp.getSvgDimensions();
             let tooltipText = Math.round(comp.getXScale().invert(mouseX - compSvgDims.x + 5));
-            d3.select(comp.selector)
+            d3.select(comp.getSelector())
                 .selectAll('div.rule-tooltip')
                 .style('opacity', () => {
                     // we'll hide the tooltip for every component except the active one
@@ -111,7 +111,7 @@ export class RuleController implements Plugin {
         for (const comp of this.components) {
             let svgDims = comp.getSvgDimensions();
             let top = svgDims.y;
-            d3.select(comp.selector)
+            d3.select(comp.getSelector())
                 .selectAll('div.vertical-rule')
                 .style('height', comp.height + 'px')
                 .style('top', top + 'px')
@@ -125,7 +125,7 @@ export class RuleController implements Plugin {
  */
 export function ruleTooltip(chart: ChartBase<any>) {
     // a utility function to create the div for a rule tooltip
-    d3.select(chart.selector)
+    d3.select(chart.getSelector())
       .append('div')
         .attr('class', 'rule-tooltip')
         .style('position', 'absolute')
@@ -142,7 +142,7 @@ export function verticalRule(chart: ChartBase<any>) {
     // a utility function to create the div for a vertical rule
     let containerDims = chart.getContainerDimensions();
     let top = containerDims.y;
-    d3.select(chart.selector)
+    d3.select(chart.getSelector())
       .append('div')
         .attr('class', 'vertical-rule')
         .style('height', chart.height + 'px')
