@@ -10,7 +10,6 @@ export class TrackRack {
     compCount = 0;
     charts: Chart<any>[] = [];
     divSelection: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
-    // compDivSelections: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>[] = [];
 
     constructor(config: TrackRackConfig) {
         this.selector = config.selector;
@@ -27,7 +26,6 @@ export class TrackRack {
             .attr('class', 'track-rack-component')
             .style('width', '100%')
             .style('height', 'auto')
-            .style('display', 'flex')
             .style('padding-top', '5px')
             .style('padding-bottom', '5px')
             .style('border', 'solid')
@@ -37,15 +35,24 @@ export class TrackRack {
             .append('div')
             .attr('class', 'track-rack-sidebar')
             .attr('id', `track-rack-bar-${this.compCount}`)
-            .style('width', '10%')
+            .style('width', '100px')
             .style('float', 'left')
             .style('height', 'auto')
+            .append('svg')
+            .attr('height', '20px')
+            .attr('width' ,'100%')
+            .append('text')
+            .text(`track ${this.compCount}`)
+            .attr('x', 10)
+            .attr('y', 10)
+            .style('fill', 'black')
 
         let compChartDiv = compDiv
             .append('div')
             .attr('class', 'track-rack-chart')
             .attr('id', `track-rack-chart-${this.compCount}`)
-            .style('width', '90%')
+            .style('margin-left', '100px')
+            .style('width', '100%')
             .style('height', 'auto')
 
         compChartDiv.append(() => chart.svgSelection.node())
