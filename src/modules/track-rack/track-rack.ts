@@ -1,13 +1,9 @@
 import {Chart} from "../../charts/chart";
 import * as d3 from "d3";
+import {QuerySignature} from "../query/query-controller";
 
 export interface TrackRackConfig {
     selector: string;
-}
-
-export interface QuerySignature {
-    start: number;
-    end: number;
 }
 
 export class TrackRack<Q extends QuerySignature> {
@@ -26,7 +22,7 @@ export class TrackRack<Q extends QuerySignature> {
             .style('height', 'auto')
     }
 
-    public add<C extends Chart<any>>(chart: C, renderCallback: (chart: C, query: Q) => void): void {
+    public add<C extends Chart<any>>(chart: C, renderCallback: (chart: C, query: Q) => void, title?: string): void {
 
         this.charts.push(chart);
         this.renderCallbacks.push(renderCallback);
@@ -38,8 +34,6 @@ export class TrackRack<Q extends QuerySignature> {
             .style('height', 'auto')
             .style('padding-top', '5px')
             .style('padding-bottom', '5px')
-            .style('border', 'solid')
-            .style('border-width', '0.5px')
 
         let compBarDiv = compDiv
             .append('div')
@@ -52,9 +46,9 @@ export class TrackRack<Q extends QuerySignature> {
             .attr('height', '20px')
             .attr('width' ,'100%')
             .append('text')
-            .text(`track ${this.compCount}`)
+            .text(title || ``)
             .attr('x', 10)
-            .attr('y', 10)
+            .attr('y', 15)
             .style('fill', 'black')
 
         let compChartDiv = compDiv
@@ -62,7 +56,7 @@ export class TrackRack<Q extends QuerySignature> {
             .attr('class', 'track-rack-chart')
             .attr('id', `track-rack-chart-${this.compCount}`)
             .style('margin-left', '100px')
-            .style('width', '100%')
+            .style('width', 'calc(100% - 100px)')
             .style('height', 'auto')
 
         compChartDiv.append(() => chart.svgSelection.node())
