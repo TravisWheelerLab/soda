@@ -9,6 +9,8 @@ export const sequenceYFn = <A extends SequenceAnnotation, C extends Chart<any>>(
 
 export class SequenceZoomBehavior<A extends SequenceAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     selector: string;
+    id = 'default-sequence-zoom-behavior';
+
     x: (a: A, c: C) => number;
     y: (a: A, c: C) => number;
 
@@ -33,6 +35,8 @@ export class SequenceZoomBehavior<A extends SequenceAnnotation, C extends Chart<
 
 export class SequenceCharacterZoomBehavior<D extends CharacterDatum, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGTextElement, D, HTMLElement, any>> {
     selector: string;
+    id = 'default-sequence-character-zoom-behavior';
+
     // x: (d: D, c: C) => number;
 
     constructor(selector: string) {

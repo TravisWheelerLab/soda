@@ -14,13 +14,10 @@ export function registerZoomBehavior(chart: ZoomableChart<any>, behavior: ZoomBe
         chart.zoomBehaviors = [];
     }
 
-    // TODO: resolve the issue of non-unique selectors
     for (const b of chart.zoomBehaviors) {
-        // if (behavior.selector == b.selector) {
-        //     // if this chart already has a zoomBehavior
-        //     // registered to this selector, we'll just return
-        //     return;
-        // }
+        if (behavior.selector == b.selector && behavior.id == b.id) {
+            return;
+        }
     }
     chart.zoomBehaviors.push(behavior);
 }

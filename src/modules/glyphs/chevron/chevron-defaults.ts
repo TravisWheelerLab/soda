@@ -45,6 +45,7 @@ export const chevronPatternViewBoxFn = <A extends Annotation>(a: A, h: number, s
 
 export class ForwardChevronZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
+    id = 'default-forward-chevron-zoom-behavior';
 
     constructor(selector: string) {
         this.selector = `pattern.${selector}`;
@@ -65,6 +66,7 @@ export class ForwardChevronZoomBehavior<A extends Annotation, C extends Chart<an
 
 export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
+    id = 'default-reverse-chevron-zoom-behavior';
 
     constructor(selector: string) {
         this.selector = `pattern.${selector}`;
@@ -85,6 +87,7 @@ export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<an
 
 export class ChevronZoomBehavior<A extends OrientedAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
+    id = 'default-chevron-zoom-behavior';
 
     constructor(selector: string) {
         this.selector = `pattern.${selector}`;
@@ -105,6 +108,8 @@ export class ChevronZoomBehavior<A extends OrientedAnnotation, C extends Chart<a
 
 export class PatternSwitchZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGRectElement, A, HTMLElement, any>> {
     selector: string;
+    id = 'default-pattern-switch-zoom-behavior';
+
     fillColor: (a: A, c: C) => string;
     patternType: ChevronPatternType;
 
