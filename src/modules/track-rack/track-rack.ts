@@ -1,28 +1,43 @@
 import {Chart} from "../../charts/chart";
 import * as d3 from "d3";
-import {QuerySignature} from "../query/query-controller";
+import {QueryController, QuerySignature} from "../query/query-controller";
+import {ViewRange, ZoomController} from "../zoom/zoom-controller";
+import {ResizeController} from "../resize/resize-controller";
+import {isZoomableChart} from "../zoom/zoomable-chart";
 
-export interface TrackRackConfig {
+export interface TrackRackConfig<Q extends QuerySignature> {
     selector: string;
+    queryCallback: (prevQuery: Q, view: ViewRange) => Q;
 }
 
 export class TrackRack<Q extends QuerySignature> {
     selector: string;
+    zoomController: ZoomController;
+    resizeController: ResizeController;
+    queryController: QueryController<Q>;
     compCount = 0;
     charts: Chart<any>[] = [];
     renderCallbacks: ((chart: any, query: Q) => void)[] = [];
     divSelection: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
 
-    constructor(config: TrackRackConfig) {
+    constructor(config: TrackRackConfig<Q>) {
         this.selector = config.selector;
         this.divSelection = d3.select(this.selector)
             .append('div')
             .attr('class', 'track-rack')
             .style('width', '100%')
             .style('height', 'auto')
+
+        this.zoomController = new ZoomController();
+        this.resizeController = new ResizeController();
+        this.queryController = new QueryController();
+        this.queryController.queryCallback = config.queryCallback;
+        this.zoomController._queryController = this.queryController;
     }
 
-    public add<C extends Chart<any>>(chart: C, renderCallback: (chart: C, query: Q) => void, title?: string): void {
+    public add<C extends Chart<any>>(chart: C,
+                                     renderCallback: (chart: C, query: Q) => void,
+                                     title?: string): void {
 
         this.charts.push(chart);
         this.renderCallbacks.push(renderCallback);
@@ -64,11 +79,20 @@ export class TrackRack<Q extends QuerySignature> {
         chart.setToContainerDimensions();
 
         this.compCount++;
+        if (isZoomableChart(chart)) {
+            this.zoomController.addComponent(chart);
+        }
+        // if (isResizableChart(chart)) {
+        //@ts-ignore
+        this.resizeController.addComponent(chart);
+        // }
+        this.queryController.add(chart, renderCallback);
     }
 
     public queryAndRender(query: Q): void {
-        for (let [i, chart] of this.charts.entries()) {
-            this.renderCallbacks[i](chart, query);
-        }
+        this.queryController.render(query);
+        // for (let [i, chart] of this.charts.entries()) {
+        //     this.renderCallbacks[i](chart, query);
+        // }
     }
 }
