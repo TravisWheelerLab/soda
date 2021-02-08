@@ -14,6 +14,7 @@ export class QueryController<Q extends QuerySignature> {
     queryCallback?: ((prevQuery: Q, view: ViewRange) => Q);
     renderCallbacks: ((chart: any, query: Q) => void)[] = [];
     polling: boolean = false;
+    currentView: ViewRange = {start: 0, end: 0, width: 0};
     lastAlert: number = 0;
 
     constructor() {
@@ -26,10 +27,10 @@ export class QueryController<Q extends QuerySignature> {
         this.renderCallbacks.push(renderCallback);
     }
 
-    public poll(self: QueryController<Q>, view: ViewRange): void {
+    public poll(self: QueryController<Q>): void {
         const elapsed = performance.now() - self.lastAlert;
         if (elapsed > THRESHOLD) {
-            self.query(view);
+            self.query(self.currentView);
         }
         this.polling = false
     }
@@ -45,13 +46,14 @@ export class QueryController<Q extends QuerySignature> {
     public query(view: ViewRange): void {
         if (this.prevQuery!.start > view.start || this.prevQuery!.end < view.end) {
             let newQuery = this.queryCallback!(this.prevQuery!, view)
-            this.render(newQuery);
+            this.render(newQuery)
         }
     }
 
     public alert(view: ViewRange): void {
+        this.currentView = view;
         if (!this.polling) {
-            setTimeout(() => this.poll(this, view), 500)
+            setTimeout(() => this.poll(this), 500)
             this.polling = true;
         }
         this.lastAlert = performance.now();

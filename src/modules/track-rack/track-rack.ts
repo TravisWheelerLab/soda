@@ -79,9 +79,10 @@ export class TrackRack<Q extends QuerySignature> {
         chart.setToContainerDimensions();
 
         this.compCount++;
-        if (isZoomableChart(chart)) {
-            this.zoomController.addComponent(chart);
-        }
+        // if (isZoomableChart(chart)) {
+        //@ts-ignore
+        this.zoomController.addComponent(chart);
+        // }
         // if (isResizableChart(chart)) {
         //@ts-ignore
         this.resizeController.addComponent(chart);
@@ -91,8 +92,5 @@ export class TrackRack<Q extends QuerySignature> {
 
     public queryAndRender(query: Q): void {
         this.queryController.render(query);
-        // for (let [i, chart] of this.charts.entries()) {
-        //     this.renderCallbacks[i](chart, query);
-        // }
     }
 }
