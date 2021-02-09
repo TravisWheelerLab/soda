@@ -7,7 +7,8 @@ import {isZoomableChart} from "../zoom/zoomable-chart";
 
 export interface TrackRackConfig<Q extends QueryParameters> {
     selector: string;
-    queryCallback: (prevQuery: Q, view: ViewRange) => Q;
+    queryBuilder: (prevQuery: Q, view: ViewRange) => Q;
+    widthThresholds?: number[];
 }
 
 export class TrackRack<Q extends QueryParameters> {
@@ -17,7 +18,6 @@ export class TrackRack<Q extends QueryParameters> {
     queryController: QueryController<Q>;
     compCount = 0;
     charts: Chart<any>[] = [];
-    renderCallbacks: ((chart: any, query: Q) => void)[] = [];
     divSelection: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
 
     constructor(config: TrackRackConfig<Q>) {
@@ -30,17 +30,17 @@ export class TrackRack<Q extends QueryParameters> {
 
         this.zoomController = new ZoomController();
         this.resizeController = new ResizeController();
-        this.queryController = new QueryController();
-        this.queryController.queryBuilder = config.queryCallback;
+        this.queryController = new QueryController({queryBuilder: config.queryBuilder,
+                                                           widthThresholds: config.widthThresholds});
+        this.queryController.queryBuilder = config.queryBuilder;
         this.zoomController._queryController = this.queryController;
     }
 
     public add<C extends Chart<any>>(chart: C,
-                                     renderCallback: (chart: C, query: Q) => void,
+                                     renderCallbacks: ((chart: C, query: Q) => void)[],
                                      title?: string): void {
 
         this.charts.push(chart);
-        this.renderCallbacks.push(renderCallback);
 
         let compDiv = this.divSelection
             .append('div')
@@ -87,7 +87,7 @@ export class TrackRack<Q extends QueryParameters> {
         //@ts-ignore
         this.resizeController.addComponent(chart);
         // }
-        this.queryController.add(chart, renderCallback);
+        this.queryController.add(chart, renderCallbacks);
     }
 
     public queryAndRender(query: Q): void {

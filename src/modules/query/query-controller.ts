@@ -22,6 +22,7 @@ export interface QueryControllerConfig<Q extends QueryParameters> {
      * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
      */
     queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
+    widthThresholds?: number[];
 }
 
 /**
@@ -43,10 +44,15 @@ export class QueryController<Q extends QueryParameters> {
      */
     queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
     /**
+     * A list of thresholds in the semantic view with that determine which rendering callbacks are used at certain
+     * zoom levels. This is intended to be used to help set varying levels of detail in a visualization.
+     */
+    widthThresholds?: number[];
+    /**
      * A list of callback functions that are responsible for rendering charts. The functions should be placed in the
      * same order here that they are in the charts property.
      */
-    renderCallbacks: ((chart: any, query: Q) => void)[] = [];
+    renderCallbacks: ((chart: any, query: Q) => void)[][] = [];
     /**
      * A boolean flag that indicates whether or not the controller is currently in the process of checking for the
      * end of a stream of alerts.
@@ -64,19 +70,25 @@ export class QueryController<Q extends QueryParameters> {
 
     constructor(config: QueryControllerConfig<Q>) {
         this.queryBuilder = config.queryBuilder;
+        this.widthThresholds = config.widthThresholds;
     }
 
     /**
      * Adds a chart to the QueryController.
      * @param chart The chart to be added.
-     * @param renderCallback The callback that is responsible for accepting query parameters and calling render on
+     * @param renderCallbacks The callback that is responsible for accepting query parameters and calling render on
      * the added Chart.
      */
     public add<C extends Chart<any>>(chart: C,
-                                     renderCallback: (chart: C, query: Q) => void): void {
+                                     renderCallbacks: ((chart: C, query: Q) => void)[]): void {
         this.charts.push(chart);
-        this.renderCallbacks.push(renderCallback);
+        this.renderCallbacks.push([]);
+        for (const [i, callback] of renderCallbacks.entries()) {
+            this.renderCallbacks[this.charts.length - 1][i] = callback;
+        }
     }
+
+
 
     /**
      *  This function polls the last alert time to check if it has been long enough to run a new query. It is called
@@ -92,13 +104,29 @@ export class QueryController<Q extends QueryParameters> {
     }
 
     /**
+     * Get the index of the current threshold for the view.
+     * @protected
+     */
+    protected getThreshold(): number {
+        if (this.widthThresholds == undefined ){
+            return 0;
+        }
+        for (const [i, threshold] of this.widthThresholds.entries()) {
+            if (this.currentView.width <= threshold) {
+                return i;
+            }
+        }
+        return this.widthThresholds.length;
+    }
+
+    /**
      * This uses the provided QueryParameters as arguments in each Chart's render callback.
      * @param query The provided QueryParameters.
      */
     public render(query: Q): void {
         this.prevQuery = query;
         for (let i = 0; i < this.charts.length; i++) {
-            this.renderCallbacks[i](this.charts[i], query);
+            this.renderCallbacks[i][this.getThreshold()](this.charts[i], query);
         }
     }
 
