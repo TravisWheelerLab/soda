@@ -1,16 +1,16 @@
 import {Chart} from "../../charts/chart";
 import * as d3 from "d3";
-import {QueryController, QuerySignature} from "../query/query-controller";
+import {QueryController, QueryParameters} from "../query/query-controller";
 import {ViewRange, ZoomController} from "../zoom/zoom-controller";
 import {ResizeController} from "../resize/resize-controller";
 import {isZoomableChart} from "../zoom/zoomable-chart";
 
-export interface TrackRackConfig<Q extends QuerySignature> {
+export interface TrackRackConfig<Q extends QueryParameters> {
     selector: string;
     queryCallback: (prevQuery: Q, view: ViewRange) => Q;
 }
 
-export class TrackRack<Q extends QuerySignature> {
+export class TrackRack<Q extends QueryParameters> {
     selector: string;
     zoomController: ZoomController;
     resizeController: ResizeController;
@@ -31,7 +31,7 @@ export class TrackRack<Q extends QuerySignature> {
         this.zoomController = new ZoomController();
         this.resizeController = new ResizeController();
         this.queryController = new QueryController();
-        this.queryController.queryCallback = config.queryCallback;
+        this.queryController.queryBuilder = config.queryCallback;
         this.zoomController._queryController = this.queryController;
     }
 
@@ -79,11 +79,11 @@ export class TrackRack<Q extends QuerySignature> {
         chart.setToContainerDimensions();
 
         this.compCount++;
-        // if (isZoomableChart(chart)) {
+
+        //TODO: fix this ts-ignore
         //@ts-ignore
         this.zoomController.addComponent(chart);
         // }
-        // if (isResizableChart(chart)) {
         //@ts-ignore
         this.resizeController.addComponent(chart);
         // }

@@ -1,59 +1,128 @@
 import {Chart} from "../../charts/chart";
 import {ViewRange} from "../zoom/zoom-controller";
 
-const THRESHOLD = 50;
+const TIMEOUT_THRESHOLD = 50;
 
-export interface QuerySignature {
+/**
+ * A simple interface that defines the parameters of a query.
+ */
+export interface QueryParameters {
+    /**
+     * The start of the query in semantic coordinates.
+     */
     start: number;
+    /**
+     * The end of the query in semantic coordinates.
+     */
     end: number;
 }
 
-export class QueryController<Q extends QuerySignature> {
+export interface QueryControllerConfig<Q extends QueryParameters> {
+    /**
+     * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
+     */
+    queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
+}
+
+/**
+ * This class can be used to automate querying and rendering for groups of Charts. A QueryController should be
+ * defined such that it manages charts with common query parameters.
+ * @param Q The interface that defines the common query parameters.
+ */
+export class QueryController<Q extends QueryParameters> {
+    /**
+     * The Charts that the QueryController is managing.
+     */
     charts: Chart<any>[] = [];
-    prevQuery?: Q;
-    queryCallback?: ((prevQuery: Q, view: ViewRange) => Q);
+    /**
+     * The most recent query parameters used for rendering.
+     */
+    prevQuery: Q | undefined;
+    /**
+     * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
+     */
+    queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
+    /**
+     * A list of callback functions that are responsible for rendering charts. The functions should be placed in the
+     * same order here that they are in the charts property.
+     */
     renderCallbacks: ((chart: any, query: Q) => void)[] = [];
+    /**
+     * A boolean flag that indicates whether or not the controller is currently in the process of checking for the
+     * end of a stream of alerts.
+     */
     polling: boolean = false;
+    /**
+     * The semantic dimensions of the current view displayed in the charts.
+     */
     currentView: ViewRange = {start: 0, end: 0, width: 0};
+    /**
+     * The time in milliseconds of the last alert. This is used by the polling function to decide when to fire a new
+     * query.
+     */
     lastAlert: number = 0;
 
-    constructor() {
-
+    constructor(config: QueryControllerConfig<Q>) {
+        this.queryBuilder = config.queryBuilder;
     }
 
+    /**
+     * Adds a chart to the QueryController.
+     * @param chart The chart to be added.
+     * @param renderCallback The callback that is responsible for accepting query parameters and calling render on
+     * the added Chart.
+     */
     public add<C extends Chart<any>>(chart: C,
                                      renderCallback: (chart: C, query: Q) => void): void {
         this.charts.push(chart);
         this.renderCallbacks.push(renderCallback);
     }
 
-    public poll(self: QueryController<Q>): void {
+    /**
+     *  This function polls the last alert time to check if it has been long enough to run a new query. It is called
+     *  by alert() using the JS setTimeout() function.
+     * @param self
+     */
+    protected poll(self: QueryController<Q>): void {
         const elapsed = performance.now() - self.lastAlert;
-        if (elapsed > THRESHOLD) {
-            self.query(self.currentView);
+        if (elapsed > TIMEOUT_THRESHOLD) {
+            self.query();
         }
         this.polling = false
     }
 
+    /**
+     * This uses the provided QueryParameters as arguments in each Chart's render callback.
+     * @param query The provided QueryParameters.
+     */
     public render(query: Q): void {
-        console.log('RENDERING', query);
         this.prevQuery = query;
         for (let i = 0; i < this.charts.length; i++) {
             this.renderCallbacks[i](this.charts[i], query);
         }
     }
 
-    public query(view: ViewRange): void {
-        if (this.prevQuery!.start > view.start || this.prevQuery!.end < view.end) {
-            let newQuery = this.queryCallback!(this.prevQuery!, view)
+    /**
+     * After a stream of alerts has finished, this function is called to check if the view has moved outside of the
+     * range of the previous query. If it has, the queryBuilder callback is used to generate a new query, and then
+     * render() is called with that query.
+     */
+    public query(): void {
+        if (this.prevQuery!.start > this.currentView.start || this.prevQuery!.end < this.currentView.end) {
+            let newQuery = this.queryBuilder!(this.prevQuery!, this.currentView)
             this.render(newQuery)
         }
     }
 
+    /**
+     * This would typically be called by a ZoomController every time there is a zoom event. It receives the updated
+     * ViewRange information and starts the polling process.
+     * @param view
+     */
     public alert(view: ViewRange): void {
         this.currentView = view;
         if (!this.polling) {
-            setTimeout(() => this.poll(this), 500)
+            setTimeout(() => this.poll(this), 750)
             this.polling = true;
         }
         this.lastAlert = performance.now();
