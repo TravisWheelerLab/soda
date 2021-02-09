@@ -49,6 +49,10 @@ export class QueryController<Q extends QueryParameters> {
      */
     widthThresholds?: number[];
     /**
+     * The current width threshold that the view places the QueryController in.
+     */
+    currentThreshold: number = 0;
+    /**
      * A list of callback functions that are responsible for rendering charts. The functions should be placed in the
      * same order here that they are in the charts property.
      */
@@ -88,8 +92,6 @@ export class QueryController<Q extends QueryParameters> {
         }
     }
 
-
-
     /**
      *  This function polls the last alert time to check if it has been long enough to run a new query. It is called
      *  by alert() using the JS setTimeout() function.
@@ -125,8 +127,9 @@ export class QueryController<Q extends QueryParameters> {
      */
     public render(query: Q): void {
         this.prevQuery = query;
+        this.currentThreshold = this.getThreshold()
         for (let i = 0; i < this.charts.length; i++) {
-            this.renderCallbacks[i][this.getThreshold()](this.charts[i], query);
+            this.renderCallbacks[i][this.currentThreshold](this.charts[i], query);
         }
     }
 
@@ -136,8 +139,10 @@ export class QueryController<Q extends QueryParameters> {
      * render() is called with that query.
      */
     public query(): void {
-        if (this.prevQuery!.start > this.currentView.start || this.prevQuery!.end < this.currentView.end) {
-            let newQuery = this.queryBuilder!(this.prevQuery!, this.currentView)
+        const threshold = this.getThreshold();
+        if ((this.prevQuery!.start > this.currentView.start || this.prevQuery!.end < this.currentView.end) ||
+             this.currentThreshold !== threshold) {
+            const newQuery = this.queryBuilder!(this.prevQuery!, this.currentView)
             this.render(newQuery)
         }
     }
