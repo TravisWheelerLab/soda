@@ -17,6 +17,29 @@ export interface QueryParameters {
     end: number;
 }
 
+/**
+ * An interface that defines the parameters of a buffered query.
+ */
+export interface BufferedQueryParameters extends QueryParameters {
+    /**
+     * The start of the buffer in semantic coordinates.
+     */
+    buffStart: number;
+    /**
+     * The end of the buffer in semantic coordinates.
+     */
+    buffEnd: number;
+}
+
+/**
+ * A custom type guard to check if QueryParameters are BufferedQueryParameters.
+ * @param query
+ */
+export function isBufferedQueryParameters(query: QueryParameters): query is BufferedQueryParameters {
+    let queryCast = (<BufferedQueryParameters> query);
+    return (queryCast.buffStart !== undefined && queryCast.buffEnd !== undefined)
+}
+
 export interface QueryControllerConfig<Q extends QueryParameters> {
     /**
      * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
@@ -38,7 +61,7 @@ export class QueryController<Q extends QueryParameters> {
     /**
      * The most recent query parameters used for rendering.
      */
-    prevQuery: Q | undefined;
+    _prevQuery: Q | undefined;
     /**
      * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
      */
@@ -75,6 +98,13 @@ export class QueryController<Q extends QueryParameters> {
     constructor(config: QueryControllerConfig<Q>) {
         this.queryBuilder = config.queryBuilder;
         this.widthThresholds = config.widthThresholds;
+    }
+
+    public getPrevQuery() {
+        if (this._prevQuery == undefined) {
+            throw("_prevQuery is null or undefined");
+        }
+        return this._prevQuery;
     }
 
     /**
@@ -126,7 +156,7 @@ export class QueryController<Q extends QueryParameters> {
      * @param query The provided QueryParameters.
      */
     public render(query: Q): void {
-        this.prevQuery = query;
+        this._prevQuery = query;
         this.currentThreshold = this.getThreshold()
         for (let i = 0; i < this.charts.length; i++) {
             this.renderCallbacks[i][this.currentThreshold](this.charts[i], query);
@@ -140,9 +170,20 @@ export class QueryController<Q extends QueryParameters> {
      */
     public query(): void {
         const threshold = this.getThreshold();
-        if ((this.prevQuery!.start > this.currentView.start || this.prevQuery!.end < this.currentView.end) ||
+        let query = this.getPrevQuery();
+        let qStart: number;
+        let qEnd: number;
+        if (isBufferedQueryParameters(query)) {
+            qStart = query.buffStart;
+            qEnd = query.buffEnd;
+        } else {
+            qStart = query.start;
+            qEnd = query.end;
+        }
+
+        if ((qStart > this.currentView.start || qEnd < this.currentView.end) ||
              this.currentThreshold !== threshold) {
-            const newQuery = this.queryBuilder!(this.prevQuery!, this.currentView)
+            const newQuery = this.queryBuilder!(this._prevQuery!, this.currentView)
             this.render(newQuery)
         }
     }

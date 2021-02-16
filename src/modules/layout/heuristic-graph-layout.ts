@@ -9,16 +9,12 @@ import { AnnotationGraph } from "./annotation-graph"
  * rendered in a Chart.
  * @param ann
  * @param tolerance
- * @param vertSortFunction
+ * @param nIters
  */
 export function heuristicGraphLayout(ann: Annotation[], nIters: number = 100, tolerance: number = 0): number {
-    // This function takes an array of Annotations, turns them into a graph in which
-    // there is an edge between any Annotations that would overlap in the x-dimension.
-    // It then uses a graph coloring heuristic to find a "good enough" coloring for
-    // the graph, which can be translated into a layout by assigning every Annotation
-    // node of the same color to the same y-coordinate.
-    // **The return value is the number of colors in the best coloring, which is the
-    //   same thing as the number of "layers" in the layout
+    if (ann.length == 0) {
+        return 0;
+    }
 
     const graph = new AnnotationGraph(ann, tolerance);
 

@@ -24,6 +24,10 @@ export function greedyGraphLayout(ann: Annotation[],
                                   tolerance: number = 0,
                                   vertSortFunction: {(verts: string[], graph: AnnotationGraph): void}  = DEFAULT_VERTEX_SORT) {
 
+   if (ann.length == 0) {
+      return 0;
+   }
+
    let graph: AnnotationGraph = new AnnotationGraph(ann, tolerance);
    // if (vertSortFunction == undefined) {
    //     vertSortFunction = DEFAULT_VERTEX_SORT;

@@ -17,8 +17,11 @@ function sortByX(verts: string[], graph: AnnotationGraph): void {
  * @param ann
  * @param tolerance
  */
-export function intervalGraphLayout(ann: Annotation[],
-                                  tolerance: number = 0){
+export function intervalGraphLayout(ann: Annotation[], tolerance: number = 0){
+    if (ann.length == 0) {
+        return 0;
+    }
+
     let graph: AnnotationGraph = new AnnotationGraph(ann, tolerance);
     let colorCount = 0;
     let verts = graph.getVertices();
