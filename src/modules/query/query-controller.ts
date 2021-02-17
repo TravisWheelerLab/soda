@@ -79,7 +79,7 @@ export class QueryController<Q extends QueryParameters> {
      * A list of callback functions that are responsible for rendering charts. The functions should be placed in the
      * same order here that they are in the charts property.
      */
-    renderCallbacks: ((chart: any, query: Q) => void)[][] = [];
+    renderCallbacks: ((chart: any, query: Q) => void)[][]  = [];
     /**
      * A boolean flag that indicates whether or not the controller is currently in the process of checking for the
      * end of a stream of alerts.
@@ -110,17 +110,23 @@ export class QueryController<Q extends QueryParameters> {
     /**
      * Adds a chart to the QueryController.
      * @param chart The chart to be added.
-     * @param renderCallbacks The callback that is responsible for accepting query parameters and calling render on
-     * the added Chart.
+     * @param renderCallbacks The callbacks that are responsible for accepting query parameters and calling render on
+     * the added Chart. If fewer callbacks are provided than there are width thresholds in the QueryController, the
+     * last callback will be used repeatedly.
      */
     public add<C extends Chart<any>>(chart: C,
                                      renderCallbacks: ((chart: C, query: Q) => void)[]): void {
+
+        let threshCnt = this.widthThresholds?.length || 0;
+        let lastIdx = renderCallbacks.length - 1;
+
         this.charts.push(chart);
         this.renderCallbacks.push([]);
-        for (const [i, callback] of renderCallbacks.entries()) {
-            this.renderCallbacks[this.charts.length - 1][i] = callback;
+        for (let i=0; i<=threshCnt; i++) {
+            this.renderCallbacks[this.charts.length - 1][i] = renderCallbacks[i] || renderCallbacks[lastIdx];
         }
     }
+
 
     /**
      *  This function polls the last alert time to check if it has been long enough to run a new query. It is called
