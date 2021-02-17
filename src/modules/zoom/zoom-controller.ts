@@ -2,6 +2,13 @@ import * as d3 from 'd3';
 import { cloneDeep } from "lodash";
 import { Transform } from './transform';
 import { ZoomableChart }  from './zoomable-chart'
+import {QueryController} from "../query/query-controller";
+
+export interface ViewRange {
+    start: number;
+    end: number,
+    width: number
+}
 
 /**
 * This class can be used to synchronize and propagate browser zoom events across different Charts.
@@ -37,6 +44,8 @@ export class ZoomController {
      * The rescaled D3 scale that gets created after a zoom event.
      */
     _zoomedXScale: d3.ScaleLinear<number, number> | undefined;
+
+    _queryController?: QueryController<any>;
 
     constructor() {
         this.transform = cloneDeep(d3.zoomIdentity);
@@ -76,7 +85,7 @@ export class ZoomController {
     /**
      * Get the semantic start, end and width of the query that is currently rendered in the ZoomController's components.
      */
-    public getSemanticViewRange(): {start: number, end: number, width: number} {
+    public getSemanticViewRange(): ViewRange {
         // return information about the range that is currently in the view
         const viewStart = this.getZoomedXScale().invert(0);
         const viewEnd = this.getZoomedXScale().invert(this.getWidth());
@@ -257,6 +266,10 @@ export class ZoomController {
             this.updateCompTransforms();
             // finally, render everything in its zoomed form
             this.zoomedRender();
+
+            if (this._queryController !== undefined) {
+                this._queryController.alert(this.getSemanticViewRange());
+            }
         }
     }
 

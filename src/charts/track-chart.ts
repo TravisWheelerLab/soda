@@ -223,12 +223,11 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
     }
 
     /**
-     * This sets the binCount, x scale, and height of the TrackChart to appropriately handle the render.
+     * This sets the binCount and height of the TrackChart to accommodate the render.
      * @param params
      */
     protected preRender(params: P): void {
         this.binCount = params.maxY || 1;
-        this.setXScale(params.queryStart, params.queryEnd);
         this.setHeight((this.binCount + this.yOffset) * this.binHeight);
     }
 
@@ -251,5 +250,16 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
     protected postRender(params: P): void {
         this.callZoomTrigger();
         this.alertPlugins();
+    }
+
+    /**
+     * This resets the x scale to agree with the render parameters then calls render(). This method should be called
+     * for an initial render, or a render that is intended to reset the view in some way (e.g. whenever a 'submit
+     * query' button is pressed in a form).
+     * @param params
+     */
+    public initialRender(params: P): void {
+        this.setXScale(params.queryStart, params.queryEnd);
+        this.render(params)
     }
 }

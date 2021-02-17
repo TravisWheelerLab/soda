@@ -12,6 +12,8 @@ export class RectZoomBehavior<A extends Annotation, C extends Chart<any>> implem
     // the default zoom behavior for a rectangle
     // it basically just allows stretching/panning in the horizontal direction
     selector: string;
+    id = 'default-rect-zoom-behavior';
+
     x: (a: A, c: C) => number;
     w: (a: A, c: C) => number;
 

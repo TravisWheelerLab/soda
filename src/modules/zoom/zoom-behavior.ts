@@ -21,6 +21,10 @@ export interface ZoomBehavior<C extends Chart<any>, S extends d3.Selection<any, 
      */
     selector: string;
     /**
+     * A unique identifier for the ZoomBehavior.
+     */
+    id: string;
+    /**
      * Typically, a ZoomBehavior will make a D3 selection using the ZoomBehaviors selector property as an argument,
      * then call apply() with the target Chart and the selection as arguments. This function should be responsible
      * for making any necessary changes to the attributes and style of the DOM elements in that selection.

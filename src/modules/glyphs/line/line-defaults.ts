@@ -15,6 +15,8 @@ export class LineZoomBehavior<A extends Annotation, C extends Chart<any>> implem
     // the default ZoomBehavior for a vertical line drawn with this module
     // it moves and stretches the line horizontally
     selector: string;
+    id = 'default-line-zoom-behavior';
+
     x1: (d: A, c: C) => number;
     x2: (d: A, c: C) => number;
 

@@ -1,35 +1,46 @@
 import {Chart} from "../../charts/chart";
 import * as d3 from "d3";
+import {QueryController, QueryParameters} from "../query/query-controller";
+import {ViewRange, ZoomController} from "../zoom/zoom-controller";
+import {ResizeController} from "../resize/resize-controller";
+import {isZoomableChart} from "../zoom/zoomable-chart";
 
-export interface TrackRackConfig {
+export interface TrackRackConfig<Q extends QueryParameters> {
     selector: string;
+    queryBuilder: (prevQuery: Q, view: ViewRange) => Q;
+    widthThresholds?: number[];
 }
 
-export interface QuerySignature {
-    start: number;
-    end: number;
-}
-
-export class TrackRack<Q extends QuerySignature> {
+export class TrackRack<Q extends QueryParameters> {
     selector: string;
+    zoomController: ZoomController;
+    resizeController: ResizeController;
+    queryController: QueryController<Q>;
     compCount = 0;
     charts: Chart<any>[] = [];
-    renderCallbacks: ((chart: any, query: Q) => void)[] = [];
     divSelection: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
 
-    constructor(config: TrackRackConfig) {
+    constructor(config: TrackRackConfig<Q>) {
         this.selector = config.selector;
         this.divSelection = d3.select(this.selector)
             .append('div')
             .attr('class', 'track-rack')
             .style('width', '100%')
             .style('height', 'auto')
+
+        this.zoomController = new ZoomController();
+        this.resizeController = new ResizeController();
+        this.queryController = new QueryController({queryBuilder: config.queryBuilder,
+                                                           widthThresholds: config.widthThresholds});
+        this.queryController.queryBuilder = config.queryBuilder;
+        this.zoomController._queryController = this.queryController;
     }
 
-    public add<C extends Chart<any>>(chart: C, renderCallback: (chart: C, query: Q) => void): void {
+    public add<C extends Chart<any>>(chart: C,
+                                     renderCallbacks: ((chart: C, query: Q) => void)[],
+                                     title?: string): void {
 
         this.charts.push(chart);
-        this.renderCallbacks.push(renderCallback);
 
         let compDiv = this.divSelection
             .append('div')
@@ -38,8 +49,6 @@ export class TrackRack<Q extends QuerySignature> {
             .style('height', 'auto')
             .style('padding-top', '5px')
             .style('padding-bottom', '5px')
-            .style('border', 'solid')
-            .style('border-width', '0.5px')
 
         let compBarDiv = compDiv
             .append('div')
@@ -52,9 +61,9 @@ export class TrackRack<Q extends QuerySignature> {
             .attr('height', '20px')
             .attr('width' ,'100%')
             .append('text')
-            .text(`track ${this.compCount}`)
+            .text(title || ``)
             .attr('x', 10)
-            .attr('y', 10)
+            .attr('y', 15)
             .style('fill', 'black')
 
         let compChartDiv = compDiv
@@ -62,7 +71,7 @@ export class TrackRack<Q extends QuerySignature> {
             .attr('class', 'track-rack-chart')
             .attr('id', `track-rack-chart-${this.compCount}`)
             .style('margin-left', '100px')
-            .style('width', '100%')
+            .style('width', 'calc(100% - 100px)')
             .style('height', 'auto')
 
         compChartDiv.append(() => chart.svgSelection.node())
@@ -70,11 +79,18 @@ export class TrackRack<Q extends QuerySignature> {
         chart.setToContainerDimensions();
 
         this.compCount++;
+
+        //TODO: fix this ts-ignore
+        //@ts-ignore
+        this.zoomController.addComponent(chart);
+        // }
+        //@ts-ignore
+        this.resizeController.addComponent(chart);
+        // }
+        this.queryController.add(chart, renderCallbacks);
     }
 
     public queryAndRender(query: Q): void {
-        for (let [i, chart] of this.charts.entries()) {
-            this.renderCallbacks[i](chart, query);
-        }
+        this.queryController.render(query);
     }
 }
