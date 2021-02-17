@@ -170,6 +170,15 @@ export class QueryController<Q extends QueryParameters> {
     }
 
     /**
+     * This initializes the currentView attribute to match the query then calls render().
+     * @param query The provided QueryParameters.
+     */
+    public initialRender(query: Q): void {
+        this.currentView = {start: query.start, end: query.end, width: query.end - query.start};
+        this.render(query);
+    }
+
+    /**
      * After a stream of alerts has finished, this function is called to check if the view has moved outside of the
      * range of the previous query. If it has, the queryBuilder callback is used to generate a new query, and then
      * render() is called with that query.

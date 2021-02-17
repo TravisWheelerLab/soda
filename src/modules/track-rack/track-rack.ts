@@ -47,8 +47,6 @@ export class TrackRack<Q extends QueryParameters> {
             .attr('class', 'track-rack-component')
             .style('width', '100%')
             .style('height', 'auto')
-            .style('padding-top', '5px')
-            .style('padding-bottom', '5px')
 
         let compBarDiv = compDiv
             .append('div')
@@ -90,7 +88,14 @@ export class TrackRack<Q extends QueryParameters> {
         this.queryController.add(chart, renderCallbacks);
     }
 
-    public queryAndRender(query: Q): void {
+    public render(query: Q): void {
         this.queryController.render(query);
+    }
+
+    public initialRender(query: Q): void {
+        this.zoomController.setQueryRange(query.start, query.end);
+        this.zoomController.setXScale();
+        this.queryController.initialRender(query);
+        this.zoomController.zoomToRange(query.start, query.end);
     }
 }
