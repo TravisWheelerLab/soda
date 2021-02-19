@@ -26,6 +26,10 @@ export interface Chart<T> {
      */
     binHeight:      number;
     /**
+     * This method should set the Chart's internal dimensions to match the SVG viewport dimensions.
+     */
+    setToSvgDimensions(): void;
+    /**
      * This method should return the width of the Chart's DOM container.
      */
     getContainerWidth(): number;
@@ -33,12 +37,10 @@ export interface Chart<T> {
      * This method should return the height of the Chart's DOM container.
      */
     getContainerHeight(): number;
-
     /**
      * This method should set the size of the SVG viewport to match the Chart's DOM container.
      */
     setToContainerDimensions(): void;
-
     /**
      * This method should return a reference to whatever d3 scale the chart is using for coordinate translation.
      * This may be a scale internal to the Chart, or it may be a ZoomController's scale.

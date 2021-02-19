@@ -47,34 +47,57 @@ export class TrackRack<Q extends QueryParameters> {
             .attr('class', 'track-rack-component')
             .style('width', '100%')
             .style('height', 'auto')
+            .style('display', 'flex')
+            // .style('justify-content', 'center')
+            .style('align-items', 'center')
+
+        // let leftDiv = compDiv
+        //     .append('div')
+        //     .attr('class', 'track-rack-separator')
+        //     .attr('id', `track-rack-sep-${this.compCount}`)
+        //     .style('width', '5px')
+        //     .style('height', '100%')
+        //     .style('margin', '1px')
+        //     // .style('border', '1px solid green')
+        //     .style('background-color', 'green')
+        //     .style('flex-shrink', '0')
 
         let compBarDiv = compDiv
             .append('div')
             .attr('class', 'track-rack-sidebar')
             .attr('id', `track-rack-bar-${this.compCount}`)
-            .style('width', '100px')
-            .style('float', 'left')
-            .style('height', 'auto')
-            .append('svg')
-            .attr('height', '20px')
-            .attr('width' ,'100%')
-            .append('text')
-            .text(title || ``)
-            .attr('x', 10)
-            .attr('y', 15)
-            .style('fill', 'black')
+            .style('width', '125px')
+            .style('height', '24px')
+            .style('margin', '0px 5px 0px 5px')
+            .style('flex-shrink', '0')
+            .style('display', 'flex')
+            .style('justify-content', 'center')
+            .style('align-items', 'center')
+            .append('p')
+            .html(title || '')
+
+        // let sepDiv = compDiv
+        //     .append('div')
+        //     .attr('class', 'track-rack-separator')
+        //     .attr('id', `track-rack-sep-${this.compCount}`)
+        //     .style('width', '1px')
+        //     .style('height', 'auto')
+        //     .style('background-color', 'black')
+        //     .style('flex-shrink', '0')
 
         let compChartDiv = compDiv
             .append('div')
             .attr('class', 'track-rack-chart')
             .attr('id', `track-rack-chart-${this.compCount}`)
-            .style('margin-left', '100px')
             .style('width', 'calc(100% - 100px)')
             .style('height', 'auto')
+            .style('margin', '0px 5px 0px 5px')
+            .style('flex-grow', '1')
 
-        compChartDiv.append(() => chart.svgSelection.node())
+
+        compChartDiv.append(() => chart.svgSelection.node());
         chart.selector = `#track-rack-chart-${this.compCount}`;
-        chart.setToContainerDimensions();
+        chart.setToSvgDimensions();
 
         this.compCount++;
 

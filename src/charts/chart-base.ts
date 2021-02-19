@@ -61,31 +61,14 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
                 .style('vertical-align', 'top');
         }
 
-        if (config.width !== undefined) {
-            this.width = config.width;
-        }
-        else {
-            this.width = this.getContainerWidth();
-        }
-
-        if (config.height !== undefined) {
-            this.height = config.height;
-        }
-        else {
-            this.height = this.getContainerHeight();
-        }
-
-        if (config.binHeight !== undefined) {
-            this.binHeight = config.binHeight;
-        }
-        else {
-            // TODO: is a default of 10 here reasonable?
-            this.binHeight = 10;
-        }
+        this.binHeight = config.binHeight || 10;
 
         this.svgSelection
-            .attr('width', this.width)
-            .attr('height', this.height);
+            .attr('width', config.width || '100%')
+            .attr('height', config.height || this.binHeight);
+
+        this.width = config.width || this.getSvgWidth();
+        this.height = config.width || this.getSvgHeight();
     }
 
     /**
@@ -138,11 +121,13 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         let containerDimensions: DOMRect;
         if (this.selector !== undefined ) {
             const containerSelection = d3.select<HTMLElement, any>(this.selector).node();
+            console.log(this, containerSelection);
             if (containerSelection == null) {
                 throw (`Selector: ${this.selector} returned null selection`);
             } else {
                 containerDimensions = containerSelection
                     .getBoundingClientRect();
+                console.log(containerDimensions);
             }
         }
         else {
@@ -166,6 +151,30 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
     }
 
     /**
+     * This returns the width of the SVG viewport in pixels.
+     */
+    public getSvgWidth(): number {
+        return (this.getSvgDimensions().width);
+    }
+
+    /**
+     * This returns the width of the SVG viewport in pixels.
+     */
+    public getSvgHeight(): number {
+        return (this.getSvgDimensions().height);
+    }
+
+    /**
+     * This figures out the Chart's SVG viewport dimensions, and sets the Chart's internal dimensions to match.
+     */
+    public setToSvgDimensions(): void {
+        const dims = this.getSvgDimensions();
+        this.width = dims.width;
+        this.height = dims.height;
+    }
+
+
+    /**
      * This returns the Chart's DOM container's width in pixels.
      */
     public getContainerWidth(): number {
@@ -184,8 +193,9 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
      * dimensions.
      */
     public setToContainerDimensions(): void {
-        this.width = this.getContainerWidth();
-        this.height = this.getContainerHeight();
+        const dims = this.getContainerDimensions();
+        this.width = dims.width;
+        this.height = dims.height;
 
         this.svgSelection
             .attr('width', this.width)

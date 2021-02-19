@@ -165,7 +165,7 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
      * the new dimensions.
      */
     public resize(): void {
-        this.setToContainerDimensions();
+        this.setToSvgDimensions();
 
         if (this.zoomController !== undefined) {
             // if we have a zoom controller, we'll let it handle the re-rendering
