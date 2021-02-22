@@ -89,7 +89,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
      */
     public resize(): void {
         this.clearAxis();
-        this.setToContainerDimensions();
+        this.setToSvgDimensions();
         this.setXScale();
         this.inRender();
     }

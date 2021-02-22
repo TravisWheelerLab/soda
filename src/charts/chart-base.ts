@@ -121,13 +121,11 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         let containerDimensions: DOMRect;
         if (this.selector !== undefined ) {
             const containerSelection = d3.select<HTMLElement, any>(this.selector).node();
-            console.log(this, containerSelection);
             if (containerSelection == null) {
                 throw (`Selector: ${this.selector} returned null selection`);
             } else {
                 containerDimensions = containerSelection
                     .getBoundingClientRect();
-                console.log(containerDimensions);
             }
         }
         else {

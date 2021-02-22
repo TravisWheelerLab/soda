@@ -48,7 +48,6 @@ export class TrackRack<Q extends QueryParameters> {
             .style('width', '100%')
             .style('height', 'auto')
             .style('display', 'flex')
-            // .style('justify-content', 'center')
             .style('align-items', 'center')
 
         // let leftDiv = compDiv
@@ -58,7 +57,6 @@ export class TrackRack<Q extends QueryParameters> {
         //     .style('width', '5px')
         //     .style('height', '100%')
         //     .style('margin', '1px')
-        //     // .style('border', '1px solid green')
         //     .style('background-color', 'green')
         //     .style('flex-shrink', '0')
 

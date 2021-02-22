@@ -1,7 +1,6 @@
-import { cloneDeep } from "lodash";
-import { Annotation } from "../../annotations/annotation";
-import { AnnotationGraph } from "./annotation-graph"
-
+import {cloneDeep} from "lodash";
+import {Annotation} from "../../annotations/annotation";
+import {AnnotationGraph} from "./annotation-graph"
 
 /**
  * This function takes a list of Annotation objects and uses a non-deterministic greedy graph coloring heuristic to

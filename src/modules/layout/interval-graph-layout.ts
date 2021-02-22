@@ -1,7 +1,7 @@
-import { Annotation } from "../../annotations/annotation";
-import { AnnotationGraph } from "./annotation-graph";
+import {Annotation} from "../../annotations/annotation";
+import {AnnotationGraph} from "./annotation-graph";
 
-function sortByX(verts: string[], graph: AnnotationGraph): void {
+function sortByX(verts: string[], graph: AnnotationGraph<Annotation>): void {
     // sorts the vertices by Annotation X coordinates (the start of the annotation)
     verts.sort((v1: string, v2: string) => {
         if (graph.getAnnotationFromId(v1).getX() > graph.getAnnotationFromId(v2).getX()) {
@@ -22,7 +22,7 @@ export function intervalGraphLayout(ann: Annotation[], tolerance: number = 0){
         return 0;
     }
 
-    let graph: AnnotationGraph = new AnnotationGraph(ann, tolerance);
+    let graph: AnnotationGraph<Annotation> = new AnnotationGraph(ann, tolerance);
     let colorCount = 0;
     let verts = graph.getVertices();
     sortByX(verts, graph);
