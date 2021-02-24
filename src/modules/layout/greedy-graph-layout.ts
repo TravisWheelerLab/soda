@@ -45,7 +45,7 @@ export function greedyGraphLayout<A extends Annotation>(ann: A[],
         for (const v of verts) {
             if (vertAvailable.get(v)) {
                 // take the first node and assign it a color
-                graph.getAnnotationFromId(v).y = nextColor;
+                graph.getAnnotationFromId(v).setY(nextColor);
 
                 for (const v2 of graph.getEdges(v)) {
                     // remove all of that nodes adjacent nodes from consideration

@@ -1,12 +1,19 @@
 import * as d3 from 'd3';
 import { ChartBase } from '../../charts';
 import { Plugin } from '../plugin';
-import {ZoomableChart} from "../../modules/zoom/zoomable-chart";
 
 /**
  * This plugin object allows a dynamic vertical rule to be added to any Chart.
  */
 export class RuleController implements Plugin {
+    /**
+     * A list of the rule divs controlled by the controller.
+     */
+    ruleDivs: d3.Selection<any, any, any, any>[] = [];
+    /**
+     * A list of the rule tooltips controlled by the controller.
+     */
+    tooltipDivs: d3.Selection<any, any, any, any>[] = [];
     /**
      * A list of Charts that the RuleController will place rules in.
      */
@@ -16,6 +23,10 @@ export class RuleController implements Plugin {
      * mouse.
      */
     activeComponent?: ChartBase<any>;
+    /**
+     * A boolean flag that describes whether or not the rules are being displayed.
+     */
+    enabled = false;
 
     constructor() {
         this.components = [];
@@ -29,6 +40,34 @@ export class RuleController implements Plugin {
         this.updateRuleSize();
     }
 
+    public toggle(self: RuleController = this): void {
+        if (self.enabled) {
+            self.disable();
+        } else {
+            self.enable();
+        }
+    }
+
+    public enable(): void {
+        this.enabled = true;
+        for (const sel of this.ruleDivs) {
+            sel.style('border-left', '2px dotted');
+        }
+        for (const sel of this.tooltipDivs) {
+            sel.style('opacity', 1);
+        }
+    }
+
+    public disable(): void {
+        this.enabled = false;
+        for (const sel of this.ruleDivs) {
+            sel.style('border-left', 'none');
+        }
+        for (const sel of this.tooltipDivs) {
+            sel.style('opacity', 0);
+        }
+    }
+
     /**
      * Add a component to the RuleController and add a rule to that component.
      * @param component
@@ -37,9 +76,9 @@ export class RuleController implements Plugin {
         this.components.push(component);
         component.plugins.push(this);
         // actually create the rule
-        verticalRule(component);
+        this.createVerticalRule(component);
         // create the tooltip that will display the chromosome position currently hovered
-        ruleTooltip(component);
+        this.createRuleTooltip(component);
         component.svgSelection
             .on('mousemove', () => this.chartMouseMove(component))
     }
@@ -55,16 +94,53 @@ export class RuleController implements Plugin {
     }
 
     /**
+     * A utility function that creates the actual rule.
+     * @param chart
+     */
+    protected createVerticalRule(chart: ChartBase<any>) {
+        let containerDims = chart.getContainerDimensions();
+        let top = containerDims.y;
+        let ruleSelection = d3.select(chart.getSelector())
+            .append('div')
+            .attr('class', 'vertical-rule')
+            .style('height', chart.height + 'px')
+            .style('top', top + 'px')
+            .style('position', 'absolute')
+            .style('border-left', 'none')
+            .style('text-align', 'left')
+
+        this.ruleDivs.push(ruleSelection);
+    }
+
+    /**
+     * A utility function that creates the tooltip that floats next to the rule.
+     * @param chart
+     */
+    protected createRuleTooltip(chart: ChartBase<any>) {
+        let tooltipSelection = d3.select(chart.getSelector())
+            .append('div')
+            .attr('class', 'rule-tooltip')
+            .style('position', 'absolute')
+            .style('border-radius', '8px')
+            .style('background', 'lightsteelblue')
+            .style('opacity', 0);
+
+        this.tooltipDivs.push(tooltipSelection);
+    }
+
+    /**
      * This method is routed to the mousemove event on each components' SVG viewport. It updates the activeComponent
      * property, and then moves the rule to follow the mouse position.
      * @param chart
      */
     public chartMouseMove(chart: ChartBase<any>) {
-        // this is called any time the mouse moves on a chart
-        // set the active component
-        this.activeComponent = chart;
-        // then defer to the function that will actually move the rules
-        this.moveRule();
+        if (this.enabled) {
+            // this is called any time the mouse moves on a chart
+            // set the active component
+            this.activeComponent = chart;
+            // then defer to the function that will actually move the rules
+            this.moveRule();
+        }
     }
 
     /**
@@ -117,38 +193,4 @@ export class RuleController implements Plugin {
                 .style('top', top + 'px')
         }
     }
-}
-
-/**
- * A utility function that creates the tooltip that floats next to the rule.
- * @param chart
- */
-export function ruleTooltip(chart: ChartBase<any>) {
-    // a utility function to create the div for a rule tooltip
-    d3.select(chart.getSelector())
-      .append('div')
-        .attr('class', 'rule-tooltip')
-        .style('position', 'absolute')
-        .style('border-radius', '8px')
-        .style('background', 'lightsteelblue')
-        .style('opacity', 0);
-}
-
-/**
- * A utility function that creates the actual rule.
- * @param chart
- */
-export function verticalRule(chart: ChartBase<any>) {
-    // a utility function to create the div for a vertical rule
-    let containerDims = chart.getContainerDimensions();
-    let top = containerDims.y;
-    d3.select(chart.getSelector())
-      .append('div')
-        .attr('class', 'vertical-rule')
-        .style('height', chart.height + 'px')
-        .style('top', top + 'px')
-        .style('position', 'absolute')
-        .style('border-left', '2px dotted')
-        .style('text-align', 'left')
-        .style('border-color', 'coral');
 }

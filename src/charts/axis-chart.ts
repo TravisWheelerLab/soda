@@ -3,6 +3,11 @@ import {ChartBase} from './chart-base'
 import {ZoomableChart, ZoomBehavior, ZoomController} from '../modules/zoom';
 import {ResizableChart} from '../modules/resize';
 import {ChartConfig} from "./chart";
+import {QueryParameters} from "../modules/query/query-controller";
+
+export function axisRenderCallback (axis: AxisChart, query: QueryParameters) {
+    axis.render({queryStart: query.start, queryEnd: query.end});
+}
 
 /**
  * A simple interface that holds the arguments for the AxisChart render function.

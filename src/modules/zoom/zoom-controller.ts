@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-import { cloneDeep } from "lodash";
-import { Transform } from './transform';
-import { ZoomableChart }  from './zoomable-chart'
+import {cloneDeep} from "lodash";
+import {Transform} from './transform';
+import {ZoomableChart}  from './zoomable-chart'
 import {QueryController} from "../query/query-controller";
 
 export interface ViewRange {
@@ -191,7 +191,6 @@ export class ZoomController {
      * method returns true.
      */
     public checkForWidthChange(): boolean {
-        // check if any of the components have a different width than their container
         for (const comp of this.components) {
             if (comp.width !== this.getWidth()) {
                 return true;
@@ -208,7 +207,7 @@ export class ZoomController {
         const firstWidth = this.components[0].width;
         for (const comp of this.components.slice(1)) {
             if (firstWidth !== comp.width) {
-                console.error(`Width mismatch on component ${comp} in ZoomController`);
+                console.error(`Width mismatch on component in ZoomController:`, comp);
                 equal = false;
             }
         }
@@ -241,7 +240,6 @@ export class ZoomController {
      */
     protected checkForTransformDifference(transform: Transform): boolean {
         return this.transform.k !== transform.k || this.transform.x !== transform.x || this.transform.y !== transform.y;
-
     }
 
     /**
@@ -309,13 +307,9 @@ export class ZoomController {
      * and the component as arguments.
      */
     public zoomedRender(): void {
-        // for every component the controller is paying attention to,
-        // grab the zoom behaviors, make a selection, and apply the behavior
         for (const comp of this.components) {
             for (const behavior of comp.getZoomBehaviors()) {
-                // ** we want to make this selection out here, so that we could possibly
-                // ** apply a secondary selector to distinguish between charts
-                const selection = d3.selectAll(behavior.selector);
+                const selection = comp.svgSelection.selectAll(behavior.selector);
                 behavior.apply(comp, selection);
             }
         }
@@ -326,18 +320,13 @@ export class ZoomController {
      * which makes the ZoomBehavior application seem animated.
      */
     public zoomedRenderDuration(duration: number): void {
-        // for every component the controller is paying attention to,
-        // grab the zoom behaviors, make a selection, and apply the behavior
         for (const comp of this.components) {
             for (const behavior of comp.getZoomBehaviors()) {
-                // ** we want to make this selection out here, so that we could possibly
-                // ** apply a secondary selector to distinguish between charts
-                const selection = d3.selectAll(behavior.selector);
+                const selection = comp.svgSelection.selectAll(behavior.selector);
                 behavior.applyDuration(comp, selection, duration);
             }
         }
     }
-
 
     /**
      * This method registers a component with the ZoomController. It will also register itself on the added component.
