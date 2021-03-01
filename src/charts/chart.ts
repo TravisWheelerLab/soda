@@ -7,7 +7,7 @@ export interface Chart<T> {
     /**
      * A string that can be used to uniquely select the target DOM container via d3.select().
      */
-    selector:       string;
+    selector:       string | undefined;
     /**
      * The height in pixels of the Chart's SVG viewport.
      */
@@ -26,6 +26,10 @@ export interface Chart<T> {
      */
     binHeight:      number;
     /**
+     * This method should set the Chart's internal dimensions to match the SVG viewport dimensions.
+     */
+    setToSvgDimensions(): void;
+    /**
      * This method should return the width of the Chart's DOM container.
      */
     getContainerWidth(): number;
@@ -33,6 +37,10 @@ export interface Chart<T> {
      * This method should return the height of the Chart's DOM container.
      */
     getContainerHeight(): number;
+    /**
+     * This method should set the size of the SVG viewport to match the Chart's DOM container.
+     */
+    setToContainerDimensions(): void;
     /**
      * This method should return a reference to whatever d3 scale the chart is using for coordinate translation.
      * This may be a scale internal to the Chart, or it may be a ZoomController's scale.
@@ -59,7 +67,7 @@ export interface Chart<T> {
  * A simple interface that defines the common parameters that should be used to configure any Chart.
  */
 export interface ChartConfig {
-    selector: string;
+    selector?: string;
     binHeight?: number;
     height?: number;
     width?: number;

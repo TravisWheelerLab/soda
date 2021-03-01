@@ -11,6 +11,7 @@ export class TextZoomBehavior<A extends TextAnnotation, C extends Chart<any>> im
     // it moves the text horizontally and changes the level of detail based on how
     // much room the text has to draw in
     selector: string;
+    id = 'default-text-zoom-behavior';
     textPad: number;
     x: (d: A, c: C) => number;
 
