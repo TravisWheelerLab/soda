@@ -9,7 +9,8 @@
   "author": "Jack Roddy",
   "license": "ISC",
   "dependencies": {
-    "@traviswheelerlab/soda": "file:.."
+    "@traviswheelerlab/soda": "file:..",
+    "source-map-loader": "^1.0.0"
   },
   "devDependencies": {
     "source-map-loader": "^1.0.0",

@@ -4,15 +4,15 @@ import {PlotAnnotation, PointDatum} from "../../../annotations/plot-annotation";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 
 export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
-   let yScale = d3.scaleLinear()
-       .domain(domain)
-       .range([chart.binHeight, 0]);
+    let yScale = d3.scaleLinear()
+        .domain(domain)
+        .range([chart.binHeight, 0]);
 
-   let func = d3.line<PointDatum>()
-      .x((d) => chart.getXScale()(d.parent.x + d.x))
-      .y((d) => d.parent.y * chart.binHeight + yScale(d.value));
+    let func = d3.line<PointDatum>()
+        .x((d) => chart.getXScale()(d.parent.x + d.x))
+        .y((d) => (d.parent.y * chart.binHeight) + chart.verticalPad + yScale(d.value));
 
-   return func;
+    return func;
 }
 
 export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
@@ -38,5 +38,4 @@ export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>
             .selectAll<SVGPathElement, PointDatum[]>(`path.${this.selector}`)
             .attr('d', this.lineFunc);
     }
-
 }

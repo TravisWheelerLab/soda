@@ -228,7 +228,7 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
      */
     protected preRender(params: P): void {
         this.binCount = params.maxY || 1;
-        this.setHeight((this.binCount + this.yOffset) * this.binHeight);
+        this.setHeight((this.binCount + this.yOffset) * this.binHeight + 2 * this.verticalPad);
     }
 
     /**

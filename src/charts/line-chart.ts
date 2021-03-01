@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
 import {PlotAnnotation} from "../annotations/plot-annotation";
 import {linePlot, LinePlotConfig} from "../modules/glyphs/line-plot/line-plot";
-import {barPlot} from "../modules/glyphs/bar-plot/bar-plot";
 
 export interface LineChartConfig extends TrackChartConfig {
 
@@ -19,19 +18,18 @@ export class LineChart extends TrackChart<LineChartRenderParams> {
 
     constructor(config: LineChartConfig) {
         super(config);
+
         this.yScale = d3.scaleLinear()
             .domain([100, 0])
             .range([0, this.binHeight])
 
         this._axis = d3.axisRight(this.yScale)
         this._axisSelection = this.svgSelection
+            .append('g')
             .attr('class', 'y-axis')
+            .attr('transform', `translate(0, ${this.verticalPad})`)
             .call(this.getAxis());
-        
-        this._axisSelection
-            .selectAll('text')
-            // .attr('x', 20)
-            // .style('text-anchor', 'start');
+
     }
 
     public getAxis(): d3.Axis<number | {valueOf(): number}> {

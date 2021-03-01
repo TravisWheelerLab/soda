@@ -13,6 +13,10 @@ export interface Chart<T> {
      */
     height: number;
     /**
+     * The amount of space in pixels to pad the top and bottom of the chart.
+     */
+    verticalPad:         number;
+    /**
      * The width in pixels of the Chart's SVG viewport.
      */
     width: number;
@@ -71,6 +75,7 @@ export interface ChartConfig {
     binHeight?: number;
     height?: number;
     width?: number;
+    verticalPad?: number;
 }
 
 /**

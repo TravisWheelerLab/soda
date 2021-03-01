@@ -217,29 +217,39 @@ resizeController.addComponent(chart);
 
 window.onresize = () => resizeController.trigger();
 
-let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+// let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-let ann: soda.PlotAnnotation[] = []
-for (let i = 0; i < 1; i++) {
-    for (let j = 0; j < 2; j++) {
-        let conf: soda.PlotAnnotationConfig = {
-            id: `${i}-${j}`,
-            x: i * 1000,
-            w: 1000,
-            y: j,
-            h: 0,
-            points: gcData,
-        }
-        ann.push(new soda.PlotAnnotation(conf))
-    }
+// let ann: soda.PlotAnnotation[] = []
+// for (let i = 0; i < 1; i++) {
+//     for (let j = 0; j < 2; j++) {
+//         let conf: soda.PlotAnnotationConfig = {
+//             id: `${i}-${j}`,
+//             x: i * 1000,
+//             w: 1000,
+//             y: j,
+//             h: 0,
+//             points: gcData,
+//         }
+//         ann.push(new soda.PlotAnnotation(conf))
+//     }
+// }
+
+let conf: soda.PlotAnnotationConfig = {
+    id: `0`,
+    x: 0,
+    w: 1000,
+    y: 0,
+    h: 0,
+    points: gcData,
 }
 
+let ann = [new soda.PlotAnnotation(conf)]
 let renderParams: soda.LineChartRenderParams = {
     data: ann,
     queryStart: 0,
     queryEnd: 1000,
-    maxY: 11
+    maxY: 1
 };
 
 axis.render(renderParams);
-chart.render(renderParams);
+chart.initialRender(renderParams);

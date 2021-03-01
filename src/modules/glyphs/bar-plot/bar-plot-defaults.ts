@@ -13,6 +13,7 @@ export const barHeightFunc = <P extends ChartRenderParams>(chart: Chart<P>, doma
 }
 
 export class BarPlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
+    id: string = 'default-bar-plot-zoom-behavior';
     selector: string;
 
     constructor(selector: string) {
