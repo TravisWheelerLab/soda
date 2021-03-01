@@ -16,6 +16,7 @@ export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [
 }
 
 export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
+    id: string = 'default-line-plot-zoom-behavior';
     selector: string;
     lineFunc: d3.Line<PointDatum>;
 
@@ -37,4 +38,5 @@ export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>
             .selectAll<SVGPathElement, PointDatum[]>(`path.${this.selector}`)
             .attr('d', this.lineFunc);
     }
+
 }
