@@ -67,6 +67,13 @@ export class Annotation {
     }
 
     /**
+     * Gets the x2 coordinate.
+     */
+    public getX2(): number {
+        return (this.x + this.w);
+    }
+
+    /**
      * Sets the y coordinate. This exists largely to let the layout module be oblivious to the existence of
      * AnnotationGroups.
      */

@@ -3,6 +3,11 @@ import {ChartBase} from './chart-base'
 import {ZoomableChart, ZoomBehavior, ZoomController} from '../modules/zoom';
 import {ResizableChart} from '../modules/resize';
 import {ChartConfig} from "./chart";
+import {QueryParameters} from "../modules/query/query-controller";
+
+export function axisRenderCallback (axis: AxisChart, query: QueryParameters) {
+    axis.render({queryStart: query.start, queryEnd: query.end});
+}
 
 /**
  * A simple interface that holds the arguments for the AxisChart render function.
@@ -89,7 +94,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
      */
     public resize(): void {
         this.clearAxis();
-        this.setToContainerDimensions();
+        this.setToSvgDimensions();
         this.setXScale();
         this.inRender();
     }
@@ -98,7 +103,7 @@ export class AxisChart extends ChartBase<AxisRenderParams> implements ZoomableCh
      * This removes all of the SVG elements that the AxisChart has rendered.
      */
     protected clearAxis(): void {
-        d3.select(this.selector)
+       this.svgSelection
           .selectAll('g')
             .remove();
     }
