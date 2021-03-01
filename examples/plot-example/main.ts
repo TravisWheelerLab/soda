@@ -228,7 +228,7 @@ for (let i = 0; i < 1; i++) {
             w: 1000,
             y: j,
             h: 0,
-            values: gcData,
+            points: gcData,
         }
         ann.push(new soda.PlotAnnotation(conf))
     }

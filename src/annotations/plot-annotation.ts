@@ -5,7 +5,7 @@ import {Annotation, AnnotationConfig} from "./annotation"
  * An interface for initializing a PlotAnnotation.
  */
 export interface PlotAnnotationConfig extends AnnotationConfig {
-    points: PointDatum[],
+    points: number[],
 }
 
 /**
@@ -45,6 +45,7 @@ export class PlotAnnotation extends Annotation {
 
     constructor(config: PlotAnnotationConfig) {
         super(config);
+        this.points = interpolatePointData(config.points, this);
     }
 }
 
@@ -52,23 +53,23 @@ function isFlat(arr: number[] | [number, number][]): arr is number[] {
     return (typeof(arr[0]) === 'number')
 }
 
-// function interpolatePointData(values: number[], parent: PlotAnnotation): PointDatum[] {
-//     let valCnt = values.length;
-//     const xScale = d3.scaleLinear<number, number>()
-//         .domain([0, valCnt])
-//         .range([0, parent.w])
-//
-//     let points: PointDatum[] = [];
-//     const datumW = parent.w / valCnt;
-//     for (let i = 0; i < valCnt; i++) {
-//         points.push({x: xScale(i),
-//             w: datumW,
-//             centerX: xScale(i) + datumW/2,
-//             value: values[i],
-//             parent: parent})
-//     }
-//     return (points);
-// }
+function interpolatePointData(values: number[], parent: PlotAnnotation): PointDatum[] {
+    let valCnt = values.length;
+    const xScale = d3.scaleLinear<number, number>()
+        .domain([0, valCnt])
+        .range([0, parent.w])
+
+    let points: PointDatum[] = [];
+    const datumW = parent.w / valCnt;
+    for (let i = 0; i < valCnt; i++) {
+        points.push({x: xScale(i),
+            w: datumW,
+            centerX: xScale(i) + datumW/2,
+            value: values[i],
+            parent: parent})
+    }
+    return (points);
+}
 
 // let span = config.span || 1;
 // for (let i = 0; i < valCnt; i++) {
