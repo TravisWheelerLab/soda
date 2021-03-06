@@ -9,7 +9,6 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
 import {getPlotGSelection} from "./plot-defaults";
 
-
 /**
  * An interface that holds the parameters to style a bar plot.
  */
@@ -43,15 +42,15 @@ export function heatmap<A extends PlotAnnotation, C extends Chart<any>>(chart: C
             const innerEnter = innerSelection.enter()
                 .append('rect')
                 .attr('class', conf.selector)
-                .attr('y', (a) => chart.binHeight * (a.parent.y + 1))
+                .attr('y', (a) => chart.binHeight * a.parent.y + chart.verticalPad)
                 .attr('height', chart.binHeight)
                 .attr('fill', (a) => colorScale(a.value))
 
             const innerMerge = innerEnter.merge(innerSelection);
 
             innerMerge
-                .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
-                .attr('width', 5)
+                .attr('x', (a) => a.parent.x + a.x)
+                .attr('width', (a) => a.w)
 
         });
 

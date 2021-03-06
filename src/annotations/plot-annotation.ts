@@ -8,30 +8,34 @@ export interface PlotAnnotationConfig extends AnnotationConfig {
     points: number[],
 }
 
+export interface PointDatumConfig extends AnnotationConfig {
+    value: number;
+    parent: PlotAnnotation;
+}
+
 /**
- * A simple interface to define one point in a PlotAnnotation.
+ * A simple class to define one point in a PlotAnnotation.
  */
-export interface PointDatum extends Annotation {
-    /**
-     * The x coordinate of the point relative to the start of the PlotAnnotation.
-     */
-    x: number,
+export class PointDatum extends Annotation {
     /**
      * The center of the datum.
      */
-    centerX: number,
-    /**
-     * The width of the point.
-     */
-    w: number,
+    centerX: number;
     /**
      * The y coordinate of the point.
      */
-    value: number,
+    value: number;
     /**
      * The PlotAnnotation that this PointDatum is a part of.
      */
-    parent: PlotAnnotation,
+    parent: PlotAnnotation;
+
+    constructor(config: PointDatumConfig) {
+        super(config);
+        this.value = config.value;
+        this.parent = config.parent;
+        this.centerX = this.x + this.w/2;
+    }
 }
 
 /**
@@ -45,7 +49,7 @@ export class PlotAnnotation extends Annotation {
 
     constructor(config: PlotAnnotationConfig) {
         super(config);
-        this.points = interpolatePointData(config.points, this);
+        this.points =  distributePointData(config.points, this);
     }
 }
 
@@ -53,7 +57,7 @@ function isFlat(arr: number[] | [number, number][]): arr is number[] {
     return (typeof(arr[0]) === 'number')
 }
 
-function interpolatePointData(values: number[], parent: PlotAnnotation): PointDatum[] {
+function distributePointData(values: number[], parent: PlotAnnotation): PointDatum[] {
     let valCnt = values.length;
     const xScale = d3.scaleLinear<number, number>()
         .domain([0, valCnt])
@@ -62,30 +66,16 @@ function interpolatePointData(values: number[], parent: PlotAnnotation): PointDa
     let points: PointDatum[] = [];
     const datumW = parent.w / valCnt;
     for (let i = 0; i < valCnt; i++) {
-        points.push({
-            h: 0, id: "", y: 0, getW(): number {
-                return 0;
-            }, getX(): number {
-                return 0;
-            }, getX2(): number {
-                return 0;
-            }, setY(y: number): void {
-            },
+        let conf: PointDatumConfig = {
+            y: 0,
+            id: ``,
             x: xScale(i),
             w: datumW,
-            centerX: xScale(i) + datumW/2,
+            h: 0,
             value: values[i],
-            parent: parent})
+            parent: parent
+        }
+        points.push(new PointDatum(conf));
     }
     return (points);
 }
-
-// let span = config.span || 1;
-// for (let i = 0; i < valCnt; i++) {
-//     let datumX = config.values[i][0];
-//     this.points.push({x: datumX,
-//         w: span,
-//         centerX: datumX + span/2,
-//         value: config.values[i][1],
-//         parent: this})
-// }

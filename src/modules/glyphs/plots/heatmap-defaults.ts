@@ -15,7 +15,7 @@ export class HeatmapZoomBehavior<A extends PlotAnnotation, C extends Chart<any>>
         selection
             .selectAll<SVGRectElement, PointDatum>('rect')
             .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
-            .attr('width', 5)
+            .attr('width', (a) => chart.getXScale()(a.x + a.w) - chart.getXScale()(a.x));
     }
 
     public applyDuration(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>, duration: number) {
@@ -24,6 +24,6 @@ export class HeatmapZoomBehavior<A extends PlotAnnotation, C extends Chart<any>>
             .transition()
             .duration(duration)
             .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
-            .attr('width', 5)
+            .attr('width', (a) => chart.getXScale()(a.x + a.w) - chart.getXScale()(a.x));
     }
 }

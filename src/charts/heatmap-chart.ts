@@ -1,10 +1,9 @@
 import * as d3 from 'd3';
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
-import {PlotAnnotation, PointDatum} from "../annotations/plot-annotation";
+import {PlotAnnotation} from "../annotations/plot-annotation";
 import {heatmap, HeatmapConfig} from "../modules/glyphs/plots/heatmap";
 
 export interface HeatmapChartConfig extends TrackChartConfig {
-
 }
 
 export interface HeatmapChartRenderParams extends TrackChartRenderParams {

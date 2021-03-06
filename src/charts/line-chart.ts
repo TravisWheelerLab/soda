@@ -24,12 +24,13 @@ export class LineChart extends TrackChart<LineChartRenderParams> {
             .range([0, this.binHeight])
 
         this._axis = d3.axisRight(this.yScale)
+            .ticks(5);
+
         this._axisSelection = this.svgSelection
             .append('g')
             .attr('class', 'y-axis')
             .attr('transform', `translate(0, ${this.verticalPad})`)
             .call(this.getAxis());
-
     }
 
     public getAxis(): d3.Axis<number | {valueOf(): number}> {
