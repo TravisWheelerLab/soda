@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
 import {PlotAnnotation} from "../annotations/plot-annotation";
-import {barPlot, BarPlotConfig} from "../modules/glyphs/bar-plot";
+import {barPlot, BarPlotConfig} from "../modules/glyphs/plots";
 
 export interface BarChartConfig extends TrackChartConfig {
 

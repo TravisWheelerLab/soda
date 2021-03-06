@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
 import {PlotAnnotation, PointDatum} from "../annotations/plot-annotation";
-import {RectangleConfig, rectangleGlyph} from "../modules/glyphs/rectangle/rectangle-glyph";
+import {heatmap, HeatmapConfig} from "../modules/glyphs/plots/heatmap";
 
 export interface HeatmapChartConfig extends TrackChartConfig {
 
@@ -21,12 +21,9 @@ export class HeatmapChart extends TrackChart<HeatmapChartRenderParams> {
     }
 
     public inRender(params: HeatmapChartRenderParams) {
-        const rectConf: RectangleConfig<PointDatum, HeatmapChart> = {
-            selector: 'heatmap-cell',
-            strokeOpacity: () => 0,
-            x: (p) => p.parent.x + p.centerX - 5,
-            fillColor: (p) => this.colorScale(p.value),
+        const rectConf: HeatmapConfig<PlotAnnotation, HeatmapChart> = {
+            selector: 'heatmap',
         };
-        rectangleGlyph(this, params.data[0].points, rectConf);
+        heatmap(this, [params.data[0]], rectConf);
     }
 }

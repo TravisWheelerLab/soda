@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {TrackChart, TrackChartConfig, TrackChartRenderParams} from "./track-chart";
 import {PlotAnnotation} from "../annotations/plot-annotation";
-import {linePlot, LinePlotConfig} from "../modules/glyphs/line-plot/line-plot";
+import {linePlot, LinePlotConfig} from "../modules/glyphs/plots";
 
 export interface LineChartConfig extends TrackChartConfig {
 

@@ -7,6 +7,7 @@ import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./line-plot-defaults";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
+import {getPlotGSelection} from "./plot-defaults";
 
 /**
  * An interface that holds the parameters to style a line plot.
@@ -38,6 +39,10 @@ export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> 
      */
     strokeDashArray?: (a: A, c: C) => string;
     /**
+     * A custom defined d3.Line function, which is what is used to determine the x and y coordinates of each point.
+     */
+    lineFunc?: d3.Line<PointDatum>
+    /**
      * A custom defined zoom behavior for all of the glyphs rendered with this config. This is intended to be used by
      * experienced users only.
      */
@@ -51,31 +56,20 @@ export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> 
  * @param conf The parameters for configuring the styling of the plot.
  */
 export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: LinePlotConfig<A, C>): void {
-    const outerSelection = chart.svgSelection
-        .selectAll<SVGGElement, A>(`g.${conf.selector}`)
-        .data(ann, (a: A) => a.id);
-
     const strokeWidth = conf.strokeWidth || (() => 1);
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
     const strokeDashArray = conf.strokeDashArray || (() => "");
-    // let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
-    const lineFunc = defaults.lineFunc(chart)
+    let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
 
-    const outerEnter = outerSelection.enter()
-        .append('g')
-        .attr('class', conf.selector)
+    let [outerEnter, outerMerge] = getPlotGSelection(chart, ann, conf);
+
+    outerEnter
         .style('stroke-width', (a: A) => strokeWidth(a, chart))
         .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
         .style('stroke-dasharray', (a: A) => strokeDashArray(a, chart))
         .style('stroke', (a: A) => strokeColor(a, chart))
         .style('fill', 'none')
-
-    const outerMerge = outerEnter.merge(outerSelection)
-
-    // remove plots no longer in the visualization
-    outerSelection.exit()
-        .remove();
 
     outerMerge
         // iterate over the G tags and render the charts inside

@@ -7,6 +7,7 @@ import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./bar-plot-defaults";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
+import {getPlotGSelection} from "./plot-defaults";
 
 
 /**
@@ -17,26 +18,13 @@ export interface BarPlotConfig<A extends PlotAnnotation, C extends Chart<any>> e
 }
 
 /**
- * This renders PlotAnnotations as a line plot.
+ * This renders PlotAnnotations as a bar plot.
  * @param chart The Chart in which we will render the plot.
  * @param ann The PlotAnnotations to be rendered.
  * @param conf The parameters for configuring the styling of the plot.
  */
 export function barPlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: BarPlotConfig<A, C>): void {
-    const outerSelection = chart.svgSelection
-        .selectAll<SVGGElement, A>(`g.${conf.selector}`)
-        .data(ann, (a: A) => a.id);
-
-    const outerEnter = outerSelection.enter()
-        .append('g')
-        .attr('class', conf.selector)
-        .style('fill', 'none')
-
-    const outerMerge = outerEnter.merge(outerSelection)
-
-    // remove plots no longer in the visualization
-    outerSelection.exit()
-        .remove();
+    let [_, outerMerge] = getPlotGSelection(chart, ann, conf);
 
     const barHeightFunc = defaults.barHeightFunc(chart);
 
