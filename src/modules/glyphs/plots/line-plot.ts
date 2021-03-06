@@ -12,7 +12,7 @@ import {getPlotGSelection} from "./plot-defaults";
 /**
  * An interface that holds the parameters to style a line plot.
  */
-export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * A callback to define the stroke color of the line plot.
      * @param a

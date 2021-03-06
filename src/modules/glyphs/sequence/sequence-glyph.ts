@@ -8,7 +8,7 @@ import {GlyphConfig} from "../glyph-config";
 /**
  * An interface that holds the parameters for rendering sequence glyphs.
  */
-export interface SequenceConfig<A extends SequenceAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface SequenceConfig<A extends SequenceAnnotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * A callback to define the semantic x coordinate of the sequence glyph.
      * @param a

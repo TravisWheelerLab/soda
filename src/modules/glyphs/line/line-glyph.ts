@@ -11,7 +11,7 @@ import {GlyphConfig} from "../glyph-config";
 /**
  * An interface that holds the common parameters for rendering line glyphs.
  */
-interface CommonLineConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+interface CommonLineConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * A callback to define the stroke color of the line glyph.
      * @param a

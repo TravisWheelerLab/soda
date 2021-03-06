@@ -1,6 +1,3 @@
 export * from './plots/line-plot'
-export * from './plots/line-plot-defaults'
 export * from './plots/bar-plot'
-export * from './plots/bar-plot-defaults'
 export * from './plots/heatmap'
-export * from './plots/heatmap-defaults'

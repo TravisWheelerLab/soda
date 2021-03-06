@@ -26,7 +26,7 @@ function getTextSize(text: string): number {
     return (width);
 }
 
-export interface TextConfig<A extends TextAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface TextConfig<A extends TextAnnotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * The number of pixels to pad the text width.
      */

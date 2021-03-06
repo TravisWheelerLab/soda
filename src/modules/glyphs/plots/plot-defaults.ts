@@ -3,7 +3,7 @@ import {Chart} from "../../../charts/chart";
 import {PlotAnnotation} from "../../../annotations/plot-annotation";
 import {GlyphConfig} from "../glyph-config";
 
-export interface PlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface PlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig {
 
 }
 

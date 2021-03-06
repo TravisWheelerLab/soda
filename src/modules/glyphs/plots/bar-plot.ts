@@ -13,7 +13,7 @@ import {getPlotGSelection} from "./plot-defaults";
 /**
  * An interface that holds the parameters to style a bar plot.
  */
-export interface BarPlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface BarPlotConfig<A extends PlotAnnotation, C extends Chart<any>> extends GlyphConfig {
     zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
 

@@ -11,7 +11,7 @@ import {GlyphConfig} from "../glyph-config";
 /**
  * An interface that holds the parameters for rendering rectangle glyphs.
  */
-export interface RectangleConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface RectangleConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * A callback to define the y coordinate of the rectangle glyph.
      * @param a
