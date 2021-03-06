@@ -11,7 +11,7 @@ export interface PlotAnnotationConfig extends AnnotationConfig {
 /**
  * A simple interface to define one point in a PlotAnnotation.
  */
-export interface PointDatum {
+export interface PointDatum extends Annotation {
     /**
      * The x coordinate of the point relative to the start of the PlotAnnotation.
      */
@@ -62,7 +62,16 @@ function interpolatePointData(values: number[], parent: PlotAnnotation): PointDa
     let points: PointDatum[] = [];
     const datumW = parent.w / valCnt;
     for (let i = 0; i < valCnt; i++) {
-        points.push({x: xScale(i),
+        points.push({
+            h: 0, id: "", y: 0, getW(): number {
+                return 0;
+            }, getX(): number {
+                return 0;
+            }, getX2(): number {
+                return 0;
+            }, setY(y: number): void {
+            },
+            x: xScale(i),
             w: datumW,
             centerX: xScale(i) + datumW/2,
             value: values[i],

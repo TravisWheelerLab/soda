@@ -204,35 +204,24 @@ let gcData = [
 
 // gcData = gcData.slice(0,20);
 const axis = new soda.AxisChart({selector: '#axis-chart'});
-let chart = new soda.LineChart({selector: '#track-chart', binHeight:100});
+let lineChart = new soda.LineChart({selector: '#line-chart', binHeight:100});
+let barChart = new soda.BarChart({selector: '#bar-chart', binHeight:100});
+let heatmapChart = new soda.HeatmapChart({selector: '#heatmap-chart', binHeight:20});
 
 let zoomController = new soda.ZoomController();
 let resizeController = new soda.ResizeController();
 
 zoomController.addComponent(axis);
-zoomController.addComponent(chart);
+zoomController.addComponent(lineChart);
+zoomController.addComponent(barChart);
+zoomController.addComponent(heatmapChart);
 
 resizeController.addComponent(axis);
-resizeController.addComponent(chart);
+resizeController.addComponent(lineChart);
+resizeController.addComponent(barChart);
+resizeController.addComponent(heatmapChart);
 
 window.onresize = () => resizeController.trigger();
-
-// let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-// let ann: soda.PlotAnnotation[] = []
-// for (let i = 0; i < 1; i++) {
-//     for (let j = 0; j < 2; j++) {
-//         let conf: soda.PlotAnnotationConfig = {
-//             id: `${i}-${j}`,
-//             x: i * 1000,
-//             w: 1000,
-//             y: j,
-//             h: 0,
-//             points: gcData,
-//         }
-//         ann.push(new soda.PlotAnnotation(conf))
-//     }
-// }
 
 let conf: soda.PlotAnnotationConfig = {
     id: `0`,
@@ -252,4 +241,6 @@ let renderParams: soda.LineChartRenderParams = {
 };
 
 axis.render(renderParams);
-chart.initialRender(renderParams);
+lineChart.initialRender(renderParams);
+barChart.initialRender(renderParams);
+heatmapChart.initialRender(renderParams);
