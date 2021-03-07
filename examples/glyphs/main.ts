@@ -41,7 +41,8 @@ const chevronLineAnnConf: soda.AnnotationConfig[]  = [
     {"id": "8",  "x": 200, "w": 95, "y": 2, "h": 0}
 ];
 
-const chevronLineAnn = chevronLineAnnConf.map((a) => {
+// @ts-ignore
+const chevronLineAnn: soda.OrientedAnnotation[] = chevronLineAnnConf.map((a) => {
     return {
         id: a.id,
         h: a.h,
@@ -64,7 +65,8 @@ const chevronRectAnnConf: soda.AnnotationConfig[]  = [
     {"id": "11", "x": 300, "w": 95, "y": 2, "h": 0}
 ];
 
-const chevronRectAnn = chevronRectAnnConf.map((a) => {
+// @ts-ignore
+const chevronRectAnn: soda.OrientedAnnotation[] = chevronRectAnnConf.map((a) => {
     return {
         id: a.id,
         h: a.h,
@@ -81,13 +83,28 @@ const chevronRectAnn = chevronRectAnnConf.map((a) => {
     }
 });
 
+const sandwichConf: soda.AnnotationConfig[] = [
+    {"id": "15", "x": 505, "w": 95, "y": 0, "h": 0},
+    {"id": "16", "x": 505, "w": 95, "y": 1, "h": 0},
+    {"id": "17", "x": 505, "w": 95, "y": 2, "h": 0},
+    {"id": "18", "x": 400, "w": 25, "y": 1, "h": 0},
+    {"id": "19", "x": 400, "w": 45, "y": 2, "h": 0}
+]
+
+const sandwichAnn: soda.Annotation[] = sandwichConf.map((conf) => {
+    return new soda.Annotation(conf);
+});
+
+
+
 const textAnnConf: soda.AnnotationConfig[]  = [
     {"id": "12", "x": 500, "w": 95, "y": 0, "h": 0},
     {"id": "13", "x": 500, "w": 75, "y": 1, "h": 0},
     {"id": "14", "x": 500, "w": 55, "y": 2, "h": 0}
 ]
 
-const textAnn = textAnnConf.map((a) => {
+// @ts-ignore
+const textAnn: soda.TextAnnotation[] = textAnnConf.map((a) => {
     return {
         id: a.id,
         h: a.h,
@@ -114,7 +131,7 @@ let renderParams: soda.TrackChartRenderParams = {
 };
 
 axis.render(renderParams);
-chart.render(renderParams);
+chart.initialRender(renderParams);
 
 let rectConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
     selector: 'r1',
@@ -229,3 +246,10 @@ soda.chevronRectangleGlyph(chart, chevronRectAnn.slice(2,3), chevronRectConf);
 soda.chevronLineGlyph(chart, chevronLineAnn.slice(2,3), chevronLineConf);
 soda.textGlyph(chart, textAnn.slice(2,3), textConf);
 
+let rConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
+    selector: 'rsan',
+    strokeColor: () => '#984ea3',
+    fillColor: () => '#984ea3'
+}
+
+soda.rectangleGlyph(chart, sandwichAnn, rConf);

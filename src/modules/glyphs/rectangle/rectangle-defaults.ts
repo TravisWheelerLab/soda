@@ -36,5 +36,4 @@ export class RectZoomBehavior<A extends Annotation, C extends Chart<any>> implem
             .attr('x', (a: A) => chart.getXScale()(this.x(a, chart)))
             .attr('width', (a: A) => chart.getXScale()(this.w(a, chart) + this.x(a, chart)) - chart.getXScale()(this.x(a, chart)));
     }
-
 }

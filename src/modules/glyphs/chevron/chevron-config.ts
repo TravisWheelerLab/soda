@@ -5,7 +5,7 @@ import {GlyphConfig} from "../glyph-config";
 /**
  * An interface that defines the common parameters for rendering chevron glyphs.
  */
-export interface ChevronPrimitiveConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig<A, C> {
+export interface ChevronPrimitiveConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     /**
      * The semantic query width at which the chevron patterns will be disabled. At this point, they will look like
      * regular rectangles or lines.

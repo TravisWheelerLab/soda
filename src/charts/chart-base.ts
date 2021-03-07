@@ -26,6 +26,10 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
      */
     height:         number;
     /**
+     * The amount of space in pixels to pad the top and bottom of the chart.
+     */
+    verticalPad:         number;
+    /**
      * A d3 selection of the Chart's SVG viewport.
      */
     svgSelection:   d3.Selection<any, any, any, any>;
@@ -62,13 +66,13 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         }
 
         this.binHeight = config.binHeight || 10;
-
+        this.verticalPad = config.verticalPad || 10;
         this.svgSelection
             .attr('width', config.width || '100%')
-            .attr('height', config.height || this.binHeight);
+            .attr('height', (config.height || this.binHeight) + this.verticalPad * 2);
 
         this.width = config.width || this.getSvgWidth();
-        this.height = config.width || this.getSvgHeight();
+        this.height = ( (config.width || this.getSvgHeight()) + this.verticalPad + this.verticalPad * 2);
     }
 
     /**
