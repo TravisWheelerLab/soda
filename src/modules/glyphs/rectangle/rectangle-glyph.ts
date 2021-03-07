@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {Annotation} from "../../../annotations/annotation";
-import {mapIdToAnnotation, mapIdToSelection} from "../../../plugins/id-map";
+import {mapIdToAnnotation, mapIdToSelection} from "../../id-map/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import * as defaults from "./rectangle-defaults";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";

@@ -1,13 +1,13 @@
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {PlotAnnotation, PointDatum} from "../../../annotations/plot-annotation";
-import {mapIdToAnnotation, mapIdToSelection} from "../../../plugins/id-map";
+import {mapIdToAnnotation, mapIdToSelection} from "../../id-map/id-map";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./bar-plot-defaults";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
-import {GlyphConfig} from "../glyph-config";
 import {getPlotGSelection} from "./plot-defaults";
+import {GlyphConfig} from "../glyph-config";
 
 /**
  * An interface that holds the parameters to style a bar plot.

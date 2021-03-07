@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {getSelectionById} from '../id-map';
+import {getSelectionById} from '../id-map/id-map';
 import {Annotation} from "../../annotations/annotation";
 
 // this module provides a way to route an arbitrary number of

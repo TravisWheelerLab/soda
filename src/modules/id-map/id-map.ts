@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Annotation } from '../annotations';
+import { Annotation } from '../../annotations';
 
 // this module provides some convenience maps that give
 // access to selections and annotations via id

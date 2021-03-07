@@ -1,4 +1,3 @@
-import {GlyphConfig} from "../glyph-config";
 import * as d3 from "d3";
 import {Chart} from "../../../charts/chart";
 import {Annotation} from "../../../annotations/annotation";
@@ -7,6 +6,7 @@ import * as defaults from "./axis-defaults";
 import {isZoomableChart} from "../../zoom/zoomable-chart";
 import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
+import {GlyphConfig} from "../glyph-config";
 
 /**
  * An interface that holds the parameters to style a vertical axis.

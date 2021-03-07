@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {Chart, ChartConfig, ChartRenderParams} from './chart';
-import {Plugin} from '../plugins/plugin';
+import {Plugin} from '../modules/plugin';
 
 /**
  * This is an abstract class that provides some default implementations for Charts. It basically just handles creating
