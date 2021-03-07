@@ -9,7 +9,6 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
 import {getPlotGSelection} from "./plot-defaults";
 
-
 /**
  * An interface that holds the parameters to style a bar plot.
  */
@@ -42,7 +41,7 @@ export function barPlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C
             const innerEnter = innerSelection.enter()
                 .append('rect')
                 .attr('class', conf.selector)
-                .attr('y', (a) => chart.binHeight * (a.parent.y + 1) - barHeightFunc(a.value))
+                .attr('y', (a) => chart.binHeight * (a.parent.y + 1) + chart.verticalPad - barHeightFunc(a.value))
                 .attr('height', (a) => barHeightFunc(a.value))
                 .attr('fill', 'green')
 

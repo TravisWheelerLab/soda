@@ -7,7 +7,7 @@ export interface HeatmapChartConfig extends TrackChartConfig {
 }
 
 export interface HeatmapChartRenderParams extends TrackChartRenderParams {
-    data: PlotAnnotation[],
+    data: PlotAnnotation,
 }
 
 export class HeatmapChart extends TrackChart<HeatmapChartRenderParams> {
@@ -23,6 +23,6 @@ export class HeatmapChart extends TrackChart<HeatmapChartRenderParams> {
         const rectConf: HeatmapConfig<PlotAnnotation, HeatmapChart> = {
             selector: 'heatmap',
         };
-        heatmap(this, [params.data[0]], rectConf);
+        heatmap(this, [params.data], rectConf);
     }
 }

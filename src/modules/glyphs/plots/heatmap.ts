@@ -49,9 +49,8 @@ export function heatmap<A extends PlotAnnotation, C extends Chart<any>>(chart: C
             const innerMerge = innerEnter.merge(innerSelection);
 
             innerMerge
-                .attr('x', (a) => a.parent.x + a.x)
-                .attr('width', (a) => a.w)
-
+                .attr('x', (a) => chart.getXScale()(a.parent.x + a.x))
+                .attr('width', (a) => chart.getXScale()(a.x + a.w) - chart.getXScale()(a.x))
         });
 
 

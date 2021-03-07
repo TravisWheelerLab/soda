@@ -232,7 +232,18 @@ let conf: soda.PlotAnnotationConfig = {
     points: gcData,
 }
 
-let ann = [new soda.PlotAnnotation(conf)]
+let conf2: soda.PlotAnnotationConfig = {
+    id: `0`,
+    x: 1200,
+    w: 1000,
+    y: 0,
+    h: 0,
+    points: gcData,
+}
+
+// let ann = [new soda.PlotAnnotation(conf), new soda.PlotAnnotation(conf2)]
+let ann = new soda.PlotAnnotation(conf)
+
 let renderParams: soda.LineChartRenderParams = {
     data: ann,
     queryStart: 0,
