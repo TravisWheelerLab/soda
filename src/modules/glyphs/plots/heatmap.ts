@@ -17,7 +17,7 @@ export interface HeatmapConfig<A extends PlotAnnotation, C extends Chart<any>> e
 }
 
 /**
- * This renders PlotAnnotations as a heatmap plot.
+ * This renders PlotAnnotations as a heatmap.
  * @param chart The Chart in which we will render the plot.
  * @param ann The PlotAnnotations to be rendered.
  * @param conf The parameters for configuring the styling of the plot.
