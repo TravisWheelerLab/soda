@@ -5,7 +5,7 @@ import {registerZoomBehavior} from "../../zoom/zoom-utilities";
 import * as defaults from "./chevron-defaults";
 import {chevronPatternId, ChevronPatternType, createChevronPatterns} from "./chevron-patterns";
 import {ChevronPrimitiveConfig} from "./chevron-config";
-import {horizontalLine, HorizontalLineConfig} from "../line/line-glyph";
+import {horizontalLineGlyph, HorizontalLineConfig} from "../line/line-glyph";
 import {RectangleConfig, rectangleGlyph} from "../rectangle/rectangle-glyph";
 
 /**
@@ -46,7 +46,7 @@ export function chevronLineGlyph<A extends OrientedAnnotation, C extends Chart<a
     conf.chevronY = conf.chevronY || conf.y;
     conf.chevronH = conf.chevronH || conf.h;
     createChevronPatterns(chart, ann, conf, ChevronPatternType.Line);
-    horizontalLine(chart, ann, conf);
+    horizontalLineGlyph(chart, ann, conf);
     const h = conf.h || defaults.chevronHFn;
     const y = conf.y || defaults.chevronLineYFn;
 

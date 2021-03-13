@@ -1,6 +1,6 @@
 import {Gff3Annotation, Gff3AnnotationConfig, Phase} from "../../../annotations/gff3-annotation";
 import {Orientation} from "../../../annotations/oriented-annotation";
-import {GmodGff3} from "./gmod-gff3";
+import {Gff3Record} from "./gff3-record";
 
 import gff from '@gmod/gff';
 
@@ -14,7 +14,7 @@ let idCnt = 0;
  * @param derivedFrom An optional reference to the Annotation from which the current object is derived
  * @returns A flat list of all of the Gff3Annotation objects.
  */
-function recursiveGmodGff3Parse(currentObj: GmodGff3,
+function recursiveGmodGff3Parse(currentObj: Gff3Record,
                                 parent: Gff3Annotation | undefined = undefined,
                                 derivedFrom: Gff3Annotation | undefined = undefined ): Gff3Annotation[] {
     let conf: Gff3AnnotationConfig = {
@@ -25,7 +25,6 @@ function recursiveGmodGff3Parse(currentObj: GmodGff3,
         x: currentObj.start,
         w: currentObj.end - currentObj.start + 1,
         y: 0,
-        h: 0,
         orientation: <Orientation>currentObj.strand,
         seqId: currentObj.seq_id,
         source: currentObj.source,
@@ -85,7 +84,7 @@ function recursiveGmodGff3Parse(currentObj: GmodGff3,
 export function gff3ParseGrouped(lines: string): Gff3Annotation[][] {
     // we pull a two dimensional array of objects from the GMOD/gff-js package
     // at each index is a group of objects that share the same ID
-    let gmodGff3Objects: GmodGff3[][] = gff.parseStringSync(lines);
+    let gmodGff3Objects: Gff3Record[][] = gff.parseStringSync(lines);
     let annGroups: Gff3Annotation[][] = [];
     for (const objList of gmodGff3Objects) {
         for (const obj of objList) {
@@ -108,7 +107,7 @@ export function gff3ParseGrouped(lines: string): Gff3Annotation[][] {
 export function gff3ParseFlat(lines: string): Gff3Annotation[] {
     // we pull a two dimensional array of objects from the GMOD/gff-js package
     // at each index is a group of objects that share the same ID
-    let gmodGff3Objects: GmodGff3[][] = gff.parseStringSync(lines);
+    let gmodGff3Objects: Gff3Record[][] = gff.parseStringSync(lines);
     let ann: Gff3Annotation[] = [];
     for (const objList of gmodGff3Objects) {
         for (const obj of objList) {

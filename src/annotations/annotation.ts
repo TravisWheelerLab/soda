@@ -6,11 +6,12 @@ export interface AnnotationConfig {
     x: number,
     y: number,
     w: number,
-    h: number,
 }
 
 /**
- * Annotation objects are the main data structure used by SODA to store information about alignments. In many cases,
+ * :trst-class:`Annotation` objects are the main data structure used by SODA to store information about alignments. In
+ * many
+ * cases,
  * this should be sufficient to store the information to represent a single glyph in a visualization. If more
  * information is needed, the Annotation class should be extended.
  */
@@ -39,15 +40,11 @@ export class Annotation {
     /**
      * The height of an annotation in the visualization. This is currently not used by the SODA core.
      */
-        // TODO: get rid of this?
-    h: number;
-
     constructor(config: AnnotationConfig) {
         this.id = config.id;
         this.x = config.x;
         this.y = config.y;
         this.w = config.w;
-        this.h = config.h;
     }
 
     /**

@@ -11,7 +11,7 @@ import {GlyphConfig} from "../glyph-config";
 /**
  * An interface that holds the parameters to style a vertical axis.
  */
-export interface VerticalAxisConfig<A extends Annotation, C extends Chart<any>>extends GlyphConfig {
+export interface VerticalAxisConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     x?: (a: A, c: C) => number;
     domain?: [number, number];
     range?: [number, number];

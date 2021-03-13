@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { ChartBase } from '../../charts';
-import { Plugin } from '../plugin';
+import {ChartBase} from '../../charts';
+import {Plugin} from '../plugin';
 
 /**
  * This plugin object allows a dynamic vertical rule to be added to any Chart.

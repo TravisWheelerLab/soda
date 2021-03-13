@@ -2,7 +2,7 @@ import BED from '@gmod/bed'
 import {BedAnnotation, BedAnnotationConfig} from "../../../annotations/bed-annotation";
 import {Orientation} from "../../../annotations/oriented-annotation";
 import {Annotation} from "../../../annotations/annotation";
-import {GmodBed} from "./gmod-bed";
+import {BedRecord} from "./bed-record";
 
 export function bed6Parse(lines: string): BedAnnotation[] {
     let bedParser = new BED();
@@ -15,7 +15,6 @@ export function bed6Parse(lines: string): BedAnnotation[] {
             x: bedObj.chromStart,
             w: bedObj.chromEnd - bedObj.chromStart,
             y: 0,
-            h: 0,
             score: bedObj.score,
             name: bedObj.name,
             orientation: Orientation.Forward,
@@ -26,7 +25,7 @@ export function bed6Parse(lines: string): BedAnnotation[] {
 }
 
 export function customBedParse<A extends Annotation>(lines: string,
-                                                     parseCallback: (bedObj: GmodBed) => A): A[] {
+                                                     parseCallback: (bedObj: BedRecord) => A): A[] {
     lines = lines.replace(/\n*$/, '');
     lines = lines.replace(/^\s*[\r\n]/gm, '');
     let bedParser = new BED();
