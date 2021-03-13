@@ -24,7 +24,7 @@ let ids = [];
 for (let i = 0; i < n; i++) {
     let id = i.toString();
     ids.push(id);
-    ann.push(new soda.Annotation({h: 0, id: id, w: randInt(1000), x: randInt(w), y: 0}));
+    ann.push(new soda.Annotation({id: id, w: randInt(1000), x: randInt(w), y: 0}));
 }
 
 let colorScale = d3.scaleOrdinal(d3.schemeCategory10)
@@ -44,37 +44,31 @@ let trackParams: soda.TrackChartRenderParams = {
     maxY: colorCount, queryEnd: w, queryStart: 0
 };
 
-axis.render(axisParams);
-chart.render(trackParams);
+axis.initialRender(axisParams);
+chart.initialRender(trackParams);
 
 soda.rectangleGlyph(chart, ann, conf);
 
-for (const a of ann) {
-    const hoverConf: soda.HoverConfig<soda.Annotation> = {
-        ann : a,
-        mouseover: (s, a) => { console.log(a.id, 'hovered') },
-        mouseout: (s, a) => { console.log(a.id, "out") }
-    };
-    soda.addHoverBehavior(hoverConf);
+const hoverConf: soda.HoverConfig<soda.Annotation> = {
+    mouseover: (s, a) => { console.log(a.id, 'hovered') },
+    mouseout: (s, a) => { console.log(a.id, "out") }
+};
+soda.hoverBehavior(ann, hoverConf);
 
-    const tooltipConf: soda.TooltipConfig<soda.Annotation, soda.TrackChart<any>> = {
-        ann : a,
-        text: (a) => a.id,
-    };
-    soda.tooltip(chart, tooltipConf);
+const tooltipConf: soda.TooltipConfig<soda.Annotation, soda.TrackChart<any>> = {
+    text: (a) => a.id,
+};
+soda.tooltip(chart, ann, tooltipConf);
 
-    const clickConf1: soda.ClickConfig<soda.Annotation> = {
-        ann : a,
-        click: (s, a) => { console.log(a.id, 'clicked') },
-    };
-    const clickConf2: soda.ClickConfig<soda.Annotation> = {
-        ann : a,
-        click: (s, a) => { alert(`${a.id} clicked`) },
-    };
-    soda.addClickBehavior(clickConf1);
-    soda.addClickBehavior(clickConf2);
+const clickConf1: soda.ClickConfig<soda.Annotation> = {
+    click: (s, a) => { console.log(a.id, 'clicked') },
+};
+const clickConf2: soda.ClickConfig<soda.Annotation> = {
+    click: (s, a) => { alert(`${a.id} clicked`) },
+};
 
-}
+soda.clickBehavior(ann, clickConf1);
+soda.clickBehavior(ann, clickConf2);
 
 function randInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
