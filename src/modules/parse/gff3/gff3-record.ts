@@ -1,4 +1,4 @@
-export interface GmodGff3 {
+export interface Gff3Record {
     seq_id: string,
     source: string,
     type: string,
@@ -7,8 +7,7 @@ export interface GmodGff3 {
     score: number,
     strand: string,
     phase: number,
-    // attributes: Map<string, string[]>;
     attributes: Object;
-    child_features: GmodGff3[][],
-    derived_features: GmodGff3[][],
+    child_features: Gff3Record[][],
+    derived_features: Gff3Record[][],
 }

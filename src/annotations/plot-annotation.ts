@@ -71,7 +71,6 @@ function distributePointData(values: number[], parent: PlotAnnotation): PointDat
             id: ``,
             x: xScale(i),
             w: datumW,
-            h: 0,
             value: values[i],
             parent: parent
         }

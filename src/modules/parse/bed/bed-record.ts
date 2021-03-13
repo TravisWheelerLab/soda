@@ -1,4 +1,4 @@
-export interface GmodBed {
+export interface BedRecord {
     chrom: string,
     chromStart: number,
     chromEnd: number,

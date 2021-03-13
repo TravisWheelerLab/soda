@@ -128,7 +128,7 @@ export interface HorizontalLineConfig<A extends Annotation, C extends Chart<any>
  * @param ann The list of Annotation objects to be rendered.
  * @param conf The parameters for configuring the style of the lines.
  */
-export function verticalLine<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: VerticalLineConfig<A, C>): void {
+export function verticalLineGlyph<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: VerticalLineConfig<A, C>): void {
     const lineConfig: LineConfig<A, C> = {
         selector: conf.selector,
         strokeColor: conf.strokeColor,
@@ -150,7 +150,7 @@ export function verticalLine<A extends Annotation, C extends Chart<any>>(chart: 
  * @param ann The list of Annotation objects to be rendered.
  * @param conf The parameters for configuring the style of the lines.
  */
-export function horizontalLine<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: HorizontalLineConfig<A, C>): void {
+export function horizontalLineGlyph<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: HorizontalLineConfig<A, C>): void {
     const lineConfig: LineConfig<A, C> = {
         selector: conf.selector,
         strokeColor: conf.strokeColor,

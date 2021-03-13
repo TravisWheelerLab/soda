@@ -2,11 +2,6 @@ import * as d3 from 'd3';
 import {getSelectionById} from '../id-map/id-map';
 import {Annotation} from "../../annotations/annotation";
 
-// this module provides a way to route an arbitrary number of
-// click behaviors to a soda glyph
-
-// these maps contain lists of click functions to
-// be called whenever a soda glyph is clicked
 const clickBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, a: Annotation): void}[]> = new Map();
 
 /**

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as soda from "@traviswheelerlab/soda"
 
-const axis = new soda.AxisChart({selector: '#axis-chart'});
+let axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart'});
 
 let zoomController = new soda.ZoomController();
@@ -15,35 +15,32 @@ resizeController.addComponent(chart);
 
 window.onresize = () => resizeController.trigger();
 
-let n = 10;
-let exampleWidth = 1000;
-const ann: soda.Annotation[] = [];
-for (let i = 0; i < n; i++) {
-    let id = i.toString();
+let ann: soda.Annotation[] = [];
+for (let i = 0; i < 10; i++) {
     let annConf: soda.AnnotationConfig = {
-        id: id,
-        w: (exampleWidth/n),
-        x: i * (exampleWidth/n),
+        id: `${i}`,
+        w: 100,
+        x: i * 100,
         y: i,
-        h: 0,
     };
     ann.push(new soda.Annotation(annConf));
 }
 
-let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
 let renderParams: soda.TrackChartRenderParams = {
     queryStart: 0,
-    queryEnd: exampleWidth,
-    maxY: n
+    queryEnd: 1000,
+    maxY: 10
 };
 
-axis.render(renderParams);
-chart.render(renderParams);
+let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
 let rectConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
     selector: 'ann',
-    fillColor: (d: soda.Annotation) => colorScale(d.id)
+    fillColor: (a: soda.Annotation) => colorScale(a.id),
+    strokeColor: (a: soda.Annotation) => colorScale(a.id)
 };
+
+axis.initialRender(renderParams);
+chart.initialRender(renderParams);
 
 soda.rectangleGlyph(chart, ann, rectConf);

@@ -33,7 +33,6 @@ function initTooltipDiv(): void {
 /**
  * An interface that holds the parameters for configuring a glyph tooltip.
  */
-
 export interface TooltipConfig<A extends Annotation, C extends Chart<any>> {
     /**
      * The Annotation object whose representative glyph we are binding the tooltip to.

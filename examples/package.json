@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@traviswheelerlab/soda": "file:..",
+    "d3": "^6.6.0",
     "source-map-loader": "^1.0.0"
   },
   "devDependencies": {
