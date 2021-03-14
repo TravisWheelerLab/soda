@@ -1,7 +1,6 @@
-import * as d3 from 'd3';
 import * as soda from "@traviswheelerlab/soda"
 
-const axis = new soda.AxisChart({selector: '#axis-chart'});
+let axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart', binHeight:24});
 
 let zoomController = new soda.ZoomController();
@@ -15,37 +14,36 @@ resizeController.addComponent(chart);
 
 window.onresize = () => resizeController.trigger();
 
-const rectAnnConf: soda.AnnotationConfig[]  = [
-    {"id": "0",  "x": 0,   "w": 95, "y": 0, "h": 0},
-    {"id": "1",  "x": 0, "w": 95, "y": 1, "h": 0},
-    {"id": "2",  "x": 0, "w": 95, "y": 2, "h": 0}
+let rectAnnConf: soda.AnnotationConfig[]  = [
+    {"id": "0",  "x": 0, "w": 95, "y": 0},
+    {"id": "1",  "x": 0, "w": 95, "y": 1},
+    {"id": "2",  "x": 0, "w": 95, "y": 2}
 ];
 
-const rectAnn: soda.Annotation[] = rectAnnConf.map((conf) => {
+let rectAnn: soda.Annotation[] = rectAnnConf.map((conf) => {
     return new soda.Annotation(conf);
 });
 
-const lineAnnConf: soda.AnnotationConfig[]  = [
-    {"id": "3",  "x": 100, "w": 95, "y": 0, "h": 0},
-    {"id": "4",  "x": 100, "w": 95, "y": 1, "h": 0},
-    {"id": "5",  "x": 100, "w": 95, "y": 2, "h": 0}
+let lineAnnConf: soda.AnnotationConfig[]  = [
+    {"id": "3",  "x": 100, "w": 95, "y": 0},
+    {"id": "4",  "x": 100, "w": 95, "y": 1},
+    {"id": "5",  "x": 100, "w": 95, "y": 2}
 ];
 
-const lineAnn = lineAnnConf.map((a) => {
+let lineAnn = lineAnnConf.map((a) => {
     return new soda.Annotation(a);
 });
 
-const chevronLineAnnConf: soda.AnnotationConfig[]  = [
-    {"id": "6",  "x": 200, "w": 95, "y": 0, "h": 0},
-    {"id": "7",  "x": 200, "w": 95, "y": 1, "h": 0},
-    {"id": "8",  "x": 200, "w": 95, "y": 2, "h": 0}
+let chevronLineAnnConf: soda.AnnotationConfig[]  = [
+    {"id": "6",  "x": 200, "w": 95, "y": 0},
+    {"id": "7",  "x": 200, "w": 95, "y": 1},
+    {"id": "8",  "x": 200, "w": 95, "y": 2}
 ];
 
 // @ts-ignore
-const chevronLineAnn: soda.OrientedAnnotation[] = chevronLineAnnConf.map((a) => {
+let chevronLineAnn: soda.OrientedAnnotation[] = chevronLineAnnConf.map((a) => {
     return {
         id: a.id,
-        h: a.h,
         w: a.w,
         x: a.x,
         y: a.y,
@@ -59,17 +57,16 @@ const chevronLineAnn: soda.OrientedAnnotation[] = chevronLineAnnConf.map((a) => 
     }
 });
 
-const chevronRectAnnConf: soda.AnnotationConfig[]  = [
-    {"id": "9",  "x": 300, "w": 95, "y": 0, "h": 0},
-    {"id": "10", "x": 300,   "w": 95, "y": 1, "h": 0},
-    {"id": "11", "x": 300, "w": 95, "y": 2, "h": 0}
+let chevronRectAnnConf: soda.AnnotationConfig[]  = [
+    {"id": "9",  "x": 300, "w": 95, "y": 0},
+    {"id": "10", "x": 300, "w": 95, "y": 1},
+    {"id": "11", "x": 300, "w": 95, "y": 2}
 ];
 
 // @ts-ignore
-const chevronRectAnn: soda.OrientedAnnotation[] = chevronRectAnnConf.map((a) => {
+let chevronRectAnn: soda.OrientedAnnotation[] = chevronRectAnnConf.map((a) => {
     return {
         id: a.id,
-        h: a.h,
         w: a.w,
         x: a.x,
         y: a.y,
@@ -83,31 +80,28 @@ const chevronRectAnn: soda.OrientedAnnotation[] = chevronRectAnnConf.map((a) => 
     }
 });
 
-const sandwichConf: soda.AnnotationConfig[] = [
-    {"id": "15", "x": 505, "w": 95, "y": 0, "h": 0},
-    {"id": "16", "x": 505, "w": 95, "y": 1, "h": 0},
-    {"id": "17", "x": 505, "w": 95, "y": 2, "h": 0},
-    {"id": "18", "x": 400, "w": 25, "y": 1, "h": 0},
-    {"id": "19", "x": 400, "w": 45, "y": 2, "h": 0}
+let sandwichConf: soda.AnnotationConfig[] = [
+    {"id": "15", "x": 505, "w": 95, "y": 0},
+    {"id": "16", "x": 505, "w": 95, "y": 1},
+    {"id": "17", "x": 505, "w": 95, "y": 2},
+    {"id": "18", "x": 400, "w": 25, "y": 1},
+    {"id": "19", "x": 400, "w": 45, "y": 2}
 ]
 
-const sandwichAnn: soda.Annotation[] = sandwichConf.map((conf) => {
+let sandwichAnn: soda.Annotation[] = sandwichConf.map((conf) => {
     return new soda.Annotation(conf);
 });
 
-
-
-const textAnnConf: soda.AnnotationConfig[]  = [
-    {"id": "12", "x": 500, "w": 95, "y": 0, "h": 0},
-    {"id": "13", "x": 500, "w": 75, "y": 1, "h": 0},
-    {"id": "14", "x": 500, "w": 55, "y": 2, "h": 0}
+let textAnnConf: soda.AnnotationConfig[]  = [
+    {"id": "12", "x": 500, "w": 95, "y": 0},
+    {"id": "13", "x": 500, "w": 75, "y": 1},
+    {"id": "14", "x": 500, "w": 55, "y": 2}
 ]
 
 // @ts-ignore
-const textAnn: soda.TextAnnotation[] = textAnnConf.map((a) => {
+let textAnn: soda.TextAnnotation[] = textAnnConf.map((a) => {
     return {
         id: a.id,
-        h: a.h,
         w: a.w,
         x: a.x,
         y: a.y,
@@ -122,15 +116,13 @@ const textAnn: soda.TextAnnotation[] = textAnnConf.map((a) => {
     }
 });
 
-let colorScale = d3.scaleOrdinal(d3.schemePaired);
-
 let renderParams: soda.TrackChartRenderParams = {
     queryStart: 0,
     queryEnd: 1000,
     maxY: 4
 };
 
-axis.render(renderParams);
+axis.initialRender(renderParams);
 chart.initialRender(renderParams);
 
 let rectConf: soda.RectangleConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
@@ -164,7 +156,7 @@ let textConf: soda.TextConfig<soda.TextAnnotation, soda.TrackChart<soda.TrackCha
 };
 
 soda.rectangleGlyph(chart, rectAnn.slice(0,1), rectConf);
-soda.horizontalLine(chart, lineAnn.slice(0,1), lineConf);
+soda.horizontalLineGlyph(chart, lineAnn.slice(0,1), lineConf);
 soda.chevronRectangleGlyph(chart, chevronRectAnn.slice(0,1), chevronRectConf);
 soda.chevronLineGlyph(chart, chevronLineAnn.slice(0,1), chevronLineConf);
 soda.textGlyph(chart, textAnn.slice(0,1), textConf);
@@ -203,7 +195,7 @@ textConf = {
 };
 
 soda.rectangleGlyph(chart, rectAnn.slice(1,2), rectConf);
-soda.horizontalLine(chart, lineAnn.slice(1,2), lineConf);
+soda.horizontalLineGlyph(chart, lineAnn.slice(1,2), lineConf);
 soda.chevronRectangleGlyph(chart, chevronRectAnn.slice(1,2), chevronRectConf);
 soda.chevronLineGlyph(chart, chevronLineAnn.slice(1,2), chevronLineConf);
 soda.textGlyph(chart, textAnn.slice(1,2), textConf);
@@ -241,7 +233,7 @@ textConf = {
 };
 
 soda.rectangleGlyph(chart, rectAnn.slice(2,3), rectConf);
-soda.horizontalLine(chart, lineAnn.slice(2,3), lineConf);
+soda.horizontalLineGlyph(chart, lineAnn.slice(2,3), lineConf);
 soda.chevronRectangleGlyph(chart, chevronRectAnn.slice(2,3), chevronRectConf);
 soda.chevronLineGlyph(chart, chevronLineAnn.slice(2,3), chevronLineConf);
 soda.textGlyph(chart, textAnn.slice(2,3), textConf);

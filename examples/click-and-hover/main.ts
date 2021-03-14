@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as soda from "@traviswheelerlab/soda"
 
-const axis = new soda.AxisChart({selector: '#axis-chart'});
+let axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart'});
 
 let zoomController = new soda.ZoomController();
@@ -18,7 +18,7 @@ window.onresize = () => resizeController.trigger();
 let n = 100;
 let w = 100000;
 
-const ann: soda.Annotation[] = [];
+let ann: soda.Annotation[] = [];
 
 let ids = [];
 for (let i = 0; i < n; i++) {
@@ -49,21 +49,21 @@ chart.initialRender(trackParams);
 
 soda.rectangleGlyph(chart, ann, conf);
 
-const hoverConf: soda.HoverConfig<soda.Annotation> = {
+let hoverConf: soda.HoverConfig<soda.Annotation> = {
     mouseover: (s, a) => { console.log(a.id, 'hovered') },
     mouseout: (s, a) => { console.log(a.id, "out") }
 };
 soda.hoverBehavior(ann, hoverConf);
 
-const tooltipConf: soda.TooltipConfig<soda.Annotation, soda.TrackChart<any>> = {
+let tooltipConf: soda.TooltipConfig<soda.Annotation, soda.TrackChart<any>> = {
     text: (a) => a.id,
 };
 soda.tooltip(chart, ann, tooltipConf);
 
-const clickConf1: soda.ClickConfig<soda.Annotation> = {
+let clickConf1: soda.ClickConfig<soda.Annotation> = {
     click: (s, a) => { console.log(a.id, 'clicked') },
 };
-const clickConf2: soda.ClickConfig<soda.Annotation> = {
+let clickConf2: soda.ClickConfig<soda.Annotation> = {
     click: (s, a) => { alert(`${a.id} clicked`) },
 };
 

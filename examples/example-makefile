@@ -15,7 +15,7 @@
 ###
 .PHONY: build
 build: builddir build/index.html
-	npx tsc --build tsconfig-example.json
+	npx tsc
 	npx webpack-cli --config webpack.config.js
 
 ### serve
