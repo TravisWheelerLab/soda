@@ -31,19 +31,23 @@ jobs:
       - name: tests
         run: |
           cd $GITHUB_WORKSPACE
-          echo 'installing npm packages...'
+          echo 'installing root npm packages...'
           npm i
           echo 'building soda...'
           make build
-          cd tests/
-          echo 'installing npm packages...'
+          cd $GITHUB_WORKSPACE/examples/
+          echo 'installing example npm packages...'
           npm i
-          cd test-apps/
+          ./build-test.sh
+          cd $GITHUB_WORKSPACE/tests/
+          echo 'installing test npm packages...'
+          npm i
+          cd $GITHUB_WORKSPACE/tests/test-apps/
           echo 'building test apps...'
           make build
           echo 'serving test apps...'
           python3 -m http.server -d build/ -b localhost 8080 &
           sleep 5
           echo 'running tests...'
-          cd ../scripts/
+          cd $GITHUB_WORKSPACE/tests/scripts/
           python3 run-tests.py

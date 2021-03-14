@@ -1,7 +1,7 @@
 #! /bin/bash
-
+ex=$(PWD)
 for d in */ ; do
     if [ "$d" != 'node_modules/' ]; then
-        ./init.sh $d
+        cd $ex/$d && make build
     fi
 done
