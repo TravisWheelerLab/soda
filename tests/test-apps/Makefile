@@ -11,9 +11,11 @@
 ### -----
 ###
 .PHONY: build
-build: builddir build/d3.js
+build: builddir
 	cd rectangles && make build
 	cd lines && make build
+	cd chevron-lines && make build
+	cd chevron-rectangles && make build
 	cd build && ln -sfn ../rectangles/build ./rectangles
 	cd build && ln -sfn ../lines/build ./lines
 	cd build && ln -sfn ../chevron-lines/build ./chevron-lines
@@ -56,9 +58,6 @@ setup:
 
 builddir:
 	mkdir -p build/
-
-build/d3.js:
-	wget -O build/d3.js -nc https://d3js.org/d3.v5.js
 
 
 ## This lives way down here because it screws up the syntax highlighting

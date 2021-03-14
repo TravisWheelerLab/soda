@@ -17,7 +17,7 @@ window.onresize = () => resizeController.trigger();
 
 // these BED data describes a handful of simple tandem repeats
 let bedData =
-    `chr1	0	1050	(TAACCC)n	4098.473818
+`chr1	0	1050	(TAACCC)n	4098.473818
 chr1	1050	1242	(CCTCAC)n	4098.473818
 chr1	1242	2343	(CCTAAC)n	4098.473818
 chr1	2343	2438	(CCTGAC)n	4098.473818

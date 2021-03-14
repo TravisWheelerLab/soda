@@ -1,7 +1,7 @@
 module.exports = {
     mode: "development",
     entry: {
-        main: __dirname + '/js/chevron-lines/main.js',
+        main: __dirname + '/js/main.js',
     },
     output: {
         filename: '[name].js',

@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import * as soda from "@traviswheelerlab/soda"
-import {ORIENTED_ANN as ann} from '../ann'
+import {ORIENTED_ANN as ann} from './ann'
 
 const axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart', binHeight: 14});
@@ -24,8 +24,8 @@ let renderParams: soda.TrackChartRenderParams = {
     maxY: 4
 };
 
-axis.render(renderParams);
-chart.render(renderParams);
+axis.initialRender(renderParams);
+chart.initialRender(renderParams);
 
 for (let i = 0; i < 10; i++) {
     let rectConf: soda.ChevronLineConfig<soda.OrientedAnnotation, soda.TrackChart<soda.TrackChartRenderParams>> = {

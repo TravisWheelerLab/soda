@@ -15,7 +15,7 @@
 ###
 .PHONY: build
 build: builddir build/index.html
-	npx tsc --build tsconfig-tests.json
+	npx tsc
 	npx webpack-cli --config webpack.config.js
 
 ### serve
@@ -27,7 +27,7 @@ serve: build
 	@echo "SERVE invoked at $$(date)"
 	@echo "Running server on localhost:8080"
 	@echo "Use ctrl-c to stop"
-	@python3 -m http.server -d build/ -b localhost 8080 && echo "Bye bye!"
+	@python3 -m http.server -d build/ -b 127.0.0.1 8080 && echo "Bye bye!"
 
 
 ### clean
