@@ -2,6 +2,7 @@
 ex=$(pwd)
 for d in */ ; do
     if [ "$d" != 'node_modules/' ]; then
-        cd $ex/$d && make build
+        echo "building $ex/$d"
+        cd $ex/$d && npx tsc 
     fi
 done
