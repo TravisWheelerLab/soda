@@ -1,1 +1,1 @@
-/Users/jack/projects/soda/tests/test-apps/ann.ts
+../ann.ts

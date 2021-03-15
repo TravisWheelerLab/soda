@@ -46,7 +46,7 @@ jobs:
           echo 'building test apps...'
           make build
           echo 'serving test apps...'
-          python3 -m http.server -d build/ -b localhost 8080 &
+          python3 -m http.server -d build/ -b 127.0.0.1 8080 &
           sleep 5
           echo 'running tests...'
           cd $GITHUB_WORKSPACE/tests/scripts/
