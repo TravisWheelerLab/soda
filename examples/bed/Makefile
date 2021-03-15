@@ -1,1 +1,1 @@
-/Users/jack/projects/soda/examples/example-makefile
+../example-makefile
