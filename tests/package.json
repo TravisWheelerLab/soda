@@ -9,7 +9,8 @@
   "author": "Jack Roddy",
   "license": "ISC",
   "dependencies": {
-    "@traviswheelerlab/soda": "file:.."
+    "@traviswheelerlab/soda": "file:..",
+    "d3": "^6.6.0"
   },
   "devDependencies": {
     "@types/puppeteer": "^5.4.2",

@@ -43,10 +43,6 @@ function getMouseoutList<A extends Annotation>(ann: A): {(s: d3.Selection<any, a
 
 export interface HoverConfig<A extends Annotation> {
     /**
-     * The Annotation to which a hover behavior will be bound.
-     */
-    ann: A;
-    /**
      * A callback function that will be responsible for executing the mouseover behavior. It will implicitly receive
      * references to both a D3 Selection to the Annotation's representative glyph and the Annotation object itself.
      */
@@ -58,23 +54,25 @@ export interface HoverConfig<A extends Annotation> {
     mouseout: { (s: d3.Selection<any, any, any, any>, a: A): void };
 }
 
-
 /**
- * A utility function to add a hover behavior to a glyph.
+ * Add a hover behavior to a list of glyphs.
+ * @param ann
  * @param config
  */
-export function addHoverBehavior<A extends Annotation>(config: HoverConfig<A>): void {
-    let mouseoverList = getMouseoverList(config.ann);
-    mouseoverList.push(config.mouseover);
-    let mouseoutList = getMouseoutList(config.ann);
-    mouseoutList.push(config.mouseout);
+export function hoverBehavior<A extends Annotation>(ann: A[], config: HoverConfig<A>): void {
+    for (const a of ann) {
+        let mouseoverList = getMouseoverList(a);
+        mouseoverList.push(config.mouseover);
+        let mouseoutList = getMouseoutList(a);
+        mouseoutList.push(config.mouseout);
 
-    let selection = getSelectionById(config.ann.id);
-    // we bind every svg that has a hover parameter to the same mouseover
-    // and mouseout functions
-    selection
-        .on('mouseover', (a: Annotation) => mouseover(selection, a))
-        .on('mouseout', (a: Annotation) => mouseout(selection, a));
+        let selection = getSelectionById(a.id);
+        // we bind every svg that has a hover parameter to the same mouseover
+        // and mouseout functions
+        selection
+            .on('mouseover', (a: Annotation) => mouseover(selection, a))
+            .on('mouseout', (a: Annotation) => mouseout(selection, a));
+    }
 }
 
 /**

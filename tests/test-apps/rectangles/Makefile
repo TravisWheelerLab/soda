@@ -1,1 +1,1 @@
-../test-Makefile
+../test-makefile

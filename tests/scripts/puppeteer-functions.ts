@@ -6,6 +6,7 @@ export async function saveTrackChartSvgXml(url: string, outpath: string, outname
     let pageX: number = 0;
     let pageY: number = 0;
 
+    // const browser = await puppeteer.launch({headless: false, slowMo: 250});
     const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
 

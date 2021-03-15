@@ -8,17 +8,26 @@ comparefiles_dir = '../tmp/'
 failed = False
 
 def main():
+    try:
+        run()
+    except FileNotFoundError as err:
+        print(err)
+
+    clean()
+    if failed:
+        raise Exception('test failed')
+
+def run():
+    cmd = ['npx', 'tsc']
+    subprocess.run(cmd)
     getComparefiles()
     dirlist = os.listdir(goldfiles_dir)
     goldfiles = [os.path.join(goldfiles_dir, f) for f in dirlist if os.path.isfile(os.path.join(goldfiles_dir, f))]
     comparefiles = [os.path.join(comparefiles_dir, f) for f in dirlist if os.path.isfile(os.path.join(goldfiles_dir, f))]
 
     for g, c in zip(goldfiles, comparefiles):
+        print(g, c)
         compare(g, c)
-
-    clean()
-    if failed:
-        raise Exception('test failed')
 
 def compare(goldfile_path, comparefile_path):
     global failed
@@ -41,9 +50,7 @@ def compare(goldfile_path, comparefile_path):
 def getComparefiles():
     if not os.path.isdir(comparefiles_dir):
         os.mkdir(comparefiles_dir)
-    cmd = ['npx', 'tsc', 'generate-comparefiles.ts']
-    subprocess.run(cmd)
-    cmd = ['node', '--unhandled-rejections=strict', 'generate-comparefiles.js']
+    cmd = ['node', '--unhandled-rejections=strict', 'js/generate-comparefiles.js']
     subprocess.run(cmd)
 
 def clean():

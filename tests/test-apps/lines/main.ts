@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import * as soda from "@traviswheelerlab/soda"
-import {ANN as ann} from '../ann'
+import {ANN as ann} from './ann'
 
 const axis = new soda.AxisChart({selector: '#axis-chart'});
 let chart = new soda.TrackChart({selector: '#track-chart', binHeight: 14});
@@ -24,8 +24,8 @@ let renderParams: soda.TrackChartRenderParams = {
     maxY: 4
 };
 
-axis.render(renderParams);
-chart.render(renderParams);
+axis.initialRender(renderParams);
+chart.initialRender(renderParams);
 
 for (let i = 0; i < 3; i++) {
     let lineConf: soda.HorizontalLineConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRenderParams>> = {
@@ -45,7 +45,7 @@ for (let i = 0; i < 3; i++) {
     else if (i == 2) {
         lineConf.strokeDashArray = () => '3 3';
     }
-    soda.horizontalLine(chart, ann.slice(i, i+1), lineConf);
+    soda.horizontalLineGlyph(chart, ann.slice(i, i+1), lineConf);
 }
 
 for (let i = 3; i < 6; i++) {
@@ -65,7 +65,7 @@ for (let i = 3; i < 6; i++) {
     else if (i == 5) {
         lineConf.strokeDashArray = () => '3 3';
     }
-    soda.verticalLine(chart, ann.slice(i, i+1), lineConf);
+    soda.verticalLineGlyph(chart, ann.slice(i, i+1), lineConf);
 }
 
 for (let i = 6; i < 10; i++) {

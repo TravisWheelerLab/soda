@@ -23,10 +23,6 @@ function getClickList<A extends Annotation>(ann: A): {(s: d3.Selection<any, any,
  */
 export interface ClickConfig<A extends Annotation> {
     /**
-     * The Annotation to which a click behavior will be bound.
-     */
-    ann: A;
-    /**
      * A callback function that will be responsible for executing the click behavior. It will implicitly receive
      * references to both a D3 Selection to the Annotation's representative glyph and the Annotation object itself.
      */
@@ -34,17 +30,20 @@ export interface ClickConfig<A extends Annotation> {
 }
 
 /**
- * A utility function to add a click behavior to a glyph.
+ * Add a click behavior to a list of glyphs.
+ * @param ann
  * @param config
  */
-export function addClickBehavior<A extends Annotation>(config: ClickConfig<A>): void {
-    let clickList = getClickList(config.ann);
-    clickList.push(config.click);
+export function clickBehavior<A extends Annotation>(ann: A[], config: ClickConfig<A>): void {
+    for (const a of ann) {
+        let clickList = getClickList(a);
+        clickList.push(config.click);
 
-    let selection = getSelectionById(config.ann.id);
-    // we bind every svg that has a click parameter to the same click function
-    selection
-        .on('click', (a: Annotation) => click(selection, a));
+        let selection = getSelectionById(a.id);
+        // we bind every svg that has a click parameter to the same click function
+        selection
+            .on('click', (a: Annotation) => click(selection, a));
+    }
 }
 
 /**

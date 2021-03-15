@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import {QueryController, QueryParameters} from "../query/query-controller";
 import {ViewRange, ZoomController} from "../zoom/zoom-controller";
 import {ResizeController} from "../resize/resize-controller";
-import {isZoomableChart} from "../zoom/zoomable-chart";
 
 export interface TrackRackConfig<Q extends QueryParameters> {
     selector: string;
@@ -50,16 +49,6 @@ export class TrackRack<Q extends QueryParameters> {
             .style('display', 'flex')
             .style('align-items', 'center')
 
-        // let leftDiv = compDiv
-        //     .append('div')
-        //     .attr('class', 'track-rack-separator')
-        //     .attr('id', `track-rack-sep-${this.compCount}`)
-        //     .style('width', '5px')
-        //     .style('height', '100%')
-        //     .style('margin', '1px')
-        //     .style('background-color', 'green')
-        //     .style('flex-shrink', '0')
-
         let compBarDiv = compDiv
             .append('div')
             .attr('class', 'track-rack-sidebar')
@@ -74,15 +63,6 @@ export class TrackRack<Q extends QueryParameters> {
             .append('p')
             .html(title || '')
 
-        // let sepDiv = compDiv
-        //     .append('div')
-        //     .attr('class', 'track-rack-separator')
-        //     .attr('id', `track-rack-sep-${this.compCount}`)
-        //     .style('width', '1px')
-        //     .style('height', 'auto')
-        //     .style('background-color', 'black')
-        //     .style('flex-shrink', '0')
-
         let compChartDiv = compDiv
             .append('div')
             .attr('class', 'track-rack-chart')
@@ -91,7 +71,6 @@ export class TrackRack<Q extends QueryParameters> {
             .style('height', 'auto')
             .style('margin', '0px 5px 0px 5px')
             .style('flex-grow', '1')
-
 
         compChartDiv.append(() => chart.svgSelection.node());
         chart.selector = `#track-rack-chart-${this.compCount}`;

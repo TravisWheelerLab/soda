@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {Chart} from '../../charts';
 import {Annotation} from '../../annotations';
-import {addHoverBehavior, HoverConfig} from "../hover";
+import {hoverBehavior, HoverConfig} from "../hover";
 import * as defaults from "./tooltip-defaults";
 
 // this module provides a generic process by which we can bind a text tooltip
@@ -34,10 +34,6 @@ function initTooltipDiv(): void {
  * An interface that holds the parameters for configuring a glyph tooltip.
  */
 export interface TooltipConfig<A extends Annotation, C extends Chart<any>> {
-    /**
-     * The Annotation object whose representative glyph we are binding the tooltip to.
-     */
-    ann: A;
     /**
      * A callback function to set the tooltip text.
      * @param a The Annotation object.
@@ -82,16 +78,15 @@ export interface TooltipConfig<A extends Annotation, C extends Chart<any>> {
  * @param chart The Chart that the glyph is rendered in.
  * @param config The Annotation whose representative glyph we are binding the tooltip to.
  */
-export function tooltip<A extends Annotation, C extends Chart<any>>(chart: C, config: TooltipConfig<A, C>) {
+export function tooltip<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], config: TooltipConfig<A, C>) {
     // the function that actually binds the mouse events to the svg elements
     initTooltipDiv();
 
     const hoverConf: HoverConfig<A> = {
-        ann: config.ann,
         mouseover: (s, a: A) => { defaultTooltipMouseover(a, chart, config)},
         mouseout: () => { defaultTooltipMouseout() },
     };
-    addHoverBehavior(hoverConf);
+    hoverBehavior(ann, hoverConf);
 }
 
 /**
