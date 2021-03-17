@@ -82,6 +82,12 @@ export interface ChartConfig {
  * A simple interface that defines the common parameters that should be used to render glyphs in any chart.
  */
 export interface ChartRenderParams {
+    /**
+     * The start coordinate of the region that will be rendered.
+     */
     queryStart: number;
+    /**
+     * The end coordinate of the region that will be rendered.
+     */
     queryEnd: number;
 }

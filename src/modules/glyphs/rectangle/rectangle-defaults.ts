@@ -3,11 +3,26 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {Annotation} from "../../../annotations/annotation";
 import {Chart} from "../../../charts/chart";
 
+/**
+ * @hidden
+ */
 export const rectXFn = <A extends Annotation>(a: A) => a.x;
+/**
+ * @hidden
+ */
 export const rectWFn = <A extends Annotation>(a: A) => a.w;
+/**
+ * @hidden
+ */
 export const rectYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight + 2;
+/**
+ * @hidden
+ */
 export const rectHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight - 4;
 
+/**
+ * @hidden
+ */
 export class RectZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGRectElement, A, HTMLElement, any>> {
     // the default zoom behavior for a rectangle
     // it basically just allows stretching/panning in the horizontal direction

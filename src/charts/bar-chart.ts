@@ -12,6 +12,9 @@ export interface BarChartConfig extends TrackChartConfig {}
  * A simple interface that holds the arguments for the BarChart render() method.
  */
 export interface BarChartRenderParams extends TrackChartRenderParams {
+    /**
+     * The data that will be plotted.
+     */
     data: PlotAnnotation,
 }
 

@@ -2,15 +2,17 @@ import * as d3 from 'd3';
 import {getSelectionById} from '../id-map/id-map';
 import {Annotation} from "../../annotations/annotation";
 
-// this module provides a way to route an arbitrary number of
-// hover behaviors to a soda primitive
-
-// these maps contain lists of mouseover and mouseout functions
-// to be called whenever a soda primitive is hovered
+/**
+ * @hidden
+ */
 const mouseoverBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, a: Annotation): void}[]> = new Map();
+/**
+ * @hidden
+ */
 const mouseoutBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, a: Annotation): void}[]> = new Map();
 
 /**
+ * @hidden
  * This function returns the list of mouseover behaviors that are associated with an Annotation object.
  * @param ann
  */
@@ -24,6 +26,7 @@ function getMouseoverList<A extends Annotation>(ann: A): {(s: d3.Selection<any, 
 }
 
 /**
+ * @hidden
  * This function returns the list of mouseout behaviors that are associated with an Annotation object.
  * @param ann
  */
@@ -40,7 +43,6 @@ function getMouseoutList<A extends Annotation>(ann: A): {(s: d3.Selection<any, a
  * A simple interface to provide a common pattern for defining behavior that should be executed when a SODA glyph is
  * hovered by a user.
  */
-
 export interface HoverConfig<A extends Annotation> {
     /**
      * A callback function that will be responsible for executing the mouseover behavior. It will implicitly receive
@@ -76,12 +78,12 @@ export function hoverBehavior<A extends Annotation>(ann: A[], config: HoverConfi
 }
 
 /**
+ * @hidden
  * A generic function that is actually routed to the mouseover event on a SODA glyph. When called, it will retrieve the
  * list of mouseover behaviors associated with that glyph, and run the callback function for each behavior.
  * @param selection
  * @param ann
  */
-
 function mouseover<A extends Annotation>(selection: d3.Selection<any, any, any, any>, ann: A): void {
     for (const behavior of getMouseoverList(ann)) {
         behavior(selection, ann);
@@ -89,6 +91,7 @@ function mouseover<A extends Annotation>(selection: d3.Selection<any, any, any, 
 }
 
 /**
+ * @hidden
  * A generic function that is actually routed to the mouseover event on a SODA glyph. When called, it will retrieve the
  * list of mouseout behaviors associated with that glyph, and run the callback function for each behavior.
  * @param selection

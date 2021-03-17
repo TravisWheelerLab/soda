@@ -1,6 +1,9 @@
 import {Annotation} from "../../annotations/annotation";
 import {AnnotationGraph} from "./annotation-graph";
 
+/**
+ * @hidden
+ */
 function sortByX(verts: string[], graph: AnnotationGraph<Annotation>): void {
     // sorts the vertices by Annotation X coordinates (the start of the annotation)
     verts.sort((v1: string, v2: string) => {
@@ -13,7 +16,9 @@ function sortByX(verts: string[], graph: AnnotationGraph<Annotation>): void {
 }
 
 /**
- * This function needs to be documented.
+ * This function takes a list of Annotation objects and uses a greedy interval scheduling algorithm to assign each
+ * of them a y coordinate in terms of horizontal bins that will prevent any horizontal overlap when they are
+ * rendered in a Chart.
  * @param ann
  * @param tolerance
  */

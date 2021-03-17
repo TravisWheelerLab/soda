@@ -7,10 +7,22 @@ import {Orientation, OrientedAnnotation} from "../../../annotations/oriented-ann
 import {horizontalLineYFn} from "../line/line-defaults";
 import {rectYFn} from "../rectangle/rectangle-defaults";
 
+/**
+ * @hidden
+ */
 export const chevronRectYFn = rectYFn;
+/**
+ * @hidden
+ */
 export const chevronLineYFn = horizontalLineYFn;
+/**
+ * @hidden
+ */
 export const chevronHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight - 4;
 
+/**
+ * @hidden
+ */
 export const chevronPathDFn = <A extends OrientedAnnotation>(a: A, h: number) => {
     if (a.orientation == Orientation.Forward) {
         return (forwardChevronPathFn(a, h));
@@ -23,9 +35,18 @@ export const chevronPathDFn = <A extends OrientedAnnotation>(a: A, h: number) =>
     }
 };
 
+/**
+ * @hidden
+ */
 export const forwardChevronPathFn = <A extends Annotation>(a: A, h: number) => `M0,0 L${h/2},${h/2} L0,${h}`;
+/**
+ * @hidden
+ */
 export const reverseChevronPathFn = <A extends Annotation>(a: A, h: number) => `M${h/2},0 L0,${h/2} L${h/2},${h}`;
 
+/**
+ * @hidden
+ */
 export const chevronXFn = <A extends OrientedAnnotation>(a: A) => {
     if (a.orientation == Orientation.Forward) {
         return (forwardChevronXFn(a));
@@ -38,11 +59,23 @@ export const chevronXFn = <A extends OrientedAnnotation>(a: A) => {
     }
 };
 
+/**
+ * @hidden
+ */
 export const forwardChevronXFn = <A extends Annotation>(a: A) => a.getX();
+/**
+ * @hidden
+ */
 export const reverseChevronXFn = <A extends Annotation>(a: A) => a.getX() + a.getW();
 
+/**
+ * @hidden
+ */
 export const chevronPatternViewBoxFn = <A extends Annotation>(a: A, h: number, s: number) => `0,0,${(h/2 + s)},${h}`;
 
+/**
+ * @hidden
+ */
 export class ForwardChevronZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
     id = 'default-forward-chevron-zoom-behavior';
@@ -64,6 +97,9 @@ export class ForwardChevronZoomBehavior<A extends Annotation, C extends Chart<an
     }
 }
 
+/**
+ * @hidden
+ */
 export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
     id = 'default-reverse-chevron-zoom-behavior';
@@ -85,6 +121,9 @@ export class ReverseChevronZoomBehavior<A extends Annotation, C extends Chart<an
     }
 }
 
+/**
+ * @hidden
+ */
 export class ChevronZoomBehavior<A extends OrientedAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGPatternElement, A, HTMLElement, any>> {
     selector: string;
     id = 'default-chevron-zoom-behavior';
@@ -106,6 +145,9 @@ export class ChevronZoomBehavior<A extends OrientedAnnotation, C extends Chart<a
     }
 }
 
+/**
+ * @hidden
+ */
 export class PatternSwitchZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGRectElement, A, HTMLElement, any>> {
     selector: string;
     id = 'default-pattern-switch-zoom-behavior';

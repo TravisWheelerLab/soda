@@ -4,10 +4,18 @@ import {ChartConfig} from "./chart";
 import {QueryParameters} from "../modules/query/query-controller";
 import {TrackChart, TrackChartRenderParams} from "./track-chart";
 
+/**
+ * A simple callback function that for rendering an AxisChart. This largely exists as a convenience function to be
+ * used with a :ref:`QueryController` and/or :ref:`TrackRack`. Typically, a QueryParams object provides the
+ * parameters with which a query can be made to an external source (e.g. annotation database) and build RenderParams
+ * from the response. In this case, an AxisChart currently only needs the start and end coordinates of a query to
+ * render, so we can build RenderParams directly from the QueryParams.
+ * @param axis The AxisChart to be rendered.
+ * @param query The QueryParameters
+ */
 export function axisRenderCallback (axis: AxisChart, query: QueryParameters) {
     axis.render({queryStart: query.start, queryEnd: query.end});
 }
-
 /**
  * A simple interface that holds the arguments for the AxisChart render function.
  */

@@ -1,3 +1,6 @@
+/**
+ * An interface that describes the SODA representation of a BED record.
+ */
 export interface BedRecord {
     chrom: string,
     chromStart: number,

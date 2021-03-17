@@ -25,7 +25,7 @@ export interface BarPlotConfig<A extends PlotAnnotation, C extends Chart<any>> e
 export function barPlot<A extends PlotAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: BarPlotConfig<A, C>): void {
     let [_, outerMerge] = getPlotGSelection(chart, ann, conf);
 
-    const barHeightFunc = defaults.barHeightFunc(chart);
+    const barHeightFunc = defaults.barHeightFn(chart);
 
     outerMerge
         // iterate over the G tags and render the charts inside

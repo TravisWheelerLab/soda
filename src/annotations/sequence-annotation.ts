@@ -1,6 +1,7 @@
 import {Annotation, AnnotationConfig} from "./annotation";
 
 /**
+ * @hidden
  * A simple interface to represent a single character and it's relative position in a SequenceAnnotation
  */
 export interface CharacterDatum {
@@ -15,6 +16,7 @@ export interface CharacterDatum {
 }
 
 /**
+ * @hidden
  * A simple interface to define the arguments for the SequenceAnnotation constructor.
  */
 export interface SequenceAnnotationConfig extends AnnotationConfig {
@@ -22,6 +24,7 @@ export interface SequenceAnnotationConfig extends AnnotationConfig {
 }
 
 /**
+ * @hidden
  * An experimental interface to define an Annotation that is rendered entirely as text. The general idea is that if
  * an Annotation represents a sequence alignment, each character in the query sequence can be rendered at the
  * semantic chromosome position that it was aligned to. This works, but it's far from optimized and will likely

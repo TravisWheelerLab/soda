@@ -1,7 +1,7 @@
 import BED from '@gmod/bed'
-import {BedAnnotation, BedAnnotationConfig} from "../../../annotations/bed-annotation";
-import {Orientation} from "../../../annotations/oriented-annotation";
-import {Annotation} from "../../../annotations/annotation";
+import {BedAnnotation, BedAnnotationConfig} from "../../annotations/bed-annotation";
+import {Orientation} from "../../annotations/oriented-annotation";
+import {Annotation} from "../../annotations/annotation";
 import {BedRecord} from "./bed-record";
 
 export function bed6Parse(lines: string): BedAnnotation[] {

@@ -1,7 +1,7 @@
 import {Annotation} from "./annotation";
 
 /**
- * A simple enum to define orientation
+ * A simple enum to define strand orientation.
  */
 export enum Orientation {
     /**

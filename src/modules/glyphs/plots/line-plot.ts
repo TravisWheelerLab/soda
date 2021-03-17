@@ -60,7 +60,7 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
     const strokeDashArray = conf.strokeDashArray || (() => "");
-    let lineFunc = conf.lineFunc || defaults.lineFunc(chart)
+    let lineFunc = conf.lineFunc || defaults.lineFn(chart)
 
     let [outerEnter, outerMerge] = getPlotGSelection(chart, ann, conf);
 
