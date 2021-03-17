@@ -4,9 +4,21 @@ import {Transform} from './transform';
 import {ZoomableChart}  from './zoomable-chart'
 import {QueryController} from "../query/query-controller";
 
+/**
+ * A simple interface that describes the current view of a visualization in terms semantic coordinates.
+ */
 export interface ViewRange {
+    /**
+     * The start of the view.
+     */
     start: number;
+    /**
+     * The end of the view.
+     */
     end: number,
+    /**
+     * The width of the view.
+     */
     width: number
 }
 

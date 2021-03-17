@@ -40,11 +40,17 @@ export function isBufferedQueryParameters(query: QueryParameters): query is Buff
     return (queryCast.buffStart !== undefined && queryCast.buffEnd !== undefined)
 }
 
+/**
+ * A simple interface that holds the arguments for a QueryController constructor.
+ */
 export interface QueryControllerConfig<Q extends QueryParameters> {
     /**
      * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
      */
     queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
+    /**
+     * A list of query width thresholds at which to switch renderCallbacks.
+     */
     widthThresholds?: number[];
 }
 

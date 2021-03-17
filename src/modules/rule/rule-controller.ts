@@ -40,6 +40,11 @@ export class RuleController implements Plugin {
         this.updateRuleSize();
     }
 
+    /**
+     * Toggle the rule on or off.
+     * @param self A reference to the ruler itself for situations in which JavaScript anonymous functions mess up
+     * the context of 'this.'
+     */
     public toggle(self: RuleController = this): void {
         if (self.enabled) {
             self.disable();
@@ -48,6 +53,9 @@ export class RuleController implements Plugin {
         }
     }
 
+    /**
+     * Enable the ruler. This will cause it to appear in the attached Charts.
+     */
     public enable(): void {
         this.enabled = true;
         for (const sel of this.ruleDivs) {
@@ -58,6 +66,9 @@ export class RuleController implements Plugin {
         }
     }
 
+    /**
+     * Disable the ruler. This will cause it to disappear from the attached Charts.
+     */
     public disable(): void {
         this.enabled = false;
         for (const sel of this.ruleDivs) {

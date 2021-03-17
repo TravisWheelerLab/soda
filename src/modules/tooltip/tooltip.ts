@@ -4,15 +4,20 @@ import {Annotation} from '../../annotations';
 import {hoverBehavior, HoverConfig} from "../hover";
 import * as defaults from "./tooltip-defaults";
 
-// this module provides a generic process by which we can bind a text tooltip
-// to any svg elements that have Annotation data bound to them
-
 // TODO: is this a good way to handle this initialization?
 // we set this flag after we have injected a tooltip div into the dom
+/**
+ * @hidden
+ */
 let tooltipDivInitialized: boolean = false;
-// after we have injected the tooltip div, we maintain a reference to its d3 selection
+/**
+ * @hidden
+ */
 let tooltipSelection: d3.Selection<any, any, any, any>;
 
+/**
+ * @hidden
+ */
 function initTooltipDiv(): void {
     // inject the div we'll use as the tooltip into the dom
     if (!tooltipDivInitialized) {
