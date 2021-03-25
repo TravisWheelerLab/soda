@@ -92,6 +92,7 @@ export function textGlyph<A extends TextAnnotation, C extends Chart<any>>(chart:
     // set the constant parameters
     enter
         .attr('class', conf.selector)
+        .attr('id', (a: A) => a.id)
         .style('text-anchor', 'end')
         .style('fill', 'black')
         .text((a: A) => {

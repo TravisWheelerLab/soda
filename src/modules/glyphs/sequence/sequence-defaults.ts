@@ -14,7 +14,7 @@ export const characterXFn = <D extends CharacterDatum, C extends Chart<any>>(d: 
 /**
  * @hidden
  */
-export const sequenceYFn = <A extends SequenceAnnotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
+export const sequenceYFn = <A extends SequenceAnnotation, C extends Chart<any>>(a: A, c: C) => (a.y + 1) * c.binHeight;
 
 /**
  * @hidden

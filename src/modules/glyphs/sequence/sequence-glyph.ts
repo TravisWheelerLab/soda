@@ -47,30 +47,28 @@ export function sequenceGlyph<A extends SequenceAnnotation, D extends CharacterD
         .data(ann, (a: A) => a.id);
 
     const enter = selection.enter()
-        .append('g')
-        .attr('class', conf.selector)
-        // .attr('transform', (a) => `translate(${chart.getXScale()(x(a, chart))},${y(a, chart)})`);
-        .attr('transform', (a) => `translate(0,${y(a, chart)})`);
+        .append('g');
 
     const merge = enter.merge(selection);
 
     enter
-        .selectAll('rect')
-        .data((a) => a.characters)
-        .enter()
-            .append('text')
-            .attr('class', conf.selector)
-            .text((c) => c.char)
-            .attr('y', 0)
-            .attr('x', (d) => chart.getXScale()(d.x))
-            .style('text-anchor', 'middle');
+        .attr('class', conf.selector)
+        .attr('id', (a: A) => a.id)
+        .selectAll(`text.${conf.selector}`)
+            .data((a) => a.characters)
+            .enter()
+                .append('text')
+                .attr('class', conf.selector)
+                .text((c) => c.char)
+                .attr('y', 0)
+                .style('text-anchor', 'middle');
 
-    // set the position parameters
+    console.log(merge);
     merge
-        .attr('x', (a: A) => chart.getXScale()(x(a, chart)))
-        .attr('y', (a: A) => y(a, chart));
+        .attr('transform', (a) => `translate(0, ${y(a, chart)})`)
+        .selectAll<SVGTextElement, CharacterDatum>(`text.${conf.selector}`)
+            .attr('x', (d) => chart.getXScale()(d.x))
 
-    // remove text that is no longer in the chart
     selection.exit()
         .remove();
 
