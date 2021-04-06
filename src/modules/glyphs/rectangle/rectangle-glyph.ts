@@ -43,7 +43,7 @@ export interface RectangleConfig<A extends Annotation, C extends Chart<any>> ext
      */
     strokeWidth?: (a: A, c: C) => number;
     /**
-     * A callback to define the stroke width of the border around the rectangle glyph.
+     * A callback to define the opacity of the border around the rectangle glyph.
      * @param a
      * @param c
      */
