@@ -12,4 +12,3 @@ Once you've done that, you can serve any of the examples like this:
 
     cd rectangles 
     make serve
-

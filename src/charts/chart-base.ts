@@ -147,7 +147,8 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
     public getSvgDimensions(): DOMRect {
         let svg = this.svgSelection.node();
         if (svg == null) {
-            throw(`SVG selection is undefined on , ${this}`);
+            console.error(`SVG selection is undefined on`, this);
+            throw('SVG undefined');
         }
         return (svg.getBoundingClientRect());
     }
