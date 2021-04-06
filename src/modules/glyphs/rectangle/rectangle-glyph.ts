@@ -43,7 +43,7 @@ export interface RectangleConfig<A extends Annotation, C extends Chart<any>> ext
      */
     strokeWidth?: (a: A, c: C) => number;
     /**
-     * A callback to define the stroke width of the border around the rectangle glyph.
+     * A callback to define the opacity of the border around the rectangle glyph.
      * @param a
      * @param c
      */
@@ -101,6 +101,7 @@ export function rectangleGlyph<A extends Annotation, C extends Chart<any>>(chart
     // set the constant style parameters
     enter
         .attr('class', conf.selector)
+        .attr('id', (a: A) => a.id)
         .style('stroke-width', (a: A) => strokeWidth(a, chart))
         .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
         .style('stroke', (a: A) => strokeColor(a, chart))

@@ -191,6 +191,7 @@ export function lineGlyph<A extends Annotation, C extends Chart<any>>(chart: C, 
     // set the constant style parameters
     enter
         .attr('class', conf.selector)
+        .attr('id', (a: A) => a.id)
         .style('stroke-width', (a: A) => strokeWidth(a, chart))
         .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
         .style('stroke-dasharray', (a: A) => strokeDashArray(a, chart))
