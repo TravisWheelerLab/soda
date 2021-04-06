@@ -10,23 +10,41 @@ import {GlyphConfig} from "../glyph-config";
  */
 export interface SequenceConfig<A extends SequenceAnnotation, C extends Chart<any>> extends GlyphConfig {
     /**
-     * A callback to define the semantic x coordinate of the sequence glyph.
-     * @param a
+     * A callback to define the x coordinate of each character in the sequence glyph.
+     * @param d
      * @param c
      */
-    x: (a: A, c: C) => number;
-    /**
-     * A callback to define the semantic width coordinate of the sequence glyph.
-     * @param a
-     * @param c
-     */
-    w: (a: A, c: C) => number;
+    characterX?: (d: CharacterDatum, c: C) => number;
     /**
      * A callback to define the y coordinate of the sequence glyph.
      * @param a
      * @param c
      */
-    y: (a: A, c: C) => number;
+    y?: (a: A, c: C) => number;
+    /**
+     * A callback to define the stroke opacity of the text.
+     * @param a
+     * @param c
+     */
+    strokeOpacity?: (d: CharacterDatum, c: C) => number;
+    /**
+     * A callback to define the stroke color of the text.
+     * @param a
+     * @param c
+     */
+    strokeColor?: (d: CharacterDatum, c: C) => string;
+    /**
+     * A callback to define the opacity of the background behind the text.
+     * @param a
+     * @param c
+     */
+    backgroundOpacity?: (d: CharacterDatum, c: C) => string;
+    /**
+     * A callback to define the color of the background behind the text.
+     * @param a
+     * @param c
+     */
+    backgroundColor?: (d: CharacterDatum, c: C) => string;
 }
 
 /**
@@ -37,10 +55,11 @@ export interface SequenceConfig<A extends SequenceAnnotation, C extends Chart<an
  * @param ann
  * @param conf
  */
-export function sequenceGlyph<A extends SequenceAnnotation, D extends CharacterDatum, C extends Chart<any>>(chart: C, ann: A[], conf: SequenceConfig<A, C>) {
-    let x: (a: A, c: C) => number = conf.x || defaults.sequenceXFn;
-    // let w: (a: A, c: C) => number = conf.w;
-    let y: (a: A, c: C) => number = conf.y || defaults.sequenceYFn ;
+export function sequenceGlyph<A extends SequenceAnnotation, C extends Chart<any>>(chart: C, ann: A[], conf: SequenceConfig<A, C>) {
+    const characterX: (d: CharacterDatum, c: C) => number = conf.characterX || defaults.characterXFn;
+    const y: (a: A, c: C) => number = conf.y || defaults.sequenceYFn;
+    const strokeOpacity = conf.strokeOpacity || (() => 1);
+    const strokeColor = conf.strokeColor || (() => 'black');
 
     const selection = chart.svgSelection
         .selectAll<SVGGElement, A>(`g.${conf.selector}`)
@@ -63,11 +82,12 @@ export function sequenceGlyph<A extends SequenceAnnotation, D extends CharacterD
                 .attr('y', 0)
                 .style('text-anchor', 'middle');
 
-    console.log(merge);
     merge
         .attr('transform', (a) => `translate(0, ${y(a, chart)})`)
         .selectAll<SVGTextElement, CharacterDatum>(`text.${conf.selector}`)
-            .attr('x', (d) => chart.getXScale()(d.x))
+            .attr('x', (d) => chart.getXScale()(characterX(d, chart)))
+            .style('stroke-opacity', (d) => strokeOpacity(d, chart))
+            .style('stroke', (d) => strokeColor(d, chart))
 
     selection.exit()
         .remove();
