@@ -11,9 +11,9 @@ export const idAnnotationMap: Map<string, Annotation> = new Map();
 export const idSelectionMap: Map<string, d3.Selection<any, any, any, any>> = new Map();
 
 /**
- * @hidden
+ * This returns a list of all of the Annotation IDs that have been used to render glyphs.
  */
-export function getAllIds(): string[] {
+export function getAllAnnotationIds(): string[] {
     return Array.from(idAnnotationMap.keys());
 }
 

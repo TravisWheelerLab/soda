@@ -66,7 +66,7 @@ export abstract class ChartBase<P extends ChartRenderParams> implements Chart<P>
         }
 
         this.binHeight = config.binHeight || 10;
-        this.verticalPad = config.verticalPad || 10;
+        this.verticalPad = config.verticalPad || 0;
         this.svgSelection
             .attr('width', config.width || '100%')
             .attr('height', (config.height || this.binHeight) + this.verticalPad * 2);
