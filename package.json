@@ -44,7 +44,7 @@
     "@gmod/bed": "^2.0.5",
     "@gmod/gff": "^1.1.2",
     "d3": "^5.15.0",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
