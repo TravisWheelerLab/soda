@@ -110,6 +110,15 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
             .on("dblclick.zoom", null);
     }
 
+    public disableZoom(): void {
+        this.svgSelection
+            .call(d3.zoom()
+                .filter(() => false)
+                .on('zoom', () => {console.log('this should not happen')})
+            )
+            .on("dblclick.zoom", null);
+    }
+
     /**
      * Getter for the TrackChart's d3 scale that maps between semantic coordinates and viewport coordinates. If there is
      * ZoomController assigned to the TrackChart, it will return the ZoomController's scale instead.
@@ -169,7 +178,7 @@ export class TrackChart<P extends TrackChartRenderParams> extends ChartBase<P> i
 
         if (this.zoomController !== undefined) {
             // if we have a zoom controller, we'll let it handle the re-rendering
-            this.configureZoom();
+            // this.configureZoom();
             this.callZoomTrigger();
         }
         else {
