@@ -4,9 +4,21 @@ import {Transform} from './transform';
 import {ZoomableChart}  from './zoomable-chart'
 import {QueryController} from "../query/query-controller";
 
+/**
+ * A simple interface that describes the current view of a visualization in terms semantic coordinates.
+ */
 export interface ViewRange {
+    /**
+     * The start of the view.
+     */
     start: number;
+    /**
+     * The end of the view.
+     */
     end: number,
+    /**
+     * The width of the view.
+     */
     width: number
 }
 
@@ -87,6 +99,7 @@ export class ZoomController {
      */
     public getSemanticViewRange(): ViewRange {
         // return information about the range that is currently in the view
+        this.setXScale();
         const viewStart = this.getZoomedXScale().invert(0);
         const viewEnd = this.getZoomedXScale().invert(this.getWidth());
         const viewWidth = viewEnd - viewStart;
@@ -154,8 +167,18 @@ export class ZoomController {
      * @param queryEnd
      */
     public setQueryRange(queryStart: number, queryEnd: number) {
-        this._queryStart = queryStart; 
-        this._queryEnd = queryEnd; 
+        if (!isNaN(queryStart)){
+            this._queryStart = queryStart;
+        }
+        else {
+            console.error('queryStart is NaN on setQueryRange,', this)
+        }
+        if (!isNaN(queryStart)) {
+            this._queryEnd = queryEnd;
+        }
+        else {
+            console.error('queryEnd is NaN on setQueryRange,', this)
+        }
     }
 
     /**

@@ -2,6 +2,9 @@ import * as d3 from 'd3';
 import {getSelectionById} from '../id-map/id-map';
 import {Annotation} from "../../annotations/annotation";
 
+/**
+ * @hidden
+ */
 const clickBehaviorMap: Map<string, {(s: d3.Selection<any, any, any, any>, a: Annotation): void}[]> = new Map();
 
 /**

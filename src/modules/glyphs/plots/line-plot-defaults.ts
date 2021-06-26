@@ -3,18 +3,24 @@ import {Chart, ChartRenderParams} from "../../../charts/chart";
 import {PlotAnnotation, PointDatum} from "../../../annotations/plot-annotation";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 
-export const lineFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
+/**
+ * @hidden
+ */
+export const lineFn = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
     let yScale = d3.scaleLinear()
         .domain(domain)
         .range([chart.binHeight, 0]);
 
-    let func = d3.line<PointDatum>()
+    let fn = d3.line<PointDatum>()
         .x((d) => chart.getXScale()(d.parent.x + d.x))
         .y((d) => (d.parent.y * chart.binHeight) + chart.verticalPad + yScale(d.value));
 
-    return func;
+    return fn;
 }
 
+/**
+ * @hidden
+ */
 export class LinePlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     id: string = 'default-line-plot-zoom-behavior';
     selector: string;

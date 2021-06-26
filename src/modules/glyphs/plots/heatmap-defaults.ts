@@ -3,6 +3,9 @@ import {Chart} from "../../../charts/chart";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import * as d3 from "d3";
 
+/**
+ * @hidden
+ */
 export class HeatmapZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     id: string = 'default-heatmap-zoom-behavior';
     selector: string;

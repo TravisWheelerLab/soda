@@ -71,10 +71,26 @@ export interface Chart<T> {
  * A simple interface that defines the common parameters that should be used to configure any Chart.
  */
 export interface ChartConfig {
+    /**
+     * A string that can be used to uniquely select the target DOM container via d3.select().
+     */
     selector?: string;
+    /**
+     * The height in pixels of a horizontal bin in the visualization. Generally, the y coordinate of an Annotation
+     * glyph will be given in terms of which bin it should be rendered in. This defaults to a value of 10.
+     */
     binHeight?: number;
+    /**
+     * The height in pixels of the Chart's SVG viewport.
+     */
     height?: number;
+    /**
+     * The height in pixels of the Chart's SVG viewport.
+     */
     width?: number;
+    /**
+     * The height in pixels with which to pad the top and bottom of the SVG viewport with empty space.
+     */
     verticalPad?: number;
 }
 
@@ -82,6 +98,12 @@ export interface ChartConfig {
  * A simple interface that defines the common parameters that should be used to render glyphs in any chart.
  */
 export interface ChartRenderParams {
+    /**
+     * The start coordinate of the region that will be rendered.
+     */
     queryStart: number;
+    /**
+     * The end coordinate of the region that will be rendered.
+     */
     queryEnd: number;
 }

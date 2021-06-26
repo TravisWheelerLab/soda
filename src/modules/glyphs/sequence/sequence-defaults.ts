@@ -3,10 +3,18 @@ import {Chart} from "../../../charts/chart";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {SequenceAnnotation, CharacterDatum} from "../../../annotations/sequence-annotation";
 
-export const sequenceXFn = <A extends SequenceAnnotation, C extends Chart<any>>(a: A) => a.getX();
+/**
+ * @hidden
+ */
 export const characterXFn = <D extends CharacterDatum, C extends Chart<any>>(d: D) => d.x;
-export const sequenceYFn = <A extends SequenceAnnotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
+/**
+ * @hidden
+ */
+export const sequenceYFn = <A extends SequenceAnnotation, C extends Chart<any>>(a: A, c: C) => (a.y + 1) * c.binHeight;
 
+/**
+ * @hidden
+ */
 export class SequenceZoomBehavior<A extends SequenceAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     selector: string;
     id = 'default-sequence-zoom-behavior';
@@ -22,26 +30,26 @@ export class SequenceZoomBehavior<A extends SequenceAnnotation, C extends Chart<
 
     public apply(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>): void {
         selection
-            .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);//, scale(${chart.svgSelection.node().__zoom.k}, 1)`);
+            .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);
     }
 
     public applyDuration(chart: C, selection: d3.Selection<SVGGElement, A, HTMLElement, any>, duration: number): void {
         selection
             .transition()
             .duration(duration)
-            .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);//, scale(${chart.svgSelection.node().__zoom.k}, 1)`);
+            .attr('transform', (a) => `translate(${chart.getXScale()(this.x(a, chart))},${this.y(a, chart)})`);
     }
 }
 
+/**
+ * @hidden
+ */
 export class SequenceCharacterZoomBehavior<D extends CharacterDatum, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGTextElement, D, HTMLElement, any>> {
     selector: string;
     id = 'default-sequence-character-zoom-behavior';
 
-    // x: (d: D, c: C) => number;
-
     constructor(selector: string) {
         this.selector = `text.${selector}`;
-        // this.x = x;
     }
 
     public apply(chart: C, selection: d3.Selection<SVGTextElement, D, HTMLElement, any>): void {

@@ -1,6 +1,9 @@
 import {Annotation, AnnotationConfig} from "./annotation";
 import {Orientation, OrientedAnnotation} from "./oriented-annotation";
 
+/**
+ * An enum that represents the phase of a CDS type for a GFF3 annotation record.
+ */
 export enum Phase {
     /**
      * Represents a lack of phase information.

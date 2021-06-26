@@ -3,7 +3,10 @@ import {Chart, ChartRenderParams} from "../../../charts/chart";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import * as d3 from "d3";
 
-export const barHeightFunc = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
+/**
+ * @hidden
+ */
+export const barHeightFn = <P extends ChartRenderParams>(chart: Chart<P>, domain: [number, number] = [0, 100]) => {
     let yScale = d3.scaleLinear()
         .domain(domain)
         .range([0, chart.binHeight]);
@@ -12,6 +15,9 @@ export const barHeightFunc = <P extends ChartRenderParams>(chart: Chart<P>, doma
     return func;
 }
 
+/**
+ * @hidden
+ */
 export class BarPlotZoomBehavior<A extends PlotAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>> {
     id: string = 'default-bar-plot-zoom-behavior';
     selector: string;

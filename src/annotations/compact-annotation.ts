@@ -1,4 +1,4 @@
-import { Annotation } from "./annotation";
+import {Annotation} from "./annotation";
 
 /**
  * An interface to define an Annotation that can be dynamically compacted and un-compacted in a visualization.
@@ -19,7 +19,7 @@ export interface CompactAnnotation extends Annotation {
 }
 
 /**
- * A custom type guard function to check whether an arbitrary Annotation object is compactable. This may not
+ * A type guard function to check whether an arbitrary Annotation object is compactable. This may not
  * currently be entirely robust, but it should be fine to use with reasonable caution.
  * @param a The Annotation object to type check.
  */

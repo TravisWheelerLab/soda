@@ -1,5 +1,5 @@
-import {Gff3Annotation, Gff3AnnotationConfig, Phase} from "../../../annotations/gff3-annotation";
-import {Orientation} from "../../../annotations/oriented-annotation";
+import {Gff3Annotation, Gff3AnnotationConfig, Phase} from "../../annotations/gff3-annotation";
+import {Orientation} from "../../annotations/oriented-annotation";
 import {Gff3Record} from "./gff3-record";
 
 import gff from '@gmod/gff';

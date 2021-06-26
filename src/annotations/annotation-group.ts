@@ -1,6 +1,12 @@
 import {Annotation, AnnotationConfig} from "./annotation";
 
+/**
+ * A simple interface that holds the arguments for an AnnotationGroup constructor.
+ */
 export interface AnnotationGroupConfig<A extends Annotation> extends AnnotationConfig {
+    /**
+     * A list of Annotations to initially fill the group with.
+     */
     group?: A[];
 }
 
@@ -11,6 +17,9 @@ export interface AnnotationGroupConfig<A extends Annotation> extends AnnotationC
  * @typeParam A The type of annotation that will live in this group.
  */
 export class AnnotationGroup<A extends Annotation> extends Annotation {
+    /**
+     * The group of Annotations that live in this object.
+     */
     group: A[] = [];
     x2: number;
 
@@ -25,6 +34,10 @@ export class AnnotationGroup<A extends Annotation> extends Annotation {
         }
     }
 
+    /**
+     * Add an Annotation to the group.
+     * @param ann The Annotation to be added.
+     */
     public add(ann: A) {
         if (this.x > ann.x) {
             this.x = ann.x;
@@ -38,6 +51,10 @@ export class AnnotationGroup<A extends Annotation> extends Annotation {
         this.group.push(ann);
     }
 
+    /**
+     * This sets the y parameter of each Annotation present in the group.
+     * @param y The y value to set.
+     */
     public setY(y: number) {
         this.y = y;
         for (const ann of this.group) {

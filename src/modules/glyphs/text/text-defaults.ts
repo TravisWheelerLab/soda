@@ -3,9 +3,18 @@ import {TextAnnotation} from "../../../annotations/text-annotation";
 import {Chart} from "../../../charts/chart";
 import {ZoomBehavior} from "../../zoom/zoom-behavior";
 
+/**
+ * @hidden
+ */
 export const textXFn = <A extends TextAnnotation, C extends Chart<any>>(a: A) => a.getX();
+/**
+ * @hidden
+ */
 export const textYFn = <A extends TextAnnotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
 
+/**
+ * @hidden
+ */
 export class TextZoomBehavior<A extends TextAnnotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGTextElement, A, HTMLElement, any>> {
     // the default ZoomBehavior for text drawn with this module
     // it moves the text horizontally and changes the level of detail based on how

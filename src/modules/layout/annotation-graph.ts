@@ -1,5 +1,8 @@
 import {Annotation} from "../../annotations/annotation";
 
+/**
+ * @hidden
+ */
 function annotationsOverlap(a: Annotation, b: Annotation, tolerance: number = 0) {
     return (a.x + tolerance <= b.x + b.w + tolerance && a.x + a.w + tolerance >= b.x + tolerance);
 }
@@ -47,18 +50,29 @@ export class AnnotationGraph<A extends Annotation> {
         }
     }
 
+    /**
+     * Get a list of the IDs for each vertex in the graph.
+     */
     public getVertices(): string[] {
         return Array.from(this.degrees.keys());
     }
 
-    public getEdges(n: string): string[] {
-        let edges: string[] | undefined = this.edges.get(n);
+    /**
+     * Get a list of the vertices with which the supplied vertex shares an edge with.
+     * @param vertex The ID of the vertex to check.
+     */
+    public getEdges(vertex: string): string[] {
+        let edges: string[] | undefined = this.edges.get(vertex);
         if (edges == undefined) {
             edges = [];
         }
         return edges;
     }
 
+    /**
+     * Get the actual Annotation object from a vertex ID.
+     * @param id The vertex ID.
+     */
     public getAnnotationFromId(id: string): A {
         let ann = this.idMap.get(id);
         if ( ann == undefined) {

@@ -2,14 +2,26 @@ import * as d3 from 'd3'
 import {Annotation, AnnotationConfig} from "./annotation"
 
 /**
- * An interface for initializing a PlotAnnotation.
+ * A simple interface that holds the arguments for a PlotAnnotation constructor.
  */
 export interface PlotAnnotationConfig extends AnnotationConfig {
+    /**
+     * The point data that will be plotted.
+     */
     points: number[],
 }
 
+/**
+ * A simple interface that holds the arguments for a PointDatum constructor.
+ */
 export interface PointDatumConfig extends AnnotationConfig {
+    /**
+     * The value of the point datum.
+     */
     value: number;
+    /**
+     * The PlotAnnotation object in which this PointDatum lives.
+     */
     parent: PlotAnnotation;
 }
 
@@ -53,10 +65,16 @@ export class PlotAnnotation extends Annotation {
     }
 }
 
+/**
+ * @hidden
+ */
 function isFlat(arr: number[] | [number, number][]): arr is number[] {
     return (typeof(arr[0]) === 'number')
 }
 
+/**
+ * @hidden
+ */
 function distributePointData(values: number[], parent: PlotAnnotation): PointDatum[] {
     let valCnt = values.length;
     const xScale = d3.scaleLinear<number, number>()

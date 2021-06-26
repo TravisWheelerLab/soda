@@ -18,6 +18,28 @@ export interface QueryParameters {
 }
 
 /**
+ * A simple function to check if QueryParameters seem valid. It currently checks if query.start > query.end and
+ * whether or not either parameter is NaN.
+ * @param query
+ */
+export function queryOk(query: QueryParameters){
+    let status = true;
+    if (isNaN(query.start)) {
+        console.error('query.start is NaN on', query);
+        status = false;
+    }
+    if (isNaN(query.end)) {
+        console.error('query.end is NaN on', query);
+        status = false;
+    }
+    if (query.start > query.end) {
+        console.error('query.start is greater than query.end', query);
+        status = false;
+    }
+    return status;
+}
+
+/**
  * An interface that defines the parameters of a buffered query.
  */
 export interface BufferedQueryParameters extends QueryParameters {
@@ -40,11 +62,17 @@ export function isBufferedQueryParameters(query: QueryParameters): query is Buff
     return (queryCast.buffStart !== undefined && queryCast.buffEnd !== undefined)
 }
 
+/**
+ * A simple interface that holds the arguments for a QueryController constructor.
+ */
 export interface QueryControllerConfig<Q extends QueryParameters> {
     /**
      * A callback function that can produce a new QuerySignature given the previous query and a ViewRange
      */
     queryBuilder: ((prevQuery: Q, view: ViewRange) => Q);
+    /**
+     * A list of query width thresholds at which to switch renderCallbacks.
+     */
     widthThresholds?: number[];
 }
 
@@ -127,7 +155,6 @@ export class QueryController<Q extends QueryParameters> {
         }
     }
 
-
     /**
      *  This function polls the last alert time to check if it has been long enough to run a new query. It is called
      *  by alert() using the JS setTimeout() function.
@@ -162,10 +189,12 @@ export class QueryController<Q extends QueryParameters> {
      * @param query The provided QueryParameters.
      */
     public render(query: Q): void {
-        this._prevQuery = query;
-        this.currentThreshold = this.getThreshold()
-        for (let i = 0; i < this.charts.length; i++) {
-            this.renderCallbacks[i][this.currentThreshold](this.charts[i], query);
+        if (queryOk(query)) {
+            this._prevQuery = query;
+            this.currentThreshold = this.getThreshold()
+            for (let i = 0; i < this.charts.length; i++) {
+                this.renderCallbacks[i][this.currentThreshold](this.charts[i], query);
+            }
         }
     }
 
