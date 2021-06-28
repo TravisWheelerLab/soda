@@ -80,6 +80,7 @@ export class Annotation {
      * AnnotationGroups.
      */
     public setY(y: number) {
+        console.log("setting y: ", y);
         this.y = y;
     }
 }
