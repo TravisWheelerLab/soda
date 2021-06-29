@@ -18,7 +18,7 @@ export const arcYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) =
 /**
  * @hidden
  */
-export const arcHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight - 4;
+export const arcHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight;
 
 /**
  * @hidden

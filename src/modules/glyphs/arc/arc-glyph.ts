@@ -83,45 +83,57 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
 
     const merge = enter.merge(selection);
 
-    // const strokeWidth = conf.strokeWidth || (() => 1);
-    // const strokeOpacity = conf.strokeOpacity || (() => 1);
-    // const strokeColor = conf.strokeColor || (() => 'black');
-    // const fillOpacity = conf.fillOpacity || (() => 1);
-    // const fillColor = conf.fillColor || (() => 'black');
+    const strokeWidth = conf.strokeWidth || (() => 1);
+    const strokeOpacity = conf.strokeOpacity || (() => 1);
+    const strokeColor = conf.strokeColor || (() => 'black');
+    const fillOpacity = conf.fillOpacity || (() => 1);
+    const fillColor = conf.fillColor || (() => 'black');
 
     enter
         .attr('class', conf.selector)
         .attr('id', (a: A) => a.id)
-        // .style('stroke-width', (a: A) => strokeWidth(a, chart))
-        // .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
-        // .style('stroke', (a: A) => strokeColor(a, chart))
-        // .style('fill-opacity', (a: A) => fillOpacity(a, chart))
-        // .style('fill', (a: A) => fillColor(a, chart));
+        .style('stroke-width', (a: A) => strokeWidth(a, chart))
+        .style('stroke-opacity', (a: A) => strokeOpacity(a, chart))
+        .style('stroke', (a: A) => strokeColor(a, chart))
+        .style('fill-opacity', (a: A) => fillOpacity(a, chart))
+        .style('fill', (a: A) => fillColor(a, chart));
 
     const x: (a: A, c: C) => number = conf.x || defaults.arcXFn;
     const y: (a: A, c: C) => number = conf.y || defaults.arcYFn;
     const w: (a: A, c: C) => number = conf.w || defaults.arcWFn;
     const h: (a: A, c: C) => number = conf.h || defaults.arcHFn;
 
+    const radius: (a: A, c: C) => number = (a, c) => {
+        let hCalculated = h(a, c);
+        let wCalculated = c.getXScale()(w(a, c));
+        return ( (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8)) );
+    };
+
     const translate: (a: A, c: C) => string = (a, c) => {
-        let translateX = 100;
-        let translateY = 100;
+        let translateX = c.getXScale()(x(a, c)) + c.getXScale()(w(a, c)) / 2;
+        let radiusCalculated = radius(a, c);
+        let translateY = (a.y + 1) * c.binHeight + radiusCalculated - h(a, c);
         return `translate(${translateX}, ${translateY})`
     }
 
-    const outerRadius: (a: A, c: C) => number = (a, c) => {
-        let hCalculated = h(a, c);
-        let wCalculated = w(a, c);
-        return ( (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8)) );
-    };
+    const endAngle: (a: A, c: C) => number = (a, c) => {
+        let radiusCalculated = radius(a, c);
+        let angle = Math.asin( (c.getXScale()(w(a, c)) / 2 ) / radiusCalculated );
+        return angle
+    }
+
+    const startAngle: (a: A, c: C) => number = (a, c) => {
+        let angle = -(endAngle(a, c));
+        return angle;
+    }
 
     merge
         .attr("transform", (a) => translate(a, chart))
         .attr("d", d3.arc<any, A>()
-            .innerRadius((a) => outerRadius(a, chart) - 5)
-            .outerRadius((a) => outerRadius(a, chart))
-            .startAngle(3.14)
-            .endAngle(6.28 * 2)
+            .innerRadius((a) => radius(a, chart) - 1)
+            .outerRadius((a) => radius(a, chart))
+            .startAngle((a) => startAngle(a, chart))
+            .endAngle((a) => endAngle(a, chart))
         )
 
     merge
