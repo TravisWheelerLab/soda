@@ -111,7 +111,8 @@ export class RadialChart<P extends RadialChartRenderParams> {
      */
     _axisSelection?: d3.Selection<any, any, any, any>;
     /**
-     *
+     * The initial number of ticks to display on the radial axis. D3 usually refuses to use the actual number
+     * supplied, and instead it tries really hard to make it even and "pretty."
      */
     tickCount: number;
     /**
@@ -258,7 +259,9 @@ export class RadialChart<P extends RadialChartRenderParams> {
      * Get the semantic coordinate range of what is currently shown in the Chart's viewport.
      */
     public getSemanticViewRange(): {start: number, end: number, width: number} {
-
+        // TODO: this is lifted from the TrackChart, and doesn't make sense in this context
+        //       it needs to be rewritten to cleverly figure out which section of the circle
+        //       is currently visible within the SVG viewport
         const viewStart = this.getXScale().invert(0);
         const viewEnd = this.getXScale().invert(this.width);
         const viewChrWidth = viewEnd - viewStart;
