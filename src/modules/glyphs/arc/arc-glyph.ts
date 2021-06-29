@@ -37,6 +37,30 @@ export interface ArcConfig<A extends Annotation, C extends Chart<any>> extends G
      */
     h?: (a: A, c: C) => number;
     /**
+     * A callback to define the radius of the conceptual circle on which the arc glyph lies.
+     * @param a
+     * @param c
+     */
+    radius?: (a: A, c: C) => number;
+    /**
+     * A callback that defines the translate parameters to place the conceptual circle in the correct spot.
+     * @param a
+     * @param c
+     */
+    translate?: (a: A, c: C) => string;
+    /**
+     * The start angle in radians of the arc on the conceptual circle.
+     * @param a
+     * @param c
+     */
+    startAngle?: (a: A, c: C) => number;
+    /**
+     * The end angle in radians of the arc on the conceptual circle.
+     * @param a
+     * @param c
+     */
+    endAngle?: (a: A, c: C) => number;
+    /**
      * A callback to define the stroke width of the border around the rectangle glyph.
      * @param a
      * @param c
@@ -98,34 +122,13 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
         .style('fill-opacity', (a: A) => fillOpacity(a, chart))
         .style('fill', (a: A) => fillColor(a, chart));
 
-    const x: (a: A, c: C) => number = conf.x || defaults.arcXFn;
-    const y: (a: A, c: C) => number = conf.y || defaults.arcYFn;
-    const w: (a: A, c: C) => number = conf.w || defaults.arcWFn;
-    const h: (a: A, c: C) => number = conf.h || defaults.arcHFn;
 
-    const radius: (a: A, c: C) => number = (a, c) => {
-        let hCalculated = h(a, c);
-        let wCalculated = c.getXScale()(w(a, c));
-        return ( (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8)) );
-    };
-
-    const translate: (a: A, c: C) => string = (a, c) => {
-        let translateX = c.getXScale()(x(a, c)) + c.getXScale()(w(a, c)) / 2;
-        let radiusCalculated = radius(a, c);
-        let translateY = (a.y + 1) * c.binHeight + radiusCalculated - h(a, c);
-        return `translate(${translateX}, ${translateY})`
-    }
-
-    const endAngle: (a: A, c: C) => number = (a, c) => {
-        let radiusCalculated = radius(a, c);
-        let angle = Math.asin( (c.getXScale()(w(a, c)) / 2 ) / radiusCalculated );
-        return angle
-    }
-
-    const startAngle: (a: A, c: C) => number = (a, c) => {
-        let angle = -(endAngle(a, c));
-        return angle;
-    }
+    // TODO: I should make factories for these defaults that
+    //       take the x, w, and h callbacks where appropriate
+    const radius: (a: A, c: C) => number = conf.radius || defaults.radiusFn;
+    const translate: (a: A, c: C) => string = conf.translate || defaults.translateFn;
+    const startAngle: (a: A, c: C) => number = conf.startAngle || defaults.startAngleFn;
+    const endAngle: (a: A, c: C) => number = conf.endAngle || defaults.endAngleFn;
 
     merge
         .attr("transform", (a) => translate(a, chart))
@@ -142,14 +145,14 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
             mapIdToAnnotation(a.id, a);
         });
 
-    // remove rectangles that are no longer in the chart
     selection.exit()
         .remove();
 
-    // if (isZoomableChart(chart)) {
-    //     // if the chart is zoomable, register the ZoomBehavior for the rectangles
-    //     registerZoomBehavior(chart, conf.zoom || new defaults.ArcZoomBehavior(conf.selector, x, w));
-    // }
+    if (isZoomableChart(chart)) {
+        // if the chart is zoomable, register the ZoomBehavior for the rectangles
+        console.log("adddddddddddded");
+        registerZoomBehavior(chart, conf.zoom || new defaults.ArcZoomBehavior(conf.selector, radius, translate, startAngle, endAngle));
+    }
 
     return merge;
 }
