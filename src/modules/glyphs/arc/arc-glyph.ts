@@ -122,13 +122,15 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
         .style('fill-opacity', (a: A) => fillOpacity(a, chart))
         .style('fill', (a: A) => fillColor(a, chart));
 
+    const x: (a: A, c: C) => number = conf.x || defaults.arcXFn;
+    const w: (a: A, c: C) => number = conf.w || defaults.arcWFn;
+    const h: (a: A, c: C) => number = conf.h || defaults.arcHFn;
+    const y: (a: A, c: C) => number = conf.y || defaults.arcYFn;
 
-    // TODO: I should make factories for these defaults that
-    //       take the x, w, and h callbacks where appropriate
-    const radius: (a: A, c: C) => number = conf.radius || defaults.radiusFn;
-    const translate: (a: A, c: C) => string = conf.translate || defaults.translateFn;
-    const startAngle: (a: A, c: C) => number = conf.startAngle || defaults.startAngleFn;
-    const endAngle: (a: A, c: C) => number = conf.endAngle || defaults.endAngleFn;
+    const radius: (a: A, c: C) => number = conf.radius || defaults.buildArcRadiusFn(x, w, h);
+    const translate: (a: A, c: C) => string = conf.translate || defaults.buildArcTranslateFn(x, w, h, y, radius);
+    const startAngle: (a: A, c: C) => number = conf.startAngle || defaults.buildArcStartAngleFn(x, w, radius);
+    const endAngle: (a: A, c: C) => number = conf.endAngle || defaults.buildArcEndAngleFn(x, w, radius);
 
     merge
         .attr("transform", (a) => translate(a, chart))

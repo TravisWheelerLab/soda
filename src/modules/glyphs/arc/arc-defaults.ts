@@ -14,45 +14,81 @@ export const arcWFn = <A extends Annotation>(a: A) => a.w;
 /**
  * @hidden
  */
-export const arcYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
+export const arcYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => (a.y + 1) * c.binHeight;
 /**
  * @hidden
  */
 export const arcHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => c.binHeight;
 /**
  * @hidden
+ * @param x
+ * @param w
+ * @param h
  */
-export const radiusFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => number = (a, c) => {
-    let hCalculated = arcHFn(a, c);
-    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
-    let radius = (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8));
-    return radius
-};
+export function buildArcRadiusFn <A extends Annotation, C extends Chart<any>>(
+    x: (a: A, c: C) => number,
+    w: (a: A, c: C) => number,
+    h: (a: A, c: C) => number): (a: A, c: C) => number {
+
+    let fn = (a: A, c: C) => {
+        let hCalculated = h(a, c);
+        let wCalculated = c.getXScale()(x(a, c) + w(a, c)) - c.getXScale()(x(a, c));
+        let radius = (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8));
+        return radius
+    }
+    return fn;
+}
+
 /**
  * @hidden
  */
-export const translateFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => string = (a, c) => {
-    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
-    let translateX = c.getXScale()(arcXFn(a)) + wCalculated / 2;
-    let radiusCalculated = radiusFn(a, c);
-    let translateY = (a.y + 1) * c.binHeight + radiusCalculated - arcHFn(a, c);
-    return `translate(${translateX}, ${translateY})`
+export function buildArcTranslateFn <A extends Annotation, C extends Chart<any>>(
+    x: (a: A, c: C) => number,
+    w: (a: A, c: C) => number,
+    h: (a: A, c: C) => number,
+    y: (a: A, c: C) => number,
+    radius: (a: A, c: C) => number): (a: A, c: C) => string {
+
+    let fn = (a: A, c: C) => {
+        let wCalculated = c.getXScale()(x(a, c) + w(a, c)) - c.getXScale()(x(a, c));
+        let translateX = c.getXScale()(x(a, c)) + wCalculated / 2;
+        let radiusCalculated = radius(a, c);
+        let translateY = y(a, c) + radiusCalculated - h(a, c);
+        return `translate(${translateX}, ${translateY})`
+    }
+    return fn
 }
 /**
  * @hidden
  */
-export const endAngleFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => number = (a, c) => {
-    let radiusCalculated = radiusFn(a, c);
-    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
-    let angle = Math.asin((wCalculated / 2 ) / radiusCalculated);
-    return angle
+export function buildArcEndAngleFn <A extends Annotation, C extends Chart<any>>(
+    x: (a: A, c: C) => number,
+    w: (a: A, c: C) => number,
+    radius: (a: A, c: C) => number): (a: A, c: C) => number {
+
+    let fn = (a: A, c: C) => {
+        let radiusCalculated = radius(a, c);
+        let wCalculated = c.getXScale()(x(a, c) + w(a, c)) - c.getXScale()(x(a, c));
+        let angle = Math.asin((wCalculated / 2) / radiusCalculated);
+        return angle;
+    }
+    return fn;
 }
 /**
  * @hidden
  */
-export const startAngleFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => number = (a, c) => {
-    let angle = -(endAngleFn(a, c));
-    return angle;
+export function buildArcStartAngleFn <A extends Annotation, C extends Chart<any>>(
+    x: (a: A, c: C) => number,
+    w: (a: A, c: C) => number,
+    radius: (a: A, c: C) => number): (a: A, c: C) => number {
+
+    let fn = (a: A, c: C) => {
+        let radiusCalculated = radius(a, c);
+        let wCalculated = c.getXScale()(x(a, c) + w(a, c)) - c.getXScale()(x(a, c));
+        let angle = Math.asin((wCalculated / 2) / radiusCalculated);
+        return -angle;
+    }
+    return fn;
 }
 
 /**
@@ -93,5 +129,12 @@ export class ArcZoomBehavior<A extends Annotation, C extends Chart<any>> impleme
         selection
             .transition()
             .duration(duration)
+            .attr("transform", (a) => this.translate(a, chart))
+            .attr("d", d3.arc<any, A>()
+                .innerRadius((a) => this.radius(a, chart) - 1)
+                .outerRadius((a) => this.radius(a, chart))
+                .startAngle((a) => this.startAngle(a, chart))
+                .endAngle((a) => this.endAngle(a, chart))
+            )
     }
 }
