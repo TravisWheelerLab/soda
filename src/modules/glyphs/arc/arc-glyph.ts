@@ -150,7 +150,6 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
 
     if (isZoomableChart(chart)) {
         // if the chart is zoomable, register the ZoomBehavior for the rectangles
-        console.log("adddddddddddded");
         registerZoomBehavior(chart, conf.zoom || new defaults.ArcZoomBehavior(conf.selector, radius, translate, startAngle, endAngle));
     }
 

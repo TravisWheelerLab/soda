@@ -14,7 +14,7 @@ export const arcWFn = <A extends Annotation>(a: A) => a.w;
 /**
  * @hidden
  */
-export const arcYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight + 2;
+export const arcYFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) => a.y * c.binHeight;
 /**
  * @hidden
  */
@@ -24,14 +24,16 @@ export const arcHFn = <A extends Annotation, C extends Chart<any>>(a: A, c: C) =
  */
 export const radiusFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => number = (a, c) => {
     let hCalculated = arcHFn(a, c);
-    let wCalculated = c.getXScale()(arcWFn(a));
-    return ( (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8)) );
+    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
+    let radius = (hCalculated / 2) + (Math.pow(wCalculated, 2) / (hCalculated * 8));
+    return radius
 };
 /**
  * @hidden
  */
 export const translateFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => string = (a, c) => {
-    let translateX = c.getXScale()(arcXFn(a)) + c.getXScale()(arcWFn(a)) / 2;
+    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
+    let translateX = c.getXScale()(arcXFn(a)) + wCalculated / 2;
     let radiusCalculated = radiusFn(a, c);
     let translateY = (a.y + 1) * c.binHeight + radiusCalculated - arcHFn(a, c);
     return `translate(${translateX}, ${translateY})`
@@ -41,7 +43,8 @@ export const translateFn: <A extends Annotation, C extends Chart<any>>(a: A, c: 
  */
 export const endAngleFn: <A extends Annotation, C extends Chart<any>>(a: A, c: C) => number = (a, c) => {
     let radiusCalculated = radiusFn(a, c);
-    let angle = Math.asin( (c.getXScale()(arcWFn(a)) / 2 ) / radiusCalculated );
+    let wCalculated = c.getXScale()(a.x + a.w) - c.getXScale()(a.x);
+    let angle = Math.asin((wCalculated / 2 ) / radiusCalculated);
     return angle
 }
 /**
@@ -77,6 +80,7 @@ export class ArcZoomBehavior<A extends Annotation, C extends Chart<any>> impleme
 
     public apply(chart: C, selection: d3.Selection<SVGPathElement, A, HTMLElement, any>): void {
         selection
+            .attr("transform", (a) => this.translate(a, chart))
             .attr("d", d3.arc<any, A>()
                 .innerRadius((a) => this.radius(a, chart) - 1)
                 .outerRadius((a) => this.radius(a, chart))

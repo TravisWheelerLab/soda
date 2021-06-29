@@ -29,7 +29,7 @@ for (let i = 0; i < 10; i++) {
 let renderParams: soda.TrackChartRenderParams = {
     queryStart: 0,
     queryEnd: 1000,
-    maxY: 100
+    maxY: 10
 };
 
 let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -43,4 +43,5 @@ let arcConf: soda.ArcConfig<soda.Annotation, soda.TrackChart<soda.TrackChartRend
 axis.initialRender(renderParams);
 chart.initialRender(renderParams);
 
+// soda.rectangleGlyph(chart, ann, arcConf);
 soda.arcGlyph(chart, ann, arcConf);
