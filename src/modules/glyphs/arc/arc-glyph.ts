@@ -61,6 +61,12 @@ export interface ArcConfig<A extends Annotation, C extends Chart<any>> extends G
      */
     endAngle?: (a: A, c: C) => number;
     /**
+     * A callback to define the height of the arc glyph (i.e. outerRadius - innerRadius).
+     * @param a
+     * @param c
+     */
+    arcHeight?: (a: A, c: C) => number;
+    /**
      * A callback to define the stroke width of the border around the arc glyph.
      * @param a
      * @param c
@@ -137,11 +143,12 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
     const translate: (a: A, c: C) => string = conf.translate || defaults.buildArcTranslateFn(x, w, h, y, radius);
     const startAngle: (a: A, c: C) => number = conf.startAngle || defaults.buildArcStartAngleFn(x, w, radius);
     const endAngle: (a: A, c: C) => number = conf.endAngle || defaults.buildArcEndAngleFn(x, w, radius);
+    const arcHeight: (a: A, c: C) => number = conf.arcHeight || ( () => 1 );
 
     merge
         .attr("transform", (a) => translate(a, chart))
         .attr("d", d3.arc<any, A>()
-            .innerRadius((a) => radius(a, chart) - 1)
+            .innerRadius((a) => radius(a, chart) - arcHeight(a, chart))
             .outerRadius((a) => radius(a, chart))
             .startAngle((a) => startAngle(a, chart))
             .endAngle((a) => endAngle(a, chart))

@@ -1,6 +1,11 @@
 import * as d3 from 'd3';
 import {Plugin} from '../modules/plugin';
 import {axisRadialOuter} from 'd3-radial-axis';
+import {Annotation} from "../annotations/annotation";
+import {ArcConfig, arcGlyph} from "../modules/glyphs/arc/arc-glyph";
+import {ChartBase} from "./chart-base";
+import {Chart} from "./chart";
+import {ZoomBehavior} from "../modules/zoom/zoom-behavior";
 
 /**
  * A simple interface that defines the parameters for rendering a RadialChart.
@@ -14,6 +19,39 @@ export interface RadialChartRenderParams {
      * The end coordinate of the region that will be rendered.
      */
     queryEnd: number;
+    /**
+     * The Annotations to be rendered on the radial chart.
+     */
+    ann: Annotation[];
+}
+
+let trackCount = 0;
+function buildTrackAnnotation(): Annotation {
+    return new Annotation({
+        id: `radial-track-annotation-${trackCount++}`, w: 0, x: 0, y: 0
+    });
+}
+
+export class RadialChartArcZoomBehavior<A extends Annotation, C extends Chart<any>> implements ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>> {
+    selector: string;
+    id = 'radial-chart-arc-zoom-behavior';
+
+    constructor(selector: string) {
+        this.selector = `path.${selector}`;
+    }
+
+    public apply(chart: C, selection: d3.Selection<SVGElement, A, HTMLElement, any>): void {
+        let chartTransform = chart.svgSelection.node().__zoom;
+        selection
+            .attr("transform", chartTransform)
+    }
+
+    public applyDuration(chart: C, selection: d3.Selection<SVGElement, A, HTMLElement, any>, duration: number): void {
+        let chartTransform = chart.svgSelection.node().__zoom;
+        selection
+            .transition()
+            .attr("transform", chartTransform)
+    }
 }
 
 /**
@@ -61,7 +99,7 @@ export interface RadialChartConfig {
 /**
  * This Chart class is designed for rendering features in a circular context, e.g. bacterial genomes.
  */
-export class RadialChart<P extends RadialChartRenderParams> {
+export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P> {
     /**
      * A string that can be used to uniquely select the target DOM container via d3.select().
      */
@@ -95,14 +133,6 @@ export class RadialChart<P extends RadialChartRenderParams> {
      */
     axisRadius?: number;
     /**
-     * The amount of space in pixels to pad the top and bottom of the chart.
-     */
-    verticalPad: number;
-    /**
-     * A d3 selection of the Chart's SVG viewport.
-     */
-    svgSelection: d3.Selection<any, any, any, any>;
-    /**
      * A d3 selection of the radial track.
       */
     trackSelection: d3.Selection<any, any, any, any>;
@@ -131,21 +161,7 @@ export class RadialChart<P extends RadialChartRenderParams> {
      * @param config
      */
     public constructor(config: RadialChartConfig) {
-        if (config.selector !== undefined) {
-            this.selector = config.selector;
-            this.svgSelection = d3.select(this.selector)
-                .append('svg')
-                .style('vertical-align', 'top');
-        }
-        else {
-            this.svgSelection = d3.create('svg:svg')
-                .style('vertical-align', 'top');
-        }
-        this.verticalPad = config.verticalPad || 0;
-        this.svgSelection
-            .attr('width', config.width || '100%')
-            .attr('height', config.height || '100%');
-
+        super(config);
         this.width = config.width || this.getSvgWidth();
         this.height = (config.width || this.getSvgHeight()) + this.verticalPad + this.verticalPad * 2;
 
@@ -154,17 +170,19 @@ export class RadialChart<P extends RadialChartRenderParams> {
         this.binCount = config.binCount || 1;
         this.tickCount = config.tickCount || 10;
 
-        this.trackSelection = this.svgSelection
-            .append("path")
-            .attr("transform", `translate(${this.height/2}, ${this.height/2})`)
-            .attr("d", d3.arc()
-                .innerRadius(this.innerRadius)
-                .outerRadius(this.outerRadius)
-                .startAngle(3.14)
-                .endAngle(6.28 * 2)
-            )
-            .attr('stroke', '#ee7f7a')
-            .attr('fill', '#ee7f7a');
+        let trackAnnotation = buildTrackAnnotation();
+        let trackArcConfig: ArcConfig<Annotation, RadialChart<RadialChartRenderParams>> = {
+            selector: 'radial-track-annotation',
+            radius: () => this.outerRadius,
+            startAngle: () => 3.14,
+            endAngle: () => 6.28 * 2,
+            arcHeight: () => this.outerRadius - this.innerRadius,
+            translate: () => `translate(${this.height/2}, ${this.height/2})`,
+            fillColor: () => '#ee7f7a',
+            strokeColor: () => '#ee7f7a',
+        }
+
+        this.trackSelection = arcGlyph(this, [trackAnnotation], trackArcConfig);
 
         this.configureZoom()
     }
@@ -212,6 +230,10 @@ export class RadialChart<P extends RadialChartRenderParams> {
 
     public zoom(event: any) {
         if (event !== null) {
+            let zb = new RadialChartArcZoomBehavior('ann')
+            const selection = this.svgSelection.selectAll<SVGElement, Annotation>(zb.selector);
+            zb.apply(this, selection);
+
             let transform = event.transform;
 
             let axisSelection = this.getAxisSelection();
@@ -246,16 +268,6 @@ export class RadialChart<P extends RadialChartRenderParams> {
     }
 
     /**
-     * Get the string selector to the container that the Chart lives in.
-     */
-    public getSelector(): string {
-        if (this.selector == undefined) {
-            throw (`Selector on ${this} is null or undefined. Is this Chart detached?`)
-        }
-        return this.selector;
-    }
-
-    /**
      * Get the semantic coordinate range of what is currently shown in the Chart's viewport.
      */
     public getSemanticViewRange(): {start: number, end: number, width: number} {
@@ -276,16 +288,6 @@ export class RadialChart<P extends RadialChartRenderParams> {
     }
 
     /**
-     * Get a reference to the Chart's internal d3 scale used for translating between semantic and viewport coordinates.
-     */
-    public getXScale(): d3.ScaleLinear<number, number> {
-        if (this._xScale == null) {
-            throw("_xScale is null or undefined");
-        }
-        return this._xScale;
-    }
-
-    /**
      * Set the internal d3 scale to map from the provided semantic query range to the Chart's current
      * viewport dimensions.
      * @param queryStart
@@ -298,126 +300,6 @@ export class RadialChart<P extends RadialChartRenderParams> {
     }
 
     /**
-     * This uses d3 to select the Chart's DOM container and returns a DOMRect that describes that containers dimensions.
-     */
-    public getContainerDimensions(): DOMRect {
-        let containerDimensions: DOMRect;
-        if (this.selector !== undefined ) {
-            const containerSelection = d3.select<HTMLElement, any>(this.selector).node();
-            if (containerSelection == null) {
-                throw (`Selector: ${this.selector} returned null selection`);
-            } else {
-                containerDimensions = containerSelection
-                    .getBoundingClientRect();
-            }
-        }
-        else {
-            //TODO: this may be a bad way to handle this
-            containerDimensions = {
-                bottom: 0, height: 0, left: 0, right: 0, top: 0, width: 0, x: 0, y: 0, toJSON(): any {}
-            }
-        }
-        return containerDimensions
-    }
-
-    /**
-     * This returns a DOMRect that describes the SVG viewport's dimensions.
-     */
-    public getSvgDimensions(): DOMRect {
-        let svg = this.svgSelection.node();
-        if (svg == null) {
-            console.warn(`SVG selection is undefined on`, this);
-            throw('SVG undefined');
-        }
-        return (svg.getBoundingClientRect());
-    }
-
-    /**
-     * This returns the width of the SVG viewport in pixels.
-     */
-    public getSvgWidth(): number {
-        return (this.getSvgDimensions().width);
-    }
-
-    /**
-     * This returns the width of the SVG viewport in pixels.
-     */
-    public getSvgHeight(): number {
-        return (this.getSvgDimensions().height);
-    }
-
-    /**
-     * This figures out the Chart's SVG viewport dimensions, and sets the Chart's internal dimensions to match.
-     */
-    public setToSvgDimensions(): void {
-        const dims = this.getSvgDimensions();
-        this.width = dims.width;
-        this.height = dims.height;
-    }
-
-    /**
-     * This returns the Chart's DOM container's width in pixels.
-     */
-    public getContainerWidth(): number {
-        return (this.getContainerDimensions().width);
-    }
-
-    /**
-     * This returns the Chart's DOM container's height in pixels.
-     */
-    public getContainerHeight(): number {
-        return (this.getContainerDimensions().height);
-    }
-
-    /**
-     * This figures out the Chart's DOM container's dimensions, and sets the Chart's viewport SVG to fill those
-     * dimensions.
-     */
-    public setToContainerDimensions(): void {
-        const dims = this.getContainerDimensions();
-        this.width = dims.width;
-        this.height = dims.height;
-
-        this.svgSelection
-            .attr('width', this.width)
-            .attr('height', this.height);
-    }
-
-    /**
-     * This set's the Chart's height to an explicit pixel value.
-     * @param height
-     */
-    public setHeight(height: number): void {
-        this.height = height;
-
-        // TODO: is this really always going to be a div?
-        d3.select<HTMLDivElement, any>(this.getSelector())
-            .style('height', this.height + 'px');
-
-        this.svgSelection
-            .attr('height', this.height);
-    }
-
-    /**
-     * This calls each of this Chart's attached plugin's alert() method.
-     */
-    protected alertPlugins(): void {
-        for (const plugin of this.plugins) {
-            plugin.alert();
-        }
-    }
-
-    /**
-     * Getter for the Chart's previously used render parameters.
-     */
-    public getRenderParams(): P {
-        if (this._renderParams == undefined) {
-            throw(`Render params not defined on ${this}`);
-        }
-        return (this._renderParams);
-    }
-
-    /**
      * @param params
      */
     protected preRender(params: P): void {
@@ -427,7 +309,21 @@ export class RadialChart<P extends RadialChartRenderParams> {
     /**
      * @param params
      */
-    protected inRender(params: P): void {}
+    protected inRender(params: P): void {
+        let arcConfig: ArcConfig<Annotation, RadialChart<RadialChartRenderParams>> = {
+            selector: 'ann',
+            radius: () => this.outerRadius,
+            startAngle: (a, c) => c.getXScale()(a.x),
+            endAngle: (a, c) => c.getXScale()(a.x + a.w),
+            arcHeight: () => this.outerRadius - this.innerRadius,
+            translate: () => `translate(${this.height/2}, ${this.height/2})`,
+            fillColor: () => 'black',
+            strokeColor: () => 'black',
+            zoom: new RadialChartArcZoomBehavior('ann'),
+        }
+
+        arcGlyph(this, params.ann, arcConfig);
+    }
 
     /**
      * @param params
