@@ -9,29 +9,29 @@ import {ZoomBehavior} from "../../zoom/zoom-behavior";
 import {GlyphConfig} from "../glyph-config";
 
 /**
- * An interface that holds the parameters for rendering rectangle glyphs.
+ * An interface that holds the parameters for rendering arc glyphs.
  */
 export interface ArcConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     /**
-     * A callback to define the y coordinate of the rectangle glyph.
+     * A callback to define the y coordinate of the arc glyph.
      * @param a
      * @param c
      */
     y?: (a: A, c: C) => number;
     /**
-     * A callback to define the semantic x coordinate of the rectangle glyph.
+     * A callback to define the semantic x coordinate of the arc glyph.
      * @param a
      * @param c
      */
     x?: (a: A, c: C) => number;
     /**
-     * A callback to define the width of the rectangle glyph.
+     * A callback to define the width of the arc glyph.
      * @param a
      * @param c
      */
     w?: (a: A, c: C) => number;
     /**
-     * A callback to define the height of the rectangle glyph.
+     * A callback to define the height of the arc glyph.
      * @param a
      * @param c
      */
@@ -43,49 +43,49 @@ export interface ArcConfig<A extends Annotation, C extends Chart<any>> extends G
      */
     radius?: (a: A, c: C) => number;
     /**
-     * A callback that defines the translate parameters to place the conceptual circle in the correct spot.
+     * A callback to define the translate parameters to place the conceptual circle in the correct spot.
      * @param a
      * @param c
      */
     translate?: (a: A, c: C) => string;
     /**
-     * The start angle in radians of the arc on the conceptual circle.
+     * A callback to define the start angle in radians of the arc on the conceptual circle.
      * @param a
      * @param c
      */
     startAngle?: (a: A, c: C) => number;
     /**
-     * The end angle in radians of the arc on the conceptual circle.
+     * A callback to define the end angle in radians of the arc on the conceptual circle.
      * @param a
      * @param c
      */
     endAngle?: (a: A, c: C) => number;
     /**
-     * A callback to define the stroke width of the border around the rectangle glyph.
+     * A callback to define the stroke width of the border around the arc glyph.
      * @param a
      * @param c
      */
     strokeWidth?: (a: A, c: C) => number;
     /**
-     * A callback to define the opacity of the border around the rectangle glyph.
+     * A callback to define the opacity of the border around the arc glyph.
      * @param a
      * @param c
      */
     strokeOpacity?: (a: A, c: C) => number;
     /**
-     * A callback to define the stroke color of the border around the rectangle glyph.
+     * A callback to define the stroke color of the border around the arc glyph.
      * @param a
      * @param c
      */
     strokeColor?: (a: A, c: C) => string;
     /**
-     * A callback to define the fill opacity of the rectangle glyph.
+     * A callback to define the fill opacity of the arc glyph.
      * @param a
      * @param c
      */
     fillOpacity?: (a: A, c: C) => number;
     /**
-     * A callback to define the fill color of the rectangle glyph.
+     * A callback to define the fill color of the arc glyph.
      * @param a
      * @param c
      */
@@ -97,6 +97,12 @@ export interface ArcConfig<A extends Annotation, C extends Chart<any>> extends G
     zoom?: ZoomBehavior<C, d3.Selection<SVGElement, A, HTMLElement, any>>;
 }
 
+/**
+ * This renders a list of Annotation objects in a target chart as arcs.
+ * @param chart The target Chart.
+ * @param ann The list of Annotation objects to be rendered.
+ * @param conf The parameters for configuring the style of the lines.
+ */
 export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: ArcConfig<A, C>): d3.Selection<SVGPathElement, A, HTMLElement, any> {
     const selection = chart.svgSelection
         .selectAll<SVGPathElement, A>(`path.${conf.selector}`)
@@ -151,7 +157,7 @@ export function arcGlyph<A extends Annotation, C extends Chart<any>>(chart: C, a
         .remove();
 
     if (isZoomableChart(chart)) {
-        // if the chart is zoomable, register the ZoomBehavior for the rectangles
+        // if the chart is zoomable, register the ZoomBehavior for the arcs
         registerZoomBehavior(chart, conf.zoom || new defaults.ArcZoomBehavior(conf.selector, radius, translate, startAngle, endAngle));
     }
 
