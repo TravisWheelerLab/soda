@@ -101,22 +101,6 @@ export interface RadialChartConfig {
  */
 export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P> {
     /**
-     * A string that can be used to uniquely select the target DOM container via d3.select().
-     */
-    selector: string | undefined;
-    /**
-     * The last used render parameters.
-     */
-    _renderParams: P | undefined;
-    /**
-     * The width in pixels of the Chart's SVG viewport.
-     */
-    width: number;
-    /**
-     * The height in pixels of the Chart's SVG viewport.
-     */
-    height: number;
-    /**
      * The number of "vertical" bins that the chart will be divided into.
      */
     binCount: number;
@@ -145,14 +129,6 @@ export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P>
      * supplied, and instead it tries really hard to make it even and "pretty."
      */
     tickCount: number;
-    /**
-     * A d3 scale that the Chart will use to translate between semantic and SVG viewport coordinates.
-     */
-    _xScale?: d3.ScaleLinear<number, number>;
-    /**
-     * A list of plugins attached to the Chart.
-     */
-    plugins: Plugin[] = [];
 
     /**
      * The base Chart constructor makes a d3 selection of the provided selector and creates an SVG inside of the
