@@ -6,6 +6,7 @@ import {ArcConfig, arcGlyph} from "../modules/glyphs/arc/arc-glyph";
 import {ChartBase} from "./chart-base";
 import {Chart} from "./chart";
 import {ZoomBehavior} from "../modules/zoom/zoom-behavior";
+import {Transform} from "../modules/zoom/transform";
 
 /**
  * A simple interface that defines the parameters for rendering a RadialChart.
@@ -174,7 +175,7 @@ export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P>
                     }
                     return true;
                 })
-                .on('zoom', () => self.zoom(d3.event))
+                .on('zoom', () => self.zoom(d3.event.transform))
             )
             .on("dblclick.zoom", null);
 
@@ -204,43 +205,53 @@ export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P>
             .style('font-size', 12)
     }
 
-    public zoom(event: any) {
-        if (event !== null) {
-            let zb = new RadialChartArcZoomBehavior('ann')
-            const selection = this.svgSelection.selectAll<SVGElement, Annotation>(zb.selector);
-            zb.apply(this, selection);
-
-            let transform = event.transform;
-
-            let axisSelection = this.getAxisSelection();
-
-            axisSelection.select("path.domain")
-                .style('stroke',  '#ee7f7a');
-
-            this.trackSelection.attr("transform", transform);
-            axisSelection.attr("transform", transform);
-
-            // TODO: I'd rather not create a new axis every time
-            let axis = axisRadialOuter(this.getXScale(), this.outerRadius);
-
-            // we'll set the ticks by multiplying the tick
-            // count by the transform scale factor k rounded
-            // this seems to work well enough for now
-            let kRounded = Math.round(transform.k)
-            axis.ticks(this.tickCount * kRounded);
-
-            axisSelection.call(axis);
-
-            // scale the ticks by the inverse of the scaling factor
-            axisSelection.selectAll('text')
-                .style('stroke', '#181d24')
-                .style('fill', '#181d24')
-                .style('font-size', 12)
-                .attr('transform', `scale(${1/transform.k})`);
-
-            axisSelection.selectAll('line')
-                .attr('transform', `scale(${1/transform.k})`);
+    protected clearAxis(): void {
+        if (this._axisSelection !== undefined) {
+            this._axisSelection
+                .remove();
         }
+    }
+
+    public zoom(transform?: Transform) {
+        if (transform == undefined) {
+            transform = this.svgSelection.node().__zoom;
+            if (transform == undefined) {
+                console.warn("no transform defined on", this, ", can't zoom");
+                return
+            }
+        }
+        let zb = new RadialChartArcZoomBehavior('ann')
+        const selection = this.svgSelection.selectAll<SVGElement, Annotation>(zb.selector);
+        zb.apply(this, selection);
+
+        let axisSelection = this.getAxisSelection();
+
+        axisSelection.select("path.domain")
+            .style('stroke',  '#ee7f7a');
+
+        this.trackSelection.attr("transform", `translate(${transform.x}, ${transform.y}) scale(${transform.k})`);
+        axisSelection.attr("transform", `translate(${transform.x}, ${transform.y}) scale(${transform.k})`);
+
+        // TODO: I'd rather not create a new axis every time
+        let axis = axisRadialOuter(this.getXScale(), this.outerRadius);
+
+        // we'll set the ticks by multiplying the tick
+        // count by the transform scale factor k rounded
+        // this seems to work well enough for now
+        let kRounded = Math.round(transform.k)
+        axis.ticks(this.tickCount * kRounded);
+
+        axisSelection.call(axis);
+
+        // scale the ticks by the inverse of the scaling factor
+        axisSelection.selectAll('text')
+            .style('stroke', '#181d24')
+            .style('fill', '#181d24')
+            .style('font-size', 12)
+            .attr('transform', `scale(${1/transform.k})`);
+
+        axisSelection.selectAll('line')
+            .attr('transform', `scale(${1/transform.k})`);
     }
 
     /**
@@ -304,7 +315,9 @@ export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P>
     /**
      * @param params
      */
-    protected postRender(params: P): void {}
+    protected postRender(params: P): void {
+        this.zoom();
+    }
 
     /**
      * This method just stores the render parameters on the Chart and calls preRender(), inRender(), and postRender().
@@ -326,6 +339,7 @@ export class RadialChart<P extends RadialChartRenderParams> extends ChartBase<P>
      * @param params
      */
     public initialRender(params: P): void {
+        this.clearAxis();
         this.setXScale(params.queryStart, params.queryEnd);
         this.render(params)
     }
