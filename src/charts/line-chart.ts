@@ -6,13 +6,16 @@ import {verticalAxis, VerticalAxisConfig} from "../modules/glyphs/plots/vertical
 /**
  * A simple interface that holds the arguments for the LineChart constructor.
  */
-export interface LineChartConfig extends TrackChartConfig {}
+export interface LineChartConfig extends TrackChartConfig {
+}
 
 /**
  * A simple interface that holds the arguments for the LineChart render() method.
  */
-export interface LineChartRenderParams extends TrackChartRenderParams {
-    data: PlotAnnotation,
+export interface LineChartRenderParams<A extends PlotAnnotation = PlotAnnotation> extends TrackChartRenderParams {
+    data: A,
+    ticks?: (a: A, c: LineChart) => number;
+    tickSizeOuter?: (a: A, c: LineChart) => number;
 }
 
 /**
@@ -33,6 +36,9 @@ export class LineChart extends TrackChart<LineChartRenderParams> {
 
         let axisConf: VerticalAxisConfig<PlotAnnotation, LineChart> = {
             selector: 'vertical-axis',
+            domain: (a) => [a.maxValue, a.minValue],
+            ticks: params.ticks,
+            tickSizeOuter: params.tickSizeOuter,
             fixed: true,
         }
         verticalAxis(this, [params.data], axisConf);

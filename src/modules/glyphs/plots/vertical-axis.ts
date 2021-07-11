@@ -13,9 +13,10 @@ import {GlyphConfig} from "../glyph-config";
  */
 export interface VerticalAxisConfig<A extends Annotation, C extends Chart<any>> extends GlyphConfig {
     x?: (a: A, c: C) => number;
-    domain?: [number, number];
-    range?: [number, number];
-    ticks?: number;
+    domain?: (a: A, c: C) => [number, number];
+    range?: (a: A, c: C) => [number, number];
+    ticks?: (a: A, c: C) => number;
+    tickSizeOuter?: (a: A, c: C) => number;
     fixed?: boolean;
     zoom?: ZoomBehavior<C, d3.Selection<SVGGElement, A, HTMLElement, any>>;
 }
@@ -31,25 +32,29 @@ export interface VerticalAxisConfig<A extends Annotation, C extends Chart<any>> 
 export function verticalAxis<A extends Annotation, C extends Chart<any>>(chart: C, ann: A[], conf: VerticalAxisConfig<A, C>): void {
     let x = conf.x || defaults.axisXFn;
     let w = conf.x || defaults.axisXFn;
-    let domain = conf.domain || [100, 0];
-    let range = conf.range || [0, chart.binHeight];
-    let ticks = conf.ticks || 5;
+    let domain = conf.domain || (() => [0, 100]);
+    let range = conf.range || (() => [0, chart.binHeight]);
+    let ticks = conf.ticks || (() => 5);
+    let tickSizeOuter = conf.tickSizeOuter || (() => 6);
     let fixed = conf.fixed || false;
 
-    let yScale = d3.scaleLinear()
-        .domain(domain)
-        .range(range);
-
-    let axis = d3.axisRight(yScale)
-        .ticks(ticks)
-
     let gSelections = getPlotGSelection(chart, ann, conf);
-    // let outerSelection = gSelections[0];
     let outerMerge = gSelections[1];
 
     outerMerge
         .attr('transform', (a) => `translate(${chart.getXScale()(x(a, chart))}, ${chart.binHeight * a.y + chart.verticalPad})`)
-        .call(axis);
+        .each( (a, i, nodes) => {
+            let yScale = d3.scaleLinear()
+                .domain(domain(a, chart))
+                .range(range(a, chart));
+
+            let axis = d3.axisRight(yScale)
+                .ticks(ticks(a, chart))
+                .tickSizeOuter(tickSizeOuter(a, chart));
+
+            d3.select(nodes[i])
+                .call(axis);
+        });
 
     if (!fixed) {
         if (isZoomableChart(chart)) {

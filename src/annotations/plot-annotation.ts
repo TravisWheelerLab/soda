@@ -58,10 +58,14 @@ export class PlotAnnotation extends Annotation {
      * The individual data points for the plot.
      */
     points: PointDatum[] = [];
+    minValue: number;
+    maxValue: number;
 
     constructor(config: PlotAnnotationConfig) {
         super(config);
         this.points =  distributePointData(config.points, this);
+        this.minValue = Math.min(...this.points.map( (p) => p.value ));
+        this.maxValue = Math.max(...this.points.map( (p) => p.value ));
     }
 }
 

@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import {Chart} from "../../../charts/chart";
-import {PlotAnnotation} from "../../../annotations/plot-annotation";
 import {Annotation} from "../../../annotations/annotation";
 import {GlyphConfig} from "../glyph-config";
 

@@ -39,9 +39,10 @@ export interface LinePlotConfig<A extends PlotAnnotation, C extends Chart<any>> 
      */
     strokeDashArray?: (a: A, c: C) => string;
     /**
-     * A custom defined d3.Line function, which is what is used to determine the x and y coordinates of each point.
+     * A callback that returns a custom defined d3.Line function, which is what is used to determine the x and y
+     * coordinates of each point.
      */
-    lineFunc?: d3.Line<PointDatum>
+    lineFunc?: (a: A, c: C) => d3.Line<PointDatum>
     /**
      * A custom defined zoom behavior for all of the glyphs rendered with this config. This is intended to be used by
      * experienced users only.
@@ -60,7 +61,7 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
     const strokeOpacity = conf.strokeOpacity || (() => 1);
     const strokeColor = conf.strokeColor || (() => 'black');
     const strokeDashArray = conf.strokeDashArray || (() => "");
-    let lineFunc = conf.lineFunc || defaults.lineFn(chart)
+    let lineFunc = conf.lineFunc || defaults.lineFn
 
     let [outerEnter, outerMerge] = getPlotGSelection(chart, ann, conf);
 
@@ -88,7 +89,7 @@ export function linePlot<A extends PlotAnnotation, C extends Chart<any>>(chart: 
               .append('path')
                 .datum(a.points)
                 .attr('class', conf.selector)
-                .attr('d', lineFunc);
+                .attr('d', lineFunc(a, chart));
         });
 
     if (isZoomableChart(chart)) {
